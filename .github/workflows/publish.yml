@@ -35,5 +35,5 @@ jobs:
       uses: shogo82148/actions-upload-release-asset@v1
       with:
         upload_url: ${{ github.event.release.upload_url }}
-        asset_path: /app/build/outputs/apk/release/app-release-unsigned.apk
+        asset_path: app/build/outputs/apk/release/app-release-unsigned.apk
         asset_name: TaskerHealthConnect-${{ steps.vars.outputs.tag }}.apk
