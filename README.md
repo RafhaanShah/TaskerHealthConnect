@@ -18,6 +18,11 @@
 - Clone the repository: `git clone https://github.com/RafhaanShah/TaskerHealthConnect`
 - Build with gradle: `./gradlew assembleDebug`
 
+# Contributing / Feature Requests
+- Contributions via pull requests are welcome!
+- Tasker plugin documentation can be found [here](https://developer.android.com/guide/health-and-fitness/health-connect/get-started)
+- Health Connect documentation can be found [here](https://tasker.joaoapps.com/pluginslibrary.html)
+- For feature requests please make a GitHub issue [here](https://github.com/RafhaanShah/TaskerHealthConnect/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc) with details
+
 ## License
 [MIT](https://choosealicense.com/licenses/mit/)
-  
