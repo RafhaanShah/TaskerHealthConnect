@@ -1,4 +1,4 @@
-package com.rafapps.taskerhealthconnect.getsteps
+package com.rafapps.taskerhealthconnect.tasker
 
 import android.content.Context
 import com.joaomgcd.taskerpluginlibrary.action.TaskerPluginRunnerAction
@@ -11,14 +11,14 @@ import kotlinx.coroutines.runBlocking
 import java.time.Instant
 import java.time.ZonedDateTime
 
-class GetStepsActionRunner : TaskerPluginRunnerAction<GetStepsInput, GetStepsOutput>() {
+class GetHealthDataActionRunner : TaskerPluginRunnerAction<GetHealthDataInput, GetHealthDataOutput>() {
     override val notificationProperties
         get() = NotificationProperties(iconResId = R.drawable.ic_launcher_foreground)
 
     override fun run(
         context: Context,
-        input: TaskerInput<GetStepsInput>
-    ): TaskerPluginResult<GetStepsOutput> {
+        input: TaskerInput<GetHealthDataInput>
+    ): TaskerPluginResult<GetHealthDataOutput> {
         val repository = HealthConnectRepository(context)
         val daysOffset = input.regular.days
         val now = Instant.now()
@@ -28,7 +28,7 @@ class GetStepsActionRunner : TaskerPluginRunnerAction<GetStepsInput, GetStepsOut
             .minusMinutes(zonedDateTime.minute.toLong())
             .toInstant()
 
-        val steps = runBlocking { repository.countSteps(startTime = offsetTime, endTime = now) }
-        return TaskerPluginResultSucess(GetStepsOutput(steps))
+        val data = runBlocking { repository.getData(startTime = offsetTime, endTime = now) }
+        return TaskerPluginResultSucess(GetHealthDataOutput(data))
     }
 }

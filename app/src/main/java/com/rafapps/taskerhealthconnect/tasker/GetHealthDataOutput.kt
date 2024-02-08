@@ -1,4 +1,4 @@
-package com.rafapps.taskerhealthconnect.getsteps
+package com.rafapps.taskerhealthconnect.tasker
 
 import android.annotation.SuppressLint
 import com.joaomgcd.taskerpluginlibrary.output.TaskerOutputObject
@@ -7,10 +7,10 @@ import com.rafapps.taskerhealthconnect.R
 
 @SuppressLint("NonConstantResourceId")
 @TaskerOutputObject
-class GetStepsOutput(
+class GetHealthDataOutput(
     @get:TaskerOutputVariable(
-        name = VARIABLE_NAME_STEPS,
-        labelResId = R.string.steps,
-        htmlLabelResId = R.string.steps
-    ) val steps: Long = 0L
+        name = VARIABLE_NAME_DATA,
+        labelResId = R.string.data,
+        htmlLabelResId = R.string.data
+    ) val data: String = ""
 )
