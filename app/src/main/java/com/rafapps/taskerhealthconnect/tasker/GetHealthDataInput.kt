@@ -1,4 +1,4 @@
-package com.rafapps.taskerhealthconnect.getsteps
+package com.rafapps.taskerhealthconnect.tasker
 
 import android.annotation.SuppressLint
 import com.joaomgcd.taskerpluginlibrary.input.TaskerInputField
@@ -7,7 +7,7 @@ import com.rafapps.taskerhealthconnect.R
 
 @SuppressLint("NonConstantResourceId")
 @TaskerInputRoot
-class GetStepsInput @JvmOverloads constructor(
+class GetHealthDataInput @JvmOverloads constructor(
     @field:TaskerInputField(
         key = VARIABLE_NAME_DAYS,
         labelResId = R.string.days,

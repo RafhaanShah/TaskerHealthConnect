@@ -1,4 +1,4 @@
-package com.rafapps.taskerhealthconnect.getsteps
+package com.rafapps.taskerhealthconnect.tasker
 
 import android.content.Context
 import android.os.Bundle
@@ -11,14 +11,14 @@ import com.joaomgcd.taskerpluginlibrary.config.TaskerPluginConfig
 import com.joaomgcd.taskerpluginlibrary.input.TaskerInput
 import com.rafapps.taskerhealthconnect.HealthConnectRepository
 import com.rafapps.taskerhealthconnect.R
-import com.rafapps.taskerhealthconnect.databinding.ActivityGetStepsBinding
+import com.rafapps.taskerhealthconnect.databinding.ActivityGetDataBinding
 import kotlinx.coroutines.launch
 
-class GetStepsActivity : AppCompatActivity(), TaskerPluginConfig<GetStepsInput> {
+class GetHealthDataActivity : AppCompatActivity(), TaskerPluginConfig<GetHealthDataInput> {
 
-    private lateinit var binding: ActivityGetStepsBinding
+    private lateinit var binding: ActivityGetDataBinding
     private val repository by lazy { HealthConnectRepository(this) }
-    private val taskerHelper by lazy { GetStepsActionHelper(this) }
+    private val taskerHelper by lazy { GetHealthDataActionHelper(this) }
 
     private val permissionsLauncher =
         registerForActivityResult(
@@ -31,14 +31,14 @@ class GetStepsActivity : AppCompatActivity(), TaskerPluginConfig<GetStepsInput> 
     override val context: Context
         get() = this
 
-    override val inputForTasker: TaskerInput<GetStepsInput>
+    override val inputForTasker: TaskerInput<GetHealthDataInput>
         get() = TaskerInput(
-            GetStepsInput(days = runCatching {
+            GetHealthDataInput(days = runCatching {
                 binding.daysText.editText?.text.toString().toLong()
             }.getOrDefault(0))
         )
 
-    override fun assignFromInput(input: TaskerInput<GetStepsInput>) {
+    override fun assignFromInput(input: TaskerInput<GetHealthDataInput>) {
         binding.daysText.editText?.setText(input.regular.days.toString())
     }
 
@@ -46,7 +46,7 @@ class GetStepsActivity : AppCompatActivity(), TaskerPluginConfig<GetStepsInput> 
         WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
 
-        binding = ActivityGetStepsBinding.inflate(layoutInflater)
+        binding = ActivityGetDataBinding.inflate(layoutInflater)
         setContentView(binding.root)
         taskerHelper.onCreate()
     }

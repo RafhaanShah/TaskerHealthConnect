@@ -5,9 +5,9 @@
     <string name="permissions_not_granted">Permissions not granted, open the Health Connect app to grant permissions</string>
     <string name="health_connect_unavailable">Health connect is not installed</string>
     <string name="install">Install Health Connect</string>
-    <string name="get_steps">Get Steps</string>
+    <string name="get_data">Get Data</string>
     <string name="days">Days</string>
     <string name="done">Done</string>
     <string name="days_description">How many days back to aggregate (0 = today only)</string>
-    <string name="steps">Steps</string>
+    <string name="data">Data</string>
 </resources>
