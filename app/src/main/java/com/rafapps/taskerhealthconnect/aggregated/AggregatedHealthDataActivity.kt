@@ -1,24 +1,32 @@
-package com.rafapps.taskerhealthconnect.tasker
+package com.rafapps.taskerhealthconnect.aggregated
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
+import androidx.core.view.isVisible
 import androidx.health.connect.client.PermissionController
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.internal.ViewUtils.hideKeyboard
 import com.joaomgcd.taskerpluginlibrary.config.TaskerPluginConfig
 import com.joaomgcd.taskerpluginlibrary.input.TaskerInput
+import com.rafapps.taskerhealthconnect.BuildConfig
 import com.rafapps.taskerhealthconnect.HealthConnectRepository
 import com.rafapps.taskerhealthconnect.R
-import com.rafapps.taskerhealthconnect.databinding.ActivityGetDataBinding
+import com.rafapps.taskerhealthconnect.databinding.ActivityAggregatedHealthDataBinding
 import kotlinx.coroutines.launch
+import java.time.Instant
 
-class GetHealthDataActivity : AppCompatActivity(), TaskerPluginConfig<GetHealthDataInput> {
+class AggregatedHealthDataActivity : AppCompatActivity(),
+    TaskerPluginConfig<AggregatedHealthDataInput> {
 
-    private lateinit var binding: ActivityGetDataBinding
+    private val TAG = "AggregatedHealthDataActivity"
+    private lateinit var binding: ActivityAggregatedHealthDataBinding
     private val repository by lazy { HealthConnectRepository(this) }
-    private val taskerHelper by lazy { GetHealthDataActionHelper(this) }
+    private val taskerHelper by lazy { AggregatedHealthDataActionHelper(this) }
 
     private val permissionsLauncher =
         registerForActivityResult(
@@ -31,23 +39,23 @@ class GetHealthDataActivity : AppCompatActivity(), TaskerPluginConfig<GetHealthD
     override val context: Context
         get() = this
 
-    override val inputForTasker: TaskerInput<GetHealthDataInput>
+    override val inputForTasker: TaskerInput<AggregatedHealthDataInput>
         get() = TaskerInput(
-            GetHealthDataInput(days = runCatching {
-                binding.daysText.editText?.text.toString().toLong()
-            }.getOrDefault(0))
+            AggregatedHealthDataInput(days = getInputDays())
         )
 
-    override fun assignFromInput(input: TaskerInput<GetHealthDataInput>) {
+    override fun assignFromInput(input: TaskerInput<AggregatedHealthDataInput>) {
         binding.daysText.editText?.setText(input.regular.days.toString())
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.d(TAG, "onCreate")
         WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
 
-        binding = ActivityGetDataBinding.inflate(layoutInflater)
+        binding = ActivityAggregatedHealthDataBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setDebugButton()
         taskerHelper.onCreate()
     }
 
@@ -77,6 +85,7 @@ class GetHealthDataActivity : AppCompatActivity(), TaskerPluginConfig<GetHealthD
     }
 
     private fun onPermissionGranted() {
+        Log.d(TAG, "onPermissionGranted")
         binding.button.text = getString(R.string.done)
         binding.button.setOnClickListener {
             hideKeyboard()
@@ -84,10 +93,32 @@ class GetHealthDataActivity : AppCompatActivity(), TaskerPluginConfig<GetHealthD
         }
     }
 
+    private fun getInputDays(): Long {
+        return runCatching {
+            binding.daysText.editText?.text.toString().toLong()
+        }.getOrDefault(0L)
+    }
+
     private fun hideKeyboard() {
         (getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager)?.hideSoftInputFromWindow(
             binding.root.windowToken,
             0
         )
+    }
+
+    private fun setDebugButton() {
+        binding.debugButton.isVisible = BuildConfig.DEBUG
+        binding.debugButton.setOnClickListener {
+            lifecycleScope.launch {
+                val startTime = AggregatedHealthDataActionRunner.daysToOffsetTime(getInputDays())
+                val endTime = Instant.now()
+                runCatching {
+                    val output = repository.getAggregateData(startTime, endTime)
+                    Log.d(TAG, output.toString(2))
+                }.onFailure { err ->
+                    Log.e(TAG, "Repository error:", err)
+                }
+            }
+        }
     }
 }

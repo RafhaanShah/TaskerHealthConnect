@@ -1,15 +1,15 @@
-package com.rafapps.taskerhealthconnect.tasker
+package com.rafapps.taskerhealthconnect.aggregated
 
 import android.annotation.SuppressLint
 import com.joaomgcd.taskerpluginlibrary.input.TaskerInputField
 import com.joaomgcd.taskerpluginlibrary.input.TaskerInputRoot
 import com.rafapps.taskerhealthconnect.R
 
-@SuppressLint("NonConstantResourceId")
+@SuppressLint("NonConstantResourceId") // TODO: check with nonFinalResIds
 @TaskerInputRoot
-class GetHealthDataInput @JvmOverloads constructor(
+class AggregatedHealthDataInput @JvmOverloads constructor(
     @field:TaskerInputField(
-        key = VARIABLE_NAME_DAYS,
+        key = "days",
         labelResId = R.string.days,
         descriptionResId = R.string.days_description
     ) var days: Long = 0L

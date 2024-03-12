@@ -1,11 +1,8 @@
 package com.rafapps.taskerhealthconnect
 
-import androidx.health.connect.client.request.AggregateRequest
-import androidx.health.connect.client.time.TimeRangeFilter
 import org.junit.Test
 
 import org.junit.Assert.*
-import java.time.Instant
 
 /**
  * Example local unit test, which will execute on the development machine (host).

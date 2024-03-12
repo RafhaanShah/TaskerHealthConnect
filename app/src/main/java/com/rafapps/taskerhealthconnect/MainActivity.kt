@@ -1,6 +1,7 @@
 package com.rafapps.taskerhealthconnect
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.isVisible
@@ -11,10 +12,9 @@ import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
+    private val TAG = "MainActivity"
     private lateinit var binding: ActivityMainBinding
-
     private val repository by lazy { HealthConnectRepository(this) }
-
     private val permissionsLauncher =
         registerForActivityResult(
             PermissionController.createRequestPermissionResultContract()
@@ -27,6 +27,7 @@ class MainActivity : AppCompatActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.d(TAG, "onCreate")
         WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
 
@@ -36,10 +37,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        checkHealthConnectAndPermissions()
+        checkAvailabilityAndPermissions()
     }
 
-    private fun checkHealthConnectAndPermissions() {
+    private fun checkAvailabilityAndPermissions() {
         if (!repository.isAvailable())
             onHealthConnectUnavailable()
         else
@@ -54,6 +55,7 @@ class MainActivity : AppCompatActivity() {
     private fun requestPermission() = permissionsLauncher.launch(repository.permissions)
 
     private fun onHealthConnectUnavailable() {
+        Log.d(TAG, "onHealthConnectUnavailable")
         with(binding) {
             textView.text = getString(R.string.health_connect_unavailable)
             button.text = getString(R.string.install)
@@ -63,13 +65,15 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onPermissionGranted() {
+        Log.d(TAG, "onPermissionGranted")
         with(binding) {
-            textView.text = getString(R.string.permissions_granted)
+            textView.text = getString(R.string.app_ready)
             button.isVisible = false
         }
     }
 
     private fun onPermissionDenied() {
+        Log.d(TAG, "onPermissionDenied")
         with(binding) {
             textView.text = getString(R.string.permissions_not_granted)
             button.text = getString(R.string.grant_permissions)

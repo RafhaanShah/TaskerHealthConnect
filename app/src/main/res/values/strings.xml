@@ -1,13 +1,15 @@
 <resources>
     <string name="app_name">Tasker Health Connect</string>
     <string name="grant_permissions">Grant Permissions</string>
-    <string name="permissions_granted">Permissions granted!</string>
-    <string name="permissions_not_granted">Permissions not granted, open the Health Connect app to grant permissions</string>
-    <string name="health_connect_unavailable">Health connect is not installed</string>
+    <string name="app_ready">Permissions are granted and Health Connect is available. Open Tasker, and look for Tasker Health Connect inside Action -> Plugins</string>
+    <string name="permissions_not_granted">Not all permissions have been granted, open the Health Connect app to grant permissions</string>
+    <string name="health_connect_unavailable">Health connect is not installed or is unavailable, check for updates</string>
+    <string name="health_connect_unavailable_or_permissions">Health Connect is unavailable or permissions are not granted</string>
     <string name="install">Install Health Connect</string>
-    <string name="get_data">Get Data</string>
-    <string name="days">Days</string>
+    <string name="debug">Debug</string>
     <string name="done">Done</string>
-    <string name="days_description">How many days back to aggregate (0 = today only)</string>
-    <string name="data">Data</string>
+    <string name="days">Days</string>
+    <string name="days_description">Days back to fetch (0 = today only, 1 = from 00:00 yesterday)</string>
+    <string name="aggregated_health_data">Aggregated Health Data</string>
+    <string name="aggregated_health_data_description">Aggregated Health Data will be returned as a JSON array, each object in the array corresponds to 1 day of data. The fields of the object will contain specific data for that day. Fields will not be present if there is no data for that type for that day.</string>
 </resources>
