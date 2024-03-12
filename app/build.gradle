@@ -4,15 +4,15 @@ plugins {
 }
 
 android {
-    compileSdk 33
+    namespace 'com.rafapps.taskerhealthconnect'
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.rafapps.taskerhealthconnect"
-        minSdk 28
-        targetSdk 33
-        versionCode 1
-        versionName "0.0.1"
-
+        minSdk 28 // Health Connect is only available in Android 9
+        targetSdk 34
+        versionCode 2
+        versionName "0.0.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -47,18 +47,22 @@ android {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-reflect:1.7.10"
-    implementation 'androidx.core:core-ktx:1.9.0'
-    implementation 'androidx.appcompat:appcompat:1.5.1'
-    implementation 'com.google.android.material:material:1.8.0-alpha02'
+    implementation 'androidx.core:core-ktx:1.12.0'
+    implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.5.3'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.5.3'
-    implementation "androidx.health.connect:connect-client:1.0.0-alpha07"
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.7.7'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.7.7'
 
-    implementation 'com.joaomgcd:taskerpluginlibrary:0.4.4'
+    // https://developer.android.com/jetpack/androidx/releases/health-connect
+    implementation "androidx.health.connect:connect-client:1.1.0-alpha07"
+
+    implementation 'com.google.android.material:material:1.11.0'
+
+    // https://tasker.joaoapps.com/pluginslibrary.html
+    implementation 'com.joaomgcd:taskerpluginlibrary:0.4.10'
 
     testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.4'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.0'
+
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 }
