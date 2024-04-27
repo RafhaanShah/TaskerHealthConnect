@@ -92,5 +92,14 @@
                 <action android:name="com.twofortyfouram.locale.intent.action.EDIT_SETTING" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".healthdata.HealthDataActivity"
+            android:exported="true"
+            android:label="@string/health_data">
+            <intent-filter>
+                <action android:name="com.twofortyfouram.locale.intent.action.EDIT_SETTING" />
+            </intent-filter>
+        </activity>
     </application>
 </manifest>

@@ -10,6 +10,12 @@
     <string name="done">Done</string>
     <string name="days">Days</string>
     <string name="days_description">Days back to fetch (0 = today only, 1 = from 00:00 yesterday)</string>
+    <string name="record_type">Class of the type of health record to fetch</string>
+    <string name="record_type_description">This must be a valid class from androidx.health.connect.client.records.* package, e.g. StepsRecord. Supports Tasker Variables.</string>
+    <string name="from_time_milliseconds">From Time Epoch Milliseconds</string>
+    <string name="from_time_milliseconds_description">The timestamp (in epoch milliseconds) to start fetching records from. Supports Tasker Variables.</string>
     <string name="aggregated_health_data">Aggregated Health Data</string>
     <string name="aggregated_health_data_description">Aggregated Health Data will be returned as a JSON array, each object in the array corresponds to 1 day of data. The fields of the object will contain specific data for that day. Fields will not be present if there is no data for that type for that day.</string>
+    <string name="health_data">Health Data</string>
+    <string name="health_data_description">Health Data will be returned as a JSON array, each object in the array corresponds to record of data. The fields of the object will contain specific data for type of record.</string>
 </resources>

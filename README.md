@@ -3,7 +3,31 @@
 [Tasker](https://tasker.joaoapps.com/) plugin to interface with [Health Connect](https://developer.android.com/health-connect) on Android
 
 ## Current Features
-- Retrieve [Aggregate data](https://developer.android.com/health-and-fitness/guides/health-connect/develop/aggregate-data) for the last X days as JSON. See [HealthConnectRepository](app/src/main/java/com/rafapps/taskerhealthconnect/HealthConnectRepository.kt) and [HealthConnectDataTypes](app/src/main/java/com/rafapps/taskerhealthconnect/HealthConnectDataTypes.kt) for all data types, units, and JSON keys.
+- See [HealthConnectRepository](app/src/main/java/com/rafapps/taskerhealthconnect/HealthConnectRepository.kt) and [HealthConnectDataTypes](app/src/main/java/com/rafapps/taskerhealthconnect/HealthConnectDataTypes.kt) for all data types, units, and JSON keys.
+- Retrieve [Raw Health Records](https://developer.android.com/health-and-fitness/guides/health-connect/develop/read-data) for the last X time period as JSON.
+```json
+[
+  {
+    "diastolic": 13,
+    "measurementLocation": 3,
+    "systolic": 59,
+    "time": "2024-04-27T13:02:50.265Z"
+  },
+  {
+    "diastolic": 134,
+    "measurementLocation": 3,
+    "systolic": 51,
+    "time": "2024-04-27T14:02:50.265Z"
+  },
+  {
+    "diastolic": 34,
+    "measurementLocation": 3,
+    "systolic": 54,
+    "time": "2024-04-27T15:02:50.265Z"
+  }
+]
+```
+- Retrieve [Aggregate data](https://developer.android.com/health-and-fitness/guides/health-connect/develop/aggregate-data) for the last X days as JSON.
 ```json
 [
   {
