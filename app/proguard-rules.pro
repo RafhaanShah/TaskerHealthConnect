@@ -20,6 +20,7 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
+# tasker
 -keepattributes *Annotation*
 -keep public class com.joaomgcd.taskerpluginlibrary.output.TaskerOutputObject { *; }
 -keep public class com.joaomgcd.taskerpluginlibrary.output.TaskerOutputVariable { *; }
@@ -45,8 +46,10 @@
 -keepclassmembers @com.joaomgcd.taskerpluginlibrary.output.TaskerOutputObject class * { *; }
 -keep public class * extends com.joaomgcd.taskerpluginlibrary.runner.TaskerPluginRunner { *; }
 
-
 -keep public class net.dinglisch.android.tasker.PluginResultReceiver { *; }
+
+# health connect classes via reflection
+-keep class androidx.health.connect.client.records.** { *; }
 
 -dontwarn android.**
 -dontwarn com.google.**

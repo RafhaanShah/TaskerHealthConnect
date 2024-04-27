@@ -18,6 +18,7 @@ class HealthDataActionRunner :
     TaskerPluginRunnerAction<HealthDataInput, HealthDataOutput>() {
 
     private val TAG = "HealthDataActionRunner"
+    private val errCode = 1
 
     override val notificationProperties
         get() = NotificationProperties(iconResId = R.drawable.ic_launcher_foreground)
@@ -26,18 +27,18 @@ class HealthDataActionRunner :
         context: Context,
         input: TaskerInput<HealthDataInput>
     ): TaskerPluginResult<HealthDataOutput> {
-        Log.d(TAG, "run: $input")
+        Log.d(TAG, "run: ${input.regular}")
         val repository = HealthConnectRepository(context)
-        val timeMs = runCatching { input.regular.fromTimeMillis.toLong() }.getOrElse {
+        val timeMs = runCatching { input.regular.fromTimeMillis.toLong() }.getOrElse { e ->
             Log.e(TAG, "invalid input: ${input.regular.fromTimeMillis}")
-            return TaskerPluginResultErrorWithOutput(Throwable(it))
+            return TaskerPluginResultErrorWithOutput(errCode, e.toString())
         }
         val offsetTime = Instant.ofEpochMilli(timeMs)
 
         if (!repository.isAvailable() || runBlocking { !repository.hasPermissions() }) {
             val errMessage = context.getString(R.string.health_connect_unavailable_or_permissions)
-            Log.d(TAG, errMessage)
-            return TaskerPluginResultErrorWithOutput(Throwable(errMessage))
+            Log.e(TAG, errMessage)
+            return TaskerPluginResultErrorWithOutput(errCode, errMessage)
         }
 
         return try {
@@ -50,8 +51,8 @@ class HealthDataActionRunner :
             }
             TaskerPluginResultSucess(HealthDataOutput(healthData = data.toString()))
         } catch (e: Exception) {
-            Log.e(TAG, "run error:", e)
-            TaskerPluginResultErrorWithOutput(e)
+            Log.e(TAG, "run error", e)
+            TaskerPluginResultErrorWithOutput(errCode, e.toString())
         }
     }
 }
