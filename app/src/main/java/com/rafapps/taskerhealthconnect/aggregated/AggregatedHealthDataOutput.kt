@@ -13,4 +13,8 @@ class AggregatedHealthDataOutput(
         labelResId = R.string.aggregated_health_data,
         htmlLabelResId = R.string.aggregated_health_data_description
     ) val aggregatedHealthData: String = "[]"
-)
+) {
+    override fun toString(): String {
+        return "aggregatedHealthData: $aggregatedHealthData"
+    }
+}

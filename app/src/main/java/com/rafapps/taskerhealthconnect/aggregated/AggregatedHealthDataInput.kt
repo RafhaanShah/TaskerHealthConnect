@@ -12,5 +12,9 @@ class AggregatedHealthDataInput @JvmOverloads constructor(
         key = "days",
         labelResId = R.string.days,
         descriptionResId = R.string.days_description
-    ) var days: Long = 0L
-)
+    ) var days: String = "0"
+) {
+    override fun toString(): String {
+        return "days: $days"
+    }
+}

@@ -45,7 +45,7 @@ class AggregatedHealthDataActivity : AppCompatActivity(),
         )
 
     override fun assignFromInput(input: TaskerInput<AggregatedHealthDataInput>) {
-        binding.daysText.editText?.setText(input.regular.days.toString())
+        binding.daysText.editText?.setText(input.regular.days)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -93,10 +93,8 @@ class AggregatedHealthDataActivity : AppCompatActivity(),
         }
     }
 
-    private fun getInputDays(): Long {
-        return runCatching {
-            binding.daysText.editText?.text.toString().toLong()
-        }.getOrDefault(0L)
+    private fun getInputDays(): String {
+        return binding.daysText.editText?.text.toString()
     }
 
     private fun hideKeyboard() {
@@ -110,7 +108,8 @@ class AggregatedHealthDataActivity : AppCompatActivity(),
         binding.debugButton.isVisible = BuildConfig.DEBUG
         binding.debugButton.setOnClickListener {
             lifecycleScope.launch {
-                val startTime = AggregatedHealthDataActionRunner.daysToOffsetTime(getInputDays())
+                val startTime = AggregatedHealthDataActionRunner.daysToOffsetTime(
+                    getInputDays().toLongOrNull() ?: 0L)
                 val endTime = Instant.now()
                 runCatching {
                     val output = repository.getAggregateData(startTime, endTime)

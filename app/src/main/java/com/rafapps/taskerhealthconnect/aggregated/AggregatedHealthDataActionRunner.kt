@@ -27,7 +27,11 @@ class AggregatedHealthDataActionRunner :
     ): TaskerPluginResult<AggregatedHealthDataOutput> {
         Log.d(TAG, "run: $input")
         val repository = HealthConnectRepository(context)
-        val offsetTime = daysToOffsetTime(input.regular.days)
+        val days = runCatching { input.regular.days.toLong() }.getOrElse {
+            Log.e(TAG, "invalid input: ${input.regular.days}")
+            return TaskerPluginResultErrorWithOutput(Throwable(it))
+        }
+        val offsetTime = daysToOffsetTime(days)
 
         if (!repository.isAvailable() || runBlocking { !repository.hasPermissions() }) {
             val errMessage = context.getString(R.string.health_connect_unavailable_or_permissions)
