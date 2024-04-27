@@ -37,59 +37,96 @@ import androidx.health.connect.client.records.Vo2MaxRecord
 import androidx.health.connect.client.records.WeightRecord
 import androidx.health.connect.client.records.WheelchairPushesRecord
 
-val singleRecordTypes = setOf(
-   BasalBodyTemperatureRecord::class,
-   BloodGlucoseRecord::class,
-   BloodPressureRecord::class,
-   BodyFatRecord::class,
-   BodyTemperatureRecord::class,
-   BodyWaterMassRecord::class,
-   BoneMassRecord::class,
-   CervicalMucusRecord::class,
-   CyclingPedalingCadenceRecord::class,
-   HeartRateVariabilityRmssdRecord::class,
-   LeanBodyMassRecord::class,
-   MenstruationFlowRecord::class,
-   OvulationTestRecord::class,
-   OxygenSaturationRecord::class,
-   RespiratoryRateRecord::class,
-   SexualActivityRecord::class,
-   SpeedRecord::class,
-   StepsCadenceRecord::class,
-   Vo2MaxRecord::class,
+// all supported record types
+val recordTypes = setOf(
+    ActiveCaloriesBurnedRecord::class,
+    BasalBodyTemperatureRecord::class,
+    BasalMetabolicRateRecord::class,
+    BloodGlucoseRecord::class,
+    BloodPressureRecord::class,
+    BodyFatRecord::class,
+    BodyTemperatureRecord::class,
+    BodyWaterMassRecord::class,
+    BoneMassRecord::class,
+    CervicalMucusRecord::class,
+    CyclingPedalingCadenceRecord::class,
+    DistanceRecord::class,
+    ElevationGainedRecord::class,
+    ExerciseSessionRecord::class,
+    FloorsClimbedRecord::class,
+    HeartRateRecord::class,
+    HeartRateVariabilityRmssdRecord::class,
+    HeightRecord::class,
+    HydrationRecord::class,
+    LeanBodyMassRecord::class,
+    MenstruationFlowRecord::class,
+    NutritionRecord::class,
+    OvulationTestRecord::class,
+    OxygenSaturationRecord::class,
+    PowerRecord::class,
+    RespiratoryRateRecord::class,
+    RestingHeartRateRecord::class,
+    SexualActivityRecord::class,
+    SleepSessionRecord::class,
+    SpeedRecord::class,
+    StepsCadenceRecord::class,
+    StepsRecord::class,
+    TotalCaloriesBurnedRecord::class,
+    Vo2MaxRecord::class,
+    WeightRecord::class,
+    WheelchairPushesRecord::class,
 )
 
-val aggregateRecordTypes = setOf(
-   ActiveCaloriesBurnedRecord::class,
-   BasalMetabolicRateRecord::class,
-   DistanceRecord::class,
-   ElevationGainedRecord::class,
-   ExerciseSessionRecord::class,
-   FloorsClimbedRecord::class,
-   HeartRateRecord::class,
-   HeightRecord::class,
-   HydrationRecord::class,
-   NutritionRecord::class,
-   PowerRecord::class,
-   RestingHeartRateRecord::class,
-   SleepSessionRecord::class,
-   StepsRecord::class,
-   TotalCaloriesBurnedRecord::class,
-   WeightRecord::class,
-   WheelchairPushesRecord::class,
+// fields common to most record types
+val commonFields = setOf("time", "startTime", "endTime")
+
+// fields that return a list of records
+val listFields = setOf("samples")
+
+// fields used by list record values
+val listValueFields = setOf(
+    "beatsPerMinute",
+    "power",
+    "rate",
+    "revolutionsPerMinute",
+    "speed",
+)
+
+// fields that return a value for a record
+val recordFields = setOf(
+    "appearance",
+    "count",
+    "diastolic",
+    "flow",
+    "heartRateVariabilityMillis",
+    "level",
+    "mass",
+    "mealType",
+    "measurementLocation",
+    "percentage",
+    "protectionUsed",
+    "rate",
+    "relationToMeal",
+    "result",
+    "sensation",
+    "specimenSource",
+    "systolic",
+    "temperature",
+    "temperature",
+    "vo2MillilitersPerMinuteKilogram"
 )
 
 // from androidx/health/connect/client/impl/platform/records/AggregationMappings
- val doubleAggregations = mapOf(
+val doubleAggregations = mapOf(
     "FloorsClimbedRecord_FLOORS_CLIMBED_TOTAL" to FloorsClimbedRecord.FLOORS_CLIMBED_TOTAL,
 )
 
- val durationAggregations = setOf(
+val durationAggregations = setOf(
     "ExerciseSessionRecord_EXERCISE_DURATION_TOTAL" to ExerciseSessionRecord.EXERCISE_DURATION_TOTAL,
     "SleepSessionRecord_SLEEP_DURATION_TOTAL" to SleepSessionRecord.SLEEP_DURATION_TOTAL,
 )
 
- val energyAggregations = setOf(
+val energyAggregations = setOf(
     "ActiveCaloriesBurnedRecord_ACTIVE_CALORIES_TOTAL" to ActiveCaloriesBurnedRecord.ACTIVE_CALORIES_TOTAL,
     "BasalMetabolicRateRecord_BASAL_CALORIES_TOTAL" to BasalMetabolicRateRecord.BASAL_CALORIES_TOTAL,
     "NutritionRecord_ENERGY_TOTAL" to NutritionRecord.ENERGY_TOTAL,
@@ -97,7 +134,7 @@ val aggregateRecordTypes = setOf(
     "TotalCaloriesBurnedRecord_ENERGY_TOTAL" to TotalCaloriesBurnedRecord.ENERGY_TOTAL,
 )
 
- val lengthAggregations = mapOf(
+val lengthAggregations = mapOf(
     "DistanceRecord_DISTANCE_TOTAL" to DistanceRecord.DISTANCE_TOTAL,
     "ElevationGainedRecord_ELEVATION_GAINED_TOTAL" to ElevationGainedRecord.ELEVATION_GAINED_TOTAL,
     "HeightRecord_HEIGHT_AVG" to HeightRecord.HEIGHT_AVG,
@@ -105,7 +142,7 @@ val aggregateRecordTypes = setOf(
     "HeightRecord_HEIGHT_MAX" to HeightRecord.HEIGHT_MAX,
 )
 
- val longAggregations = mapOf(
+val longAggregations = mapOf(
     "HeartRateRecord_BPM_AVG" to HeartRateRecord.BPM_AVG,
     "HeartRateRecord_BPM_MIN" to HeartRateRecord.BPM_MIN,
     "HeartRateRecord_BPM_MAX" to HeartRateRecord.BPM_MAX,
@@ -117,7 +154,7 @@ val aggregateRecordTypes = setOf(
     "WheelchairPushesRecord_COUNT_TOTAL" to WheelchairPushesRecord.COUNT_TOTAL
 )
 
- val gramsAggregations = mapOf(
+val gramsAggregations = mapOf(
     "NutritionRecord_ENERGY_TOTAL" to NutritionRecord.ENERGY_TOTAL,
     "NutritionRecord_ENERGY_FROM_FAT_TOTAL" to NutritionRecord.ENERGY_FROM_FAT_TOTAL,
     "NutritionRecord_BIOTIN_TOTAL" to NutritionRecord.BIOTIN_TOTAL,
@@ -161,23 +198,23 @@ val aggregateRecordTypes = setOf(
     "NutritionRecord_ZINC_TOTAL" to NutritionRecord.ZINC_TOTAL
 )
 
- val kilogramsAggregations = mapOf(
+val kilogramsAggregations = mapOf(
     "WeightRecord_WEIGHT_AVG" to WeightRecord.WEIGHT_AVG,
     "WeightRecord_WEIGHT_MIN" to WeightRecord.WEIGHT_MIN,
     "WeightRecord_WEIGHT_MAX" to WeightRecord.WEIGHT_MAX,
 )
 
- val powerAggregations = mapOf(
+val powerAggregations = mapOf(
     "PowerRecord_POWER_AVG" to PowerRecord.POWER_AVG,
     "PowerRecord_POWER_MAX" to PowerRecord.POWER_MAX,
     "PowerRecord_POWER_MIN" to PowerRecord.POWER_MIN,
 )
 
- val volumeAggregations = mapOf(
+val volumeAggregations = mapOf(
     "HydrationRecord_VOLUME_TOTAL" to HydrationRecord.VOLUME_TOTAL,
 )
 
- val aggregateMetricTypes =
+val aggregateMetricTypes =
     doubleAggregations + durationAggregations + energyAggregations + lengthAggregations +
             longAggregations + gramsAggregations + kilogramsAggregations + powerAggregations +
             volumeAggregations

@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- For Tasker PLugins -->
+    <!-- For Tasker Plugins -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <!-- Health Connect Permissions https://developer.android.com/health-and-fitness/guides/health-connect/plan/data-types -->
