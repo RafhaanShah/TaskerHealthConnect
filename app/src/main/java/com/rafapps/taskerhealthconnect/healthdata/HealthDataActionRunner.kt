@@ -45,8 +45,7 @@ class HealthDataActionRunner :
             val data = runBlocking {
                 repository.getData(
                     input.regular.recordType,
-                    startTime = offsetTime,
-                    endTime = Instant.now()
+                    startTime = offsetTime
                 )
             }
             TaskerPluginResultSucess(HealthDataOutput(healthData = data.toString()))

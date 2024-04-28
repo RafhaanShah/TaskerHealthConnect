@@ -37,11 +37,10 @@ import androidx.health.connect.client.records.Vo2MaxRecord
 import androidx.health.connect.client.records.WeightRecord
 import androidx.health.connect.client.records.WheelchairPushesRecord
 
-// all supported record types
-val recordTypes = setOf(
-    ActiveCaloriesBurnedRecord::class,
+
+// record types that do not support aggregations
+val singleRecordTypes = setOf(
     BasalBodyTemperatureRecord::class,
-    BasalMetabolicRateRecord::class,
     BloodGlucoseRecord::class,
     BloodPressureRecord::class,
     BodyFatRecord::class,
@@ -50,29 +49,35 @@ val recordTypes = setOf(
     BoneMassRecord::class,
     CervicalMucusRecord::class,
     CyclingPedalingCadenceRecord::class,
+    HeartRateVariabilityRmssdRecord::class,
+    LeanBodyMassRecord::class,
+    MenstruationFlowRecord::class,
+    OvulationTestRecord::class,
+    OxygenSaturationRecord::class,
+    RespiratoryRateRecord::class,
+    SexualActivityRecord::class,
+    SpeedRecord::class,
+    StepsCadenceRecord::class,
+    Vo2MaxRecord::class,
+)
+
+// record types that do support aggregations
+val aggregateRecordTypes = setOf(
+    ActiveCaloriesBurnedRecord::class,
+    BasalMetabolicRateRecord::class,
     DistanceRecord::class,
     ElevationGainedRecord::class,
     ExerciseSessionRecord::class,
     FloorsClimbedRecord::class,
     HeartRateRecord::class,
-    HeartRateVariabilityRmssdRecord::class,
     HeightRecord::class,
     HydrationRecord::class,
-    LeanBodyMassRecord::class,
-    MenstruationFlowRecord::class,
     NutritionRecord::class,
-    OvulationTestRecord::class,
-    OxygenSaturationRecord::class,
     PowerRecord::class,
-    RespiratoryRateRecord::class,
     RestingHeartRateRecord::class,
-    SexualActivityRecord::class,
     SleepSessionRecord::class,
-    SpeedRecord::class,
-    StepsCadenceRecord::class,
     StepsRecord::class,
     TotalCaloriesBurnedRecord::class,
-    Vo2MaxRecord::class,
     WeightRecord::class,
     WheelchairPushesRecord::class,
 )
@@ -93,7 +98,7 @@ val listValueFields = setOf(
 )
 
 // fields that return a value for a record
-val recordFields = setOf(
+val recordValueFields = setOf(
     "appearance",
     "count",
     "diastolic",
@@ -112,8 +117,7 @@ val recordFields = setOf(
     "specimenSource",
     "systolic",
     "temperature",
-    "temperature",
-    "vo2MillilitersPerMinuteKilogram"
+    "vo2MillilitersPerMinuteKilogram",
 )
 
 // from androidx/health/connect/client/impl/platform/records/AggregationMappings

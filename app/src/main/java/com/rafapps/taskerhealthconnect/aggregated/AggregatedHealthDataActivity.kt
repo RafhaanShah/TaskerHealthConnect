@@ -108,11 +108,10 @@ class AggregatedHealthDataActivity : AppCompatActivity(),
         binding.debugButton.isVisible = BuildConfig.DEBUG
         binding.debugButton.setOnClickListener {
             lifecycleScope.launch {
-                val startTime = AggregatedHealthDataActionRunner.daysToOffsetTime(
-                    getInputDays().toLongOrNull() ?: 0L)
-                val endTime = Instant.now()
                 runCatching {
-                    val output = repository.getAggregateData(startTime, endTime)
+                    val startTime = AggregatedHealthDataActionRunner
+                        .daysToOffsetTime(getInputDays().toLong())
+                    val output = repository.getAggregateData(startTime)
                     Log.d(TAG, output.toString(2))
                 }.onFailure { err ->
                     Log.e(TAG, "Repository error:", err)

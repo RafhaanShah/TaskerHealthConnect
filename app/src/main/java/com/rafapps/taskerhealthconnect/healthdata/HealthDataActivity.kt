@@ -111,14 +111,10 @@ class HealthDataActivity : AppCompatActivity(),
         binding.debugButton.isVisible = BuildConfig.DEBUG
         binding.debugButton.setOnClickListener {
             lifecycleScope.launch {
-                val recordType = getInputRecordType()
-                val startTime =
-                    runCatching { Instant.ofEpochMilli(getInputFromTime().toLong()) }.getOrElse {
-                        Instant.now().minusSeconds(60 * 60)
-                    }
-                val endTime = Instant.now()
                 runCatching {
-                    val output = repository.getData(recordType, startTime, endTime)
+                    val recordType = getInputRecordType()
+                    val startTime = Instant.ofEpochMilli(getInputFromTime().toLong())
+                    val output = repository.getData(recordType, startTime)
                     Log.d(TAG, output.toString(2))
                 }.onFailure { err ->
                     Log.e(TAG, "Repository error:", err)

@@ -38,7 +38,8 @@ class HealthConnectRepository(private val context: Context) {
     private val client by lazy { HealthConnectClient.getOrCreate(context) }
 
     val permissions by lazy {
-        recordTypes.map { HealthPermission.getReadPermission(it) }.toSet()
+        (singleRecordTypes + aggregateRecordTypes)
+            .map { HealthPermission.getReadPermission(it) }.toSet()
     }
 
     fun installHealthConnect() {
@@ -60,15 +61,15 @@ class HealthConnectRepository(private val context: Context) {
     }
 
     suspend fun getAggregateData(
-        startTime: Instant, endTime: Instant
+        startTime: Instant
     ): JSONArray {
-        Log.d(TAG, "getAggregateData: $startTime -> $endTime")
+        Log.d(TAG, "getAggregateData: $startTime")
         var dataPointSize = 0
         val result = JSONArray()
         val response = client.aggregateGroupByDuration(
             AggregateGroupByDurationRequest(
                 metrics = aggregateMetricTypes.values.toSet(),
-                timeRangeFilter = TimeRangeFilter.between(startTime, endTime),
+                timeRangeFilter = TimeRangeFilter.after(startTime),
                 timeRangeSlicer = Duration.ofDays(1)
             )
         )
@@ -91,14 +92,15 @@ class HealthConnectRepository(private val context: Context) {
             result.put(JSONObject(data.toMap()))
         }
 
-        Log.d(TAG, "getAggregateData result size: ${response.size}, dataPointSize: $dataPointSize")
+        Log.d(TAG, "getAggregateData result size: ${response.size}," +
+                " dataPointSize: $dataPointSize")
         return result
     }
 
 
     @Suppress("UNCHECKED_CAST")
-    suspend fun getData(recordClass: String, startTime: Instant, endTime: Instant): JSONArray {
-        Log.d(TAG, "getData: $recordClass, $startTime -> $endTime")
+    suspend fun getData(recordClass: String, startTime: Instant): JSONArray {
+        Log.d(TAG, "getData: $recordClass, $startTime")
         val result = JSONArray()
         // convert it to a specific record type via reflection, will throw if fails
         val kClass = Class.forName("androidx.health.connect.client.records.$recordClass")
@@ -108,7 +110,7 @@ class HealthConnectRepository(private val context: Context) {
         val response = client.readRecords(
             ReadRecordsRequest(
                 recordType = kClass,
-                timeRangeFilter = TimeRangeFilter.between(startTime, endTime)
+                timeRangeFilter = TimeRangeFilter.after(startTime)
             )
         )
 
@@ -140,7 +142,8 @@ class HealthConnectRepository(private val context: Context) {
             is Velocity -> dataPoint.inMetersPerSecond
             is Volume -> dataPoint.inLiters
             else -> {
-                Log.w(TAG, "unexpected data type: ${dataPoint::class.qualifiedName}")
+                Log.w(TAG, "unexpected data type:" +
+                        " ${dataPoint::class.qualifiedName} -> $dataPoint")
                 dataPoint.toString()
             }
         }
@@ -156,17 +159,23 @@ class HealthConnectRepository(private val context: Context) {
 
         for (prop in properties) {
             val key = prop.name
-            val value = prop.get(record) as Any
+            val value = prop.get(record) ?: continue
 
             if (commonFields.contains(key)) {
                 result[key] = value
-            } else if (recordFields.contains(key)) {
-                if (value is Comparable<Nothing>) {
+                continue
+            }
+
+            if (recordValueFields.contains(key)) {
+                if (value is Comparable<*>) {
                     result[key] = extractDataPointValue(value)
                 } else {
                     Log.w(TAG, "value was not a Comparable: ${value::class.qualifiedName}")
                 }
-            } else if (listFields.contains(key)) {
+                continue
+            }
+
+            if (listFields.contains(key)) {
                 if (value is List<*>) {
                     result[key] = extractListData(value)
                 } else {
@@ -191,9 +200,9 @@ class HealthConnectRepository(private val context: Context) {
 
             for (prop in properties) {
                 val key = prop.name
-                val value = prop.get(sample) as Any
-
+                val value = prop.get(sample) ?: continue
                 if (!listValueFields.contains(key)) continue
+
                 if (value is Comparable<*>) {
                     result.add(extractDataPointValue(value))
                 } else {

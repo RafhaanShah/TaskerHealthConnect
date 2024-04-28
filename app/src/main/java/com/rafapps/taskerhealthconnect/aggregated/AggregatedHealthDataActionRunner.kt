@@ -42,7 +42,7 @@ class AggregatedHealthDataActionRunner :
 
         return try {
             val data = runBlocking {
-                repository.getAggregateData(startTime = offsetTime, endTime = Instant.now())
+                repository.getAggregateData(startTime = offsetTime)
             }
             TaskerPluginResultSucess(AggregatedHealthDataOutput(aggregatedHealthData = data.toString()))
         } catch (e: Exception) {
@@ -52,6 +52,7 @@ class AggregatedHealthDataActionRunner :
     }
 
     companion object {
+        // get the midnight instant of 'daysOffset' days ago
         fun daysToOffsetTime(daysOffset: Long): Instant {
             val zonedDateTime = ZonedDateTime.now()
             return zonedDateTime.minusDays(daysOffset)
