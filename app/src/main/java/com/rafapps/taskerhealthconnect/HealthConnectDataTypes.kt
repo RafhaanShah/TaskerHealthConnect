@@ -82,44 +82,6 @@ val aggregateRecordTypes = setOf(
     WheelchairPushesRecord::class,
 )
 
-// fields common to most record types
-val commonFields = setOf("time", "startTime", "endTime")
-
-// fields that return a list of records
-val listFields = setOf("samples")
-
-// fields used by list record values
-val listValueFields = setOf(
-    "beatsPerMinute",
-    "power",
-    "rate",
-    "revolutionsPerMinute",
-    "speed",
-)
-
-// fields that return a value for a record
-val recordValueFields = setOf(
-    "appearance",
-    "count",
-    "diastolic",
-    "flow",
-    "heartRateVariabilityMillis",
-    "level",
-    "mass",
-    "mealType",
-    "measurementLocation",
-    "percentage",
-    "protectionUsed",
-    "rate",
-    "relationToMeal",
-    "result",
-    "sensation",
-    "specimenSource",
-    "systolic",
-    "temperature",
-    "vo2MillilitersPerMinuteKilogram",
-)
-
 // from androidx/health/connect/client/impl/platform/records/AggregationMappings
 val doubleAggregations = mapOf(
     "FloorsClimbedRecord_FLOORS_CLIMBED_TOTAL" to FloorsClimbedRecord.FLOORS_CLIMBED_TOTAL,

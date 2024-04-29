@@ -19,7 +19,7 @@ class HealthDataInput @JvmOverloads constructor(
         labelResId = R.string.from_time_milliseconds,
         descriptionResId = R.string.from_time_milliseconds_description
     ) var fromTimeMillis: String = Instant.now()
-        .minusSeconds(60 * 60)
+        .minusSeconds(60 * 60 * 24)
         .toEpochMilli()
         .toString()
 ) {

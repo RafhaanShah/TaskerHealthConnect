@@ -2,6 +2,7 @@ package com.rafapps.taskerhealthconnect
 
 import android.content.Context
 import android.content.Intent
+import android.health.connect.datatypes.Metadata
 import android.net.Uri
 import android.util.Log
 import androidx.health.connect.client.HealthConnectClient
@@ -24,6 +25,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.time.Duration
 import java.time.Instant
+import java.time.ZoneOffset
 import kotlin.reflect.KClass
 import kotlin.reflect.KVisibility
 import kotlin.reflect.full.memberProperties
@@ -83,8 +85,10 @@ class HealthConnectRepository(private val context: Context) {
             // check for each data type in each bucket
             aggregateMetricTypes.forEach { metricType ->
                 aggregationResult.result[metricType.value]?.let { dataPoint ->
-                    dataPointSize++
-                    data[metricType.key] = extractDataPointValue(dataPoint)
+                     extractDataPointValue(dataPoint)?.let {
+                         dataPointSize++
+                         data[metricType.key] = it
+                    }
                 }
             }
 
@@ -124,13 +128,15 @@ class HealthConnectRepository(private val context: Context) {
     }
 
     // use the actual data type to get the correct value
-    private fun extractDataPointValue(dataPoint: Comparable<*>): Any {
+    private fun extractDataPointValue(dataPoint: Comparable<*>): Any? {
         return when (dataPoint) {
+            is Boolean -> dataPoint
             is BloodGlucose -> dataPoint.inMilligramsPerDeciliter
             is Double -> dataPoint
             is Duration -> dataPoint.toMinutes()
             is Energy -> dataPoint.inCalories
             is Length -> dataPoint.inMeters
+            is Instant -> dataPoint.toString()
             is Int -> dataPoint
             is Long -> dataPoint
             is Mass -> dataPoint.inKilograms
@@ -141,11 +147,7 @@ class HealthConnectRepository(private val context: Context) {
             is Temperature -> dataPoint.inCelsius
             is Velocity -> dataPoint.inMetersPerSecond
             is Volume -> dataPoint.inLiters
-            else -> {
-                Log.w(TAG, "unexpected data type:" +
-                        " ${dataPoint::class.qualifiedName} -> $dataPoint")
-                dataPoint.toString()
-            }
+            else -> null
         }
     }
 
@@ -153,37 +155,18 @@ class HealthConnectRepository(private val context: Context) {
     @Suppress("UNCHECKED_CAST")
     private fun extractDataRecordValue(record: Record): Map<String, Any> {
         val result = mutableMapOf<String, Any>()
-
         val properties = (record::class as KClass<Record>)
             .memberProperties.filter { it.visibility == KVisibility.PUBLIC }
 
         for (prop in properties) {
-            val key = prop.name
             val value = prop.get(record) ?: continue
+            val key = prop.name
 
-            if (commonFields.contains(key)) {
-                result[key] = value
-                continue
-            }
-
-            if (recordValueFields.contains(key)) {
-                if (value is Comparable<*>) {
-                    result[key] = extractDataPointValue(value)
-                } else {
-                    Log.w(TAG, "value was not a Comparable: ${value::class.qualifiedName}")
-                }
-                continue
-            }
-
-            if (listFields.contains(key)) {
-                if (value is List<*>) {
-                    result[key] = extractListData(value)
-                } else {
-                    Log.w(TAG, "value was not a List: ${value::class.qualifiedName}")
-                }
+            when(value) {
+                is Comparable<*> ->  extractDataPointValue(value)?.let { result[key] = it }
+                is List<*> -> result[key] = extractListData(value)
             }
         }
-
         return result
     }
 
@@ -194,23 +177,19 @@ class HealthConnectRepository(private val context: Context) {
 
         for (sample in samples) {
             if (sample == null) continue
-
+            val obj = mutableMapOf<String, Any>()
             val properties = (sample::class as KClass<Any>)
                 .memberProperties.filter { it.visibility == KVisibility.PUBLIC }
 
             for (prop in properties) {
-                val key = prop.name
                 val value = prop.get(sample) ?: continue
-                if (!listValueFields.contains(key)) continue
-
+                val key = prop.name
                 if (value is Comparable<*>) {
-                    result.add(extractDataPointValue(value))
-                } else {
-                    Log.w(TAG, "value was not a Comparable: ${value::class.qualifiedName}")
+                    extractDataPointValue(value)?.let { obj[key] = it }
                 }
             }
+            result.add(obj)
         }
-
         return result
     }
 }
