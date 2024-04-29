@@ -1,7 +1,13 @@
 package com.rafapps.taskerhealthconnect
 
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.isVisible
@@ -33,6 +39,26 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.textViewVersion.text = getString(R.string.version, BuildConfig.VERSION_NAME)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater: MenuInflater = menuInflater
+        inflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.check_updates -> {
+                Log.d(TAG, "onOptionsItemSelected check_updates")
+                val url =
+                    Uri.parse("https://github.com/RafhaanShah/TaskerHealthConnect/releases")
+                runCatching { startActivity(Intent(Intent.ACTION_VIEW, url)) }
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     override fun onResume() {

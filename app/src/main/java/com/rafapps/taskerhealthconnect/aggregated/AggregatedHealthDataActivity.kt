@@ -17,7 +17,9 @@ import com.rafapps.taskerhealthconnect.BuildConfig
 import com.rafapps.taskerhealthconnect.HealthConnectRepository
 import com.rafapps.taskerhealthconnect.R
 import com.rafapps.taskerhealthconnect.databinding.ActivityAggregatedHealthDataBinding
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.time.Instant
 
 class AggregatedHealthDataActivity : AppCompatActivity(),
@@ -108,13 +110,15 @@ class AggregatedHealthDataActivity : AppCompatActivity(),
         binding.debugButton.isVisible = BuildConfig.DEBUG
         binding.debugButton.setOnClickListener {
             lifecycleScope.launch {
-                runCatching {
-                    val startTime = AggregatedHealthDataActionRunner
-                        .daysToOffsetTime(getInputDays().toLong())
-                    val output = repository.getAggregateData(startTime)
-                    Log.d(TAG, output.toString(2))
-                }.onFailure { err ->
-                    Log.e(TAG, "Repository error:", err)
+                withContext(Dispatchers.IO) {
+                    runCatching {
+                        val startTime = AggregatedHealthDataActionRunner
+                            .daysToOffsetTime(getInputDays().toLong())
+                        val output = repository.getAggregateData(startTime)
+                        Log.d(TAG, output.toString(2))
+                    }.onFailure { err ->
+                        Log.e(TAG, "Repository error:", err)
+                    }
                 }
             }
         }

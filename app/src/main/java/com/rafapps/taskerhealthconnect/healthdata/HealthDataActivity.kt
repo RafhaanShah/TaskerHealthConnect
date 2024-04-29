@@ -15,7 +15,9 @@ import com.rafapps.taskerhealthconnect.BuildConfig
 import com.rafapps.taskerhealthconnect.HealthConnectRepository
 import com.rafapps.taskerhealthconnect.R
 import com.rafapps.taskerhealthconnect.databinding.ActivityHealthDataBinding
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.time.Instant
 
 class HealthDataActivity : AppCompatActivity(),
@@ -111,13 +113,15 @@ class HealthDataActivity : AppCompatActivity(),
         binding.debugButton.isVisible = BuildConfig.DEBUG
         binding.debugButton.setOnClickListener {
             lifecycleScope.launch {
-                runCatching {
-                    val recordType = getInputRecordType()
-                    val startTime = Instant.ofEpochMilli(getInputFromTime().toLong())
-                    val output = repository.getData(recordType, startTime)
-                    Log.d(TAG, output.toString(2))
-                }.onFailure { err ->
-                    Log.e(TAG, "Repository error:", err)
+                withContext(Dispatchers.IO) {
+                    runCatching {
+                        val recordType = getInputRecordType()
+                        val startTime = Instant.ofEpochMilli(getInputFromTime().toLong())
+                        val output = repository.getData(recordType, startTime)
+                        Log.d(TAG, output.toString(2))
+                    }.onFailure { err ->
+                        Log.e(TAG, "Repository error:", err)
+                    }
                 }
             }
         }

@@ -18,4 +18,6 @@
     <string name="aggregated_health_data_description">Aggregated Health Data will be returned as a JSON array, each object in the array corresponds to 1 day of data. The fields of the object will contain specific data for that day. Fields will not be present if there is no data for that type for that day.</string>
     <string name="health_data">Health Data</string>
     <string name="health_data_description">Health Data will be returned as a JSON array, each object in the array corresponds to record of data. The fields of the object will contain specific data for type of record.</string>
+    <string name="version">Version %s</string>
+    <string name="check_updates">Check for updates</string>
 </resources>

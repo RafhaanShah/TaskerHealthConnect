@@ -21,6 +21,18 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="@string/permissions_not_granted" />
 
+    <TextView
+        android:id="@+id/textViewVersion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin"
+        android:gravity="center"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/button"
+        tools:text="Version 0.0.1" />
+
     <Button
         android:id="@+id/button"
         android:layout_width="0dp"
