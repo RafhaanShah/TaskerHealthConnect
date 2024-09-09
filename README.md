@@ -64,6 +64,12 @@
 - Download the [Health Connect Toolbox](https://developer.android.com/health-and-fitness/guides/health-connect/test/health-connect-toolbox) to read and write test data
 - Activities will have additional debug buttons to log output info on debug builds
 
+## Issues / Troubleshooting
+- This plugin simply reads data from Health Connect and provides it to Tasker
+- It does not have anything to do with any data from any other source
+- It does not modify or manipulate this data in any way except for unit conversions, which you can see the implementation of in [HealthConnectRepository](app/src/main/java/com/rafapps/taskerhealthconnect/HealthConnectRepository.kt)
+- To view your existing Health Connect data, use the [Health Connect Toolbox](https://developer.android.com/health-and-fitness/guides/health-connect/test/health-connect-toolbox)
+
 ## Contributing / Feature Requests
 - Contributions via pull requests are welcome!
 - Health Connect documentation can be found [here](https://developer.android.com/guide/health-and-fitness/health-connect/get-started)
