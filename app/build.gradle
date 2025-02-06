@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace 'com.rafapps.taskerhealthconnect'
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         applicationId "com.rafapps.taskerhealthconnect"
@@ -50,22 +50,30 @@ android {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
-    implementation 'androidx.core:core-ktx:1.13.0'
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.7.7'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.7.7'
+    implementation 'androidx.core:core-ktx:1.15.0'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.8.6'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.8.6'
+
+    implementation 'com.google.android.material:material:1.12.0'
 
     // https://developer.android.com/jetpack/androidx/releases/health-connect
-    implementation "androidx.health.connect:connect-client:1.1.0-alpha07"
-
-    implementation 'com.google.android.material:material:1.11.0'
+    implementation "androidx.health.connect:connect-client:1.1.0-alpha11"
 
     // https://tasker.joaoapps.com/pluginslibrary.html
     implementation 'com.joaomgcd:taskerpluginlibrary:0.4.10'
 
-    testImplementation 'junit:junit:4.13.2'
 
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    // kotlinx.serialization = cannot auto generate for classes in other modules
+    // gson = does not handle default values
+    // moshi = refuses to work with androidx classes
+    // klaxon = slower, more complicated for runtime class types
+    // so use jackson https://github.com/FasterXML/jackson-module-kotlin
+    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:2.18.2"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.18.2"
+
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.2.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.6.1'
 }

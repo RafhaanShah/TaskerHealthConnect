@@ -2,7 +2,6 @@ package com.rafapps.taskerhealthconnect
 
 import android.content.Context
 import android.content.Intent
-import android.health.connect.datatypes.Metadata
 import android.net.Uri
 import android.util.Log
 import androidx.health.connect.client.HealthConnectClient
@@ -10,6 +9,7 @@ import androidx.health.connect.client.permission.HealthPermission
 import androidx.health.connect.client.records.Record
 import androidx.health.connect.client.request.AggregateGroupByDurationRequest
 import androidx.health.connect.client.request.ReadRecordsRequest
+import androidx.health.connect.client.response.InsertRecordsResponse
 import androidx.health.connect.client.time.TimeRangeFilter
 import androidx.health.connect.client.units.BloodGlucose
 import androidx.health.connect.client.units.Energy
@@ -21,11 +21,12 @@ import androidx.health.connect.client.units.Pressure
 import androidx.health.connect.client.units.Temperature
 import androidx.health.connect.client.units.Velocity
 import androidx.health.connect.client.units.Volume
+import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.type.TypeFactory
 import org.json.JSONArray
 import org.json.JSONObject
 import java.time.Duration
 import java.time.Instant
-import java.time.ZoneOffset
 import kotlin.reflect.KClass
 import kotlin.reflect.KVisibility
 import kotlin.reflect.full.memberProperties
@@ -41,7 +42,13 @@ class HealthConnectRepository(private val context: Context) {
 
     val permissions by lazy {
         (singleRecordTypes + aggregateRecordTypes)
-            .map { HealthPermission.getReadPermission(it) }.toSet()
+            .flatMap {
+                listOf(
+                    HealthPermission.getReadPermission(it),
+                    HealthPermission.getWritePermission(it)
+                )
+            }
+            .toSet()
     }
 
     fun installHealthConnect() {
@@ -79,15 +86,16 @@ class HealthConnectRepository(private val context: Context) {
         // loop through the "buckets" of data where each bucket is 1 day
         response.forEach { aggregationResult ->
             val data = mutableMapOf<String, Any>()
-            data["startTime"] = aggregationResult.startTime
-            data["endTime"] = aggregationResult.endTime
+            data["startTime"] = aggregationResult.startTime.toEpochMilli()
+            data["endTime"] = aggregationResult.endTime.toEpochMilli()
+            data["zoneOffset"] = aggregationResult.zoneOffset.toString()
 
             // check for each data type in each bucket
             aggregateMetricTypes.forEach { metricType ->
                 aggregationResult.result[metricType.value]?.let { dataPoint ->
-                     extractDataPointValue(dataPoint)?.let {
-                         dataPointSize++
-                         data[metricType.key] = it
+                    extractDataPointValue(dataPoint)?.let {
+                        dataPointSize++
+                        data[metricType.key] = it
                     }
                 }
             }
@@ -96,11 +104,12 @@ class HealthConnectRepository(private val context: Context) {
             result.put(JSONObject(data.toMap()))
         }
 
-        Log.d(TAG, "getAggregateData result size: ${response.size}," +
-                " dataPointSize: $dataPointSize")
+        Log.d(
+            TAG, "getAggregateData result size: ${response.size}," +
+                    " dataPointSize: $dataPointSize"
+        )
         return result
     }
-
 
     @Suppress("UNCHECKED_CAST")
     suspend fun getData(recordClass: String, startTime: Instant): JSONArray {
@@ -133,10 +142,10 @@ class HealthConnectRepository(private val context: Context) {
             is Boolean -> dataPoint
             is BloodGlucose -> dataPoint.inMilligramsPerDeciliter
             is Double -> dataPoint
-            is Duration -> dataPoint.toMinutes()
+            is Duration -> dataPoint.toMillis()
             is Energy -> dataPoint.inCalories
             is Length -> dataPoint.inMeters
-            is Instant -> dataPoint.toString()
+            is Instant -> dataPoint.toEpochMilli()
             is Int -> dataPoint
             is Long -> dataPoint
             is Mass -> dataPoint.inKilograms
@@ -162,8 +171,8 @@ class HealthConnectRepository(private val context: Context) {
             val value = prop.get(record) ?: continue
             val key = prop.name
 
-            when(value) {
-                is Comparable<*> ->  extractDataPointValue(value)?.let { result[key] = it }
+            when (value) {
+                is Comparable<*> -> extractDataPointValue(value)?.let { result[key] = it }
                 is List<*> -> result[key] = extractListData(value)
             }
         }
@@ -191,5 +200,27 @@ class HealthConnectRepository(private val context: Context) {
             result.add(obj)
         }
         return result
+    }
+
+    suspend fun insertData(
+        recordClass: String, recordJson: String
+    ): List<String> {
+        Log.d(TAG, "insertData: $recordClass")
+        val kClass = Class.forName("androidx.health.connect.client.records.$recordClass")
+        val result: InsertRecordsResponse
+        val jsonNode: JsonNode = objectMapper.readTree(recordJson)
+
+        if (jsonNode.isArray) {
+            val type =
+                TypeFactory.defaultInstance().constructCollectionType(List::class.java, kClass)
+            val record: List<Record> = objectMapper.treeToValue(jsonNode, type)
+            result = client.insertRecords(record)
+        } else {
+            val record: Record = objectMapper.treeToValue(jsonNode, kClass) as Record
+            result = client.insertRecords(listOf(record))
+        }
+
+        Log.d(TAG, "insertData: result size ${result.recordIdsList.size}")
+        return result.recordIdsList
     }
 }
