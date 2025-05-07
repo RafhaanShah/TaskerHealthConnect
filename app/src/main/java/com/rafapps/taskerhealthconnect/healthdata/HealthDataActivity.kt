@@ -118,7 +118,7 @@ class HealthDataActivity : AppCompatActivity(),
                         val recordType = getInputRecordType()
                         val startTime = Instant.ofEpochMilli(getInputFromTime().toLong())
                         val output = repository.getData(recordType, startTime)
-                        Log.d(TAG, output.toString(2))
+                        Log.d(TAG, output.toString())
                     }.onFailure { err ->
                         Log.e(TAG, "Repository error:", err)
                     }

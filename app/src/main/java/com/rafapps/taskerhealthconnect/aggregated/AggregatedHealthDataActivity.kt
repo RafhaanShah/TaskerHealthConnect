@@ -115,7 +115,7 @@ class AggregatedHealthDataActivity : AppCompatActivity(),
                         val startTime = AggregatedHealthDataActionRunner
                             .daysToOffsetTime(getInputDays().toLong())
                         val output = repository.getAggregateData(startTime)
-                        Log.d(TAG, output.toString(2))
+                        Log.d(TAG, output.toString())
                     }.onFailure { err ->
                         Log.e(TAG, "Repository error:", err)
                     }
