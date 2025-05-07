@@ -2,8 +2,8 @@ package com.rafapps.taskerhealthconnect
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.util.Log
+import androidx.core.net.toUri
 import androidx.health.connect.client.HealthConnectClient
 import androidx.health.connect.client.permission.HealthPermission
 import androidx.health.connect.client.records.Record
@@ -22,7 +22,9 @@ import androidx.health.connect.client.units.Temperature
 import androidx.health.connect.client.units.Velocity
 import androidx.health.connect.client.units.Volume
 import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.node.ObjectNode
 import com.fasterxml.jackson.databind.type.TypeFactory
+import com.fasterxml.jackson.module.kotlin.contains
 import org.json.JSONArray
 import org.json.JSONObject
 import java.time.Duration
@@ -54,7 +56,7 @@ class HealthConnectRepository(private val context: Context) {
     fun installHealthConnect() {
         Log.d(TAG, "installHealthConnect")
         val intent = Intent(Intent.ACTION_VIEW).apply {
-            data = Uri.parse(playStoreUri)
+            data = playStoreUri.toUri()
             setPackage("com.android.vending")
         }
 
@@ -211,16 +213,25 @@ class HealthConnectRepository(private val context: Context) {
         val jsonNode: JsonNode = objectMapper.readTree(recordJson)
 
         if (jsonNode.isArray) {
+            jsonNode.forEach { node -> addMissingMetadata(node) }
             val type =
                 TypeFactory.defaultInstance().constructCollectionType(List::class.java, kClass)
             val record: List<Record> = objectMapper.treeToValue(jsonNode, type)
             result = client.insertRecords(record)
         } else {
+            addMissingMetadata(jsonNode)
             val record: Record = objectMapper.treeToValue(jsonNode, kClass) as Record
+            Log.d(TAG, "rec: $record")
             result = client.insertRecords(listOf(record))
         }
 
         Log.d(TAG, "insertData: result size ${result.recordIdsList.size}")
         return result.recordIdsList
+    }
+
+    private fun addMissingMetadata(node: JsonNode) {
+        if(node.isObject && !node.contains("metadata")) {
+            (node as ObjectNode).replace("metadata", objectMapper.createObjectNode())
+        }
     }
 }
