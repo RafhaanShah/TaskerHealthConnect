@@ -46,7 +46,7 @@ class WriteDataActivity : AppCompatActivity(),
 
     override fun assignFromInput(input: TaskerInput<WriteDataInput>) {
         binding.recordTypeText.editText?.setText(input.regular.recordType)
-        binding.recordJsonText.editText?.setText(input.regular.recordsJson)
+        binding.recordText.editText?.setText(input.regular.recordsJson)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -99,7 +99,7 @@ class WriteDataActivity : AppCompatActivity(),
     }
 
     private fun getInputRecordsJson(): String {
-        return binding.recordJsonText.editText?.text.toString()
+        return binding.recordText.editText?.text.toString()
     }
 
     private fun hideKeyboard() {
@@ -117,7 +117,6 @@ class WriteDataActivity : AppCompatActivity(),
                     runCatching {
                         val recordType = getInputRecordType()
                         val recordJson = getInputRecordsJson()
-                        Log.d(TAG, "$recordType: $recordJson")
                         val output = repository.insertData(recordType, recordJson)
                         Log.d(TAG, output.toString())
                     }.onFailure { err ->

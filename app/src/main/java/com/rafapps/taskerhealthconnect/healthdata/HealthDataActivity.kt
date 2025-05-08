@@ -41,12 +41,17 @@ class HealthDataActivity : AppCompatActivity(),
 
     override val inputForTasker: TaskerInput<HealthDataInput>
         get() = TaskerInput(
-            HealthDataInput(recordType = getInputRecordType(), fromTimeMillis = getInputFromTime())
+            HealthDataInput(
+                recordType = getInputRecordType(),
+                startTime = getInputStartTime(),
+                endTime = getInputEndTime()
+            )
         )
 
     override fun assignFromInput(input: TaskerInput<HealthDataInput>) {
         binding.recordTypeText.editText?.setText(input.regular.recordType)
-        binding.fromTimeText.editText?.setText(input.regular.fromTimeMillis)
+        binding.startTimeText.editText?.setText(input.regular.startTime)
+        binding.endTimeText.editText?.setText(input.regular.endTime)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -94,13 +99,11 @@ class HealthDataActivity : AppCompatActivity(),
         }
     }
 
-    private fun getInputRecordType(): String {
-        return binding.recordTypeText.editText?.text.toString()
-    }
+    private fun getInputRecordType(): String = binding.recordTypeText.editText?.text.toString()
 
-    private fun getInputFromTime(): String {
-        return binding.fromTimeText.editText?.text.toString()
-    }
+    private fun getInputStartTime(): String = binding.startTimeText.editText?.text.toString()
+
+    private fun getInputEndTime(): String = binding.endTimeText.editText?.text.toString()
 
     private fun hideKeyboard() {
         (getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager)?.hideSoftInputFromWindow(
@@ -116,9 +119,10 @@ class HealthDataActivity : AppCompatActivity(),
                 withContext(Dispatchers.IO) {
                     runCatching {
                         val recordType = getInputRecordType()
-                        val startTime = Instant.ofEpochMilli(getInputFromTime().toLong())
-                        val output = repository.getData(recordType, startTime)
-                        Log.d(TAG, output.toString())
+                        val startTime = Instant.ofEpochMilli(getInputStartTime().toLong())
+                        val endTime = Instant.ofEpochMilli(getInputEndTime().toLong())
+                        val output = repository.getData(recordType, startTime, endTime)
+                        Log.d(TAG, output)
                     }.onFailure { err ->
                         Log.e(TAG, "Repository error:", err)
                     }

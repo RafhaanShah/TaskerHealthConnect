@@ -1,7 +1,6 @@
 package com.rafapps.taskerhealthconnect.aggregated
 
 import android.content.Context
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.inputmethod.InputMethodManager
@@ -10,7 +9,6 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.isVisible
 import androidx.health.connect.client.PermissionController
 import androidx.lifecycle.lifecycleScope
-import com.google.android.material.internal.ViewUtils.hideKeyboard
 import com.joaomgcd.taskerpluginlibrary.config.TaskerPluginConfig
 import com.joaomgcd.taskerpluginlibrary.input.TaskerInput
 import com.rafapps.taskerhealthconnect.BuildConfig
@@ -43,11 +41,17 @@ class AggregatedHealthDataActivity : AppCompatActivity(),
 
     override val inputForTasker: TaskerInput<AggregatedHealthDataInput>
         get() = TaskerInput(
-            AggregatedHealthDataInput(days = getInputDays())
+            AggregatedHealthDataInput(
+                aggregateMetric = getInputAggregateMetric(),
+                startTime = getInputStartTime(),
+                endTime = getInputEndTime()
+            )
         )
 
     override fun assignFromInput(input: TaskerInput<AggregatedHealthDataInput>) {
-        binding.daysText.editText?.setText(input.regular.days)
+        binding.aggregateMetricText.editText?.setText(input.regular.aggregateMetric)
+        binding.startTimeText.editText?.setText(input.regular.startTime)
+        binding.endTimeText.editText?.setText(input.regular.endTime)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -95,9 +99,11 @@ class AggregatedHealthDataActivity : AppCompatActivity(),
         }
     }
 
-    private fun getInputDays(): String {
-        return binding.daysText.editText?.text.toString()
-    }
+    private fun getInputAggregateMetric(): String = binding.aggregateMetricText.editText?.text.toString()
+
+    private fun getInputStartTime(): String = binding.startTimeText.editText?.text.toString()
+
+    private fun getInputEndTime(): String = binding.endTimeText.editText?.text.toString()
 
     private fun hideKeyboard() {
         (getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager)?.hideSoftInputFromWindow(
@@ -112,10 +118,11 @@ class AggregatedHealthDataActivity : AppCompatActivity(),
             lifecycleScope.launch {
                 withContext(Dispatchers.IO) {
                     runCatching {
-                        val startTime = AggregatedHealthDataActionRunner
-                            .daysToOffsetTime(getInputDays().toLong())
-                        val output = repository.getAggregateData(startTime)
-                        Log.d(TAG, output.toString())
+                        val aggregateMetric = getInputAggregateMetric()
+                        val startTime = Instant.ofEpochMilli(getInputStartTime().toLong())
+                        val endTime = Instant.ofEpochMilli(getInputEndTime().toLong())
+                        val output = repository.getAggregateData(aggregateMetric, startTime, endTime)
+                        Log.d(TAG, output)
                     }.onFailure { err ->
                         Log.e(TAG, "Repository error:", err)
                     }

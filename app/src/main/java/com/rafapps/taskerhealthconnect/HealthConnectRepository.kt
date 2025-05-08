@@ -5,24 +5,25 @@ import android.content.Intent
 import android.util.Log
 import androidx.core.net.toUri
 import androidx.health.connect.client.HealthConnectClient
+import androidx.health.connect.client.aggregate.AggregateMetric
 import androidx.health.connect.client.permission.HealthPermission
 import androidx.health.connect.client.records.Record
-import androidx.health.connect.client.request.AggregateGroupByDurationRequest
+import androidx.health.connect.client.request.AggregateRequest
 import androidx.health.connect.client.request.ReadRecordsRequest
 import androidx.health.connect.client.time.TimeRangeFilter
-import java.time.Duration
 import java.time.Instant
 import kotlin.reflect.KClass
 
-class HealthConnectRepository(private val context: Context) {
+class HealthConnectRepository(
+    private val context: Context,
+    private val client: HealthConnectClient = HealthConnectClient.getOrCreate(context),
+    private val serializer: Serializer = Serializer()
+) {
 
     private val TAG = "HealthConnectRepository"
 
     private val playStoreUri =
         "https://play.google.com/store/apps/details?id=com.google.android.apps.healthdata"
-
-    private val client by lazy { HealthConnectClient.getOrCreate(context) }
-    private val serializer by lazy { Serializer() }
 
     val permissions by lazy {
         (singleRecordTypes + aggregateRecordTypes)
@@ -54,21 +55,27 @@ class HealthConnectRepository(private val context: Context) {
     }
 
     suspend fun getAggregateData(
-        startTime: Instant
+        aggregateMetric: String,
+        startTime: Instant,
+        endTime: Instant,
     ): String {
-        Log.d(TAG, "getAggregateData: $startTime")
-        val response = client.aggregateGroupByDuration(
-            AggregateGroupByDurationRequest(
-                metrics = aggregateMetricTypes.values.toSet(),
-                timeRangeFilter = TimeRangeFilter.after(startTime),
-                timeRangeSlicer = Duration.ofDays(1)
+        Log.d(TAG, "getAggregateData: $aggregateMetric $startTime $endTime")
+        val split = aggregateMetric.split(".")
+        val clazz = Class.forName("androidx.health.connect.client.aggregate.${split[0]}")
+        val field = clazz.getField(split[1])
+        val metric = field.get(null) as AggregateMetric<*>
+
+        val response = client.aggregate(
+            AggregateRequest(
+                metrics = setOf(metric),
+                timeRangeFilter = TimeRangeFilter.between(startTime, endTime)
             )
         )
-        return serializer.toJson(response)
+        return serializer.toString(response)
     }
 
     @Suppress("UNCHECKED_CAST")
-    suspend fun getData(recordClass: String, startTime: Instant): String {
+    suspend fun getData(recordClass: String, startTime: Instant, endTime: Instant): String {
         Log.d(TAG, "getData: $recordClass, $startTime")
         // convert it to a specific record type via reflection, will throw if fails
         val kClass = Class.forName("androidx.health.connect.client.records.$recordClass")
@@ -78,20 +85,20 @@ class HealthConnectRepository(private val context: Context) {
         val response = client.readRecords(
             ReadRecordsRequest(
                 recordType = kClass,
-                timeRangeFilter = TimeRangeFilter.after(startTime)
+                timeRangeFilter = TimeRangeFilter.between(startTime, endTime)
             )
         )
 
-        return serializer.toJson(response)
+        return serializer.toString(response)
     }
 
     @Suppress("UNCHECKED_CAST")
     suspend fun insertData(
-        recordClass: String, recordJson: String
+        recordClass: String, recordString: String
     ): List<String> {
         Log.d(TAG, "insertData: $recordClass")
         val kClass = Class.forName("androidx.health.connect.client.records.$recordClass")
-        val records: List<Any> = serializer.toObjectList(recordJson, kClass, listOf("metadata"))
+        val records: List<Any> = serializer.toObjectList(recordString, kClass, listOf("metadata"))
         val result = client.insertRecords(records as List<Record>)
         Log.d(TAG, "insertData: result size ${result.recordIdsList.size}")
         return result.recordIdsList

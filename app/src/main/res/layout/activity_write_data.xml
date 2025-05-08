@@ -11,8 +11,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="?attr/actionBarSize">
+        android:layout_height="wrap_content">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/recordTypeDescription"
@@ -40,7 +39,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/recordJsonDescription"
+            android:id="@+id/recordDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin"
@@ -50,14 +49,14 @@
             app:layout_constraintTop_toBottomOf="@id/recordTypeText" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/recordJsonText"
+            android:id="@+id/recordText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin"
             android:hint="@string/records_json"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/recordJsonDescription">
+            app:layout_constraintTop_toBottomOf="@id/recordDescription">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"

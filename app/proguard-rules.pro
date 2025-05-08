@@ -51,6 +51,7 @@
 # health connect classes via reflection
 -keep class androidx.health.connect.client.records.** { *; }
 -keep class androidx.health.connect.client.units.** { *; }
+-keep class androidx.health.connect.client.aggregate.** { *; }
 
 -dontwarn android.**
 -dontwarn com.google.**

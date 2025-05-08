@@ -9,10 +9,8 @@ import com.joaomgcd.taskerpluginlibrary.runner.TaskerPluginResultErrorWithOutput
 import com.joaomgcd.taskerpluginlibrary.runner.TaskerPluginResultSucess
 import com.rafapps.taskerhealthconnect.HealthConnectRepository
 import com.rafapps.taskerhealthconnect.R
-import com.rafapps.taskerhealthconnect.aggregated.AggregatedHealthDataActionRunner.Companion.daysToOffsetTime
 import kotlinx.coroutines.runBlocking
 import java.time.Instant
-import java.time.ZonedDateTime
 
 class HealthDataActionRunner :
     TaskerPluginRunnerAction<HealthDataInput, HealthDataOutput>() {
@@ -29,11 +27,15 @@ class HealthDataActionRunner :
     ): TaskerPluginResult<HealthDataOutput> {
         Log.d(TAG, "run: ${input.regular}")
         val repository = HealthConnectRepository(context)
-        val timeMs = runCatching { input.regular.fromTimeMillis.toLong() }.getOrElse { e ->
-            Log.e(TAG, "invalid input: ${input.regular.fromTimeMillis}")
+        val startTime = runCatching { Instant.ofEpochMilli(input.regular.startTime.toLong()) }.getOrElse { e ->
+            Log.e(TAG, "invalid input: ${input.regular.startTime}")
             return TaskerPluginResultErrorWithOutput(errCode, e.toString())
         }
-        val offsetTime = Instant.ofEpochMilli(timeMs)
+
+        val endTime = runCatching { Instant.ofEpochMilli(input.regular.endTime.toLong()) }.getOrElse { e ->
+            Log.e(TAG, "invalid input: ${input.regular.endTime}")
+            return TaskerPluginResultErrorWithOutput(errCode, e.toString())
+        }
 
         if (!repository.isAvailable() || runBlocking { !repository.hasPermissions() }) {
             val errMessage = context.getString(R.string.health_connect_unavailable_or_permissions)
@@ -45,7 +47,8 @@ class HealthDataActionRunner :
             val data = runBlocking {
                 repository.getData(
                     input.regular.recordType,
-                    startTime = offsetTime
+                    startTime,
+                    endTime
                 )
             }
             TaskerPluginResultSucess(HealthDataOutput(healthData = data.toString()))

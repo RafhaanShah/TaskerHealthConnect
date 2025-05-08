@@ -13,12 +13,12 @@ class WriteDataInput @JvmOverloads constructor(
         key = "recordType",
         labelResId = R.string.record_type,
         descriptionResId = R.string.record_type_description
-    ) var recordType: String = "StepsRecord",
+    ) var recordType: String = "Record",
     @field:TaskerInputField(
         key = "recordsJson",
         labelResId = R.string.records_json,
         descriptionResId = R.string.records_json_description
-    ) var recordsJson: String = "[]"
+    ) var recordsJson: String = ""
 ) {
     override fun toString(): String {
         return "recordType: $recordType"

@@ -28,11 +28,15 @@ class AggregatedHealthDataActionRunner :
     ): TaskerPluginResult<AggregatedHealthDataOutput> {
         Log.d(TAG, "run: ${input.regular}")
         val repository = HealthConnectRepository(context)
-        val days = runCatching { input.regular.days.toLong() }.getOrElse { e ->
-            Log.e(TAG, "invalid input: ${input.regular.days}")
+        val startTime = runCatching { Instant.ofEpochMilli(input.regular.startTime.toLong()) }.getOrElse { e ->
+            Log.e(TAG, "invalid input: ${input.regular.startTime}")
             return TaskerPluginResultErrorWithOutput(errCode, e.toString())
         }
-        val offsetTime = daysToOffsetTime(days)
+
+        val endTime = runCatching { Instant.ofEpochMilli(input.regular.endTime.toLong()) }.getOrElse { e ->
+            Log.e(TAG, "invalid input: ${input.regular.endTime}")
+            return TaskerPluginResultErrorWithOutput(errCode, e.toString())
+        }
 
         if (!repository.isAvailable() || runBlocking { !repository.hasPermissions() }) {
             val errMessage = context.getString(R.string.health_connect_unavailable_or_permissions)
@@ -42,9 +46,9 @@ class AggregatedHealthDataActionRunner :
 
         return try {
             val data = runBlocking {
-                repository.getAggregateData(startTime = offsetTime)
+                repository.getAggregateData(input.regular.aggregateMetric, startTime, endTime)
             }
-            TaskerPluginResultSucess(AggregatedHealthDataOutput(aggregatedHealthData = data.toString()))
+            TaskerPluginResultSucess(AggregatedHealthDataOutput(aggregatedHealthData = data))
         } catch (e: Exception) {
             Log.e(TAG, "run error", e)
             TaskerPluginResultErrorWithOutput(errCode, e.toString())
