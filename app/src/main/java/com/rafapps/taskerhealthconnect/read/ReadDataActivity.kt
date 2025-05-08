@@ -1,44 +1,18 @@
 package com.rafapps.taskerhealthconnect.read
 
-import android.content.Context
-import android.os.Bundle
-import android.util.Log
-import android.view.inputmethod.InputMethodManager
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.WindowCompat
-import androidx.core.view.isVisible
-import androidx.health.connect.client.PermissionController
-import androidx.lifecycle.lifecycleScope
-import com.joaomgcd.taskerpluginlibrary.config.TaskerPluginConfig
+import android.view.LayoutInflater
+import android.view.View
 import com.joaomgcd.taskerpluginlibrary.input.TaskerInput
-import com.rafapps.taskerhealthconnect.BuildConfig
-import com.rafapps.taskerhealthconnect.HealthConnectRepository
-import com.rafapps.taskerhealthconnect.R
-import com.rafapps.taskerhealthconnect.databinding.ActivityReadDataBinding
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.rafapps.taskerhealthconnect.TaskerConfigActivity
+import com.rafapps.taskerhealthconnect.databinding.LayoutReadDataBinding
 import java.time.Instant
 
-class ReadDataActivity : AppCompatActivity(),
-    TaskerPluginConfig<ReadDataInput> {
+class ReadDataActivity : TaskerConfigActivity<ReadDataInput, ReadDataConfigHelper>() {
 
-    private val TAG = "HealthDataActivity"
-    private lateinit var binding: ActivityReadDataBinding
-    private val repository by lazy { HealthConnectRepository(this) }
-    private val taskerHelper by lazy { HealthDataActionHelper(this) }
+    private lateinit var binding: LayoutReadDataBinding
 
-    private val permissionsLauncher =
-        registerForActivityResult(
-            PermissionController.createRequestPermissionResultContract()
-        ) { granted ->
-            if (granted.containsAll(repository.permissions))
-                onPermissionGranted()
-        }
-
-    override val context: Context
-        get() = this
-
+    override val tag = "ReadDataActivity"
+    override val taskerHelper by lazy { ReadDataConfigHelper(this) }
     override val inputForTasker: TaskerInput<ReadDataInput>
         get() = TaskerInput(
             ReadDataInput(
@@ -48,55 +22,22 @@ class ReadDataActivity : AppCompatActivity(),
             )
         )
 
+    override fun provideContentView(layoutInflater: LayoutInflater): View {
+        binding = LayoutReadDataBinding.inflate(layoutInflater)
+        return binding.root
+    }
+
+    override suspend fun debugAction(): Any {
+        val recordType = getInputRecordType()
+        val startTime = Instant.ofEpochMilli(getInputStartTime().toLong())
+        val endTime = Instant.ofEpochMilli(getInputEndTime().toLong())
+        return repository.readData(recordType, startTime, endTime)
+    }
+
     override fun assignFromInput(input: TaskerInput<ReadDataInput>) {
         binding.recordTypeText.editText?.setText(input.regular.recordType)
         binding.startTimeText.editText?.setText(input.regular.startTime)
         binding.endTimeText.editText?.setText(input.regular.endTime)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        Log.d(TAG, "onCreate")
-        WindowCompat.setDecorFitsSystemWindows(window, false)
-        super.onCreate(savedInstanceState)
-
-        binding = ActivityReadDataBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        setDebugButton()
-        taskerHelper.onCreate()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        setButtonState()
-    }
-
-    private fun setButtonState() {
-        lifecycleScope.launch {
-            when {
-                !repository.isAvailable() -> {
-                    binding.button.text = getString(R.string.install)
-                    binding.button.setOnClickListener { repository.installHealthConnect() }
-                }
-
-                !repository.hasPermissions() -> {
-                    binding.button.text = getString(R.string.grant_permissions)
-                    binding.button.setOnClickListener {
-                        permissionsLauncher.launch(repository.permissions)
-                    }
-                }
-
-                else -> onPermissionGranted()
-            }
-        }
-    }
-
-    private fun onPermissionGranted() {
-        Log.d(TAG, "onPermissionGranted")
-        binding.button.text = getString(R.string.done)
-        binding.button.setOnClickListener {
-            hideKeyboard()
-            taskerHelper.finishForTasker()
-        }
     }
 
     private fun getInputRecordType(): String = binding.recordTypeText.editText?.text.toString()
@@ -105,29 +46,4 @@ class ReadDataActivity : AppCompatActivity(),
 
     private fun getInputEndTime(): String = binding.endTimeText.editText?.text.toString()
 
-    private fun hideKeyboard() {
-        (getSystemService(INPUT_METHOD_SERVICE) as? InputMethodManager)?.hideSoftInputFromWindow(
-            binding.root.windowToken,
-            0
-        )
-    }
-
-    private fun setDebugButton() {
-        binding.debugButton.isVisible = BuildConfig.DEBUG
-        binding.debugButton.setOnClickListener {
-            lifecycleScope.launch {
-                withContext(Dispatchers.IO) {
-                    runCatching {
-                        val recordType = getInputRecordType()
-                        val startTime = Instant.ofEpochMilli(getInputStartTime().toLong())
-                        val endTime = Instant.ofEpochMilli(getInputEndTime().toLong())
-                        val output = repository.readData(recordType, startTime, endTime)
-                        Log.d(TAG, output)
-                    }.onFailure { err ->
-                        Log.e(TAG, "Repository error:", err)
-                    }
-                }
-            }
-        }
-    }
 }

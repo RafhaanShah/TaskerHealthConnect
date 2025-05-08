@@ -37,7 +37,7 @@ class WriteDataActionRunner :
             val result = runBlocking {
                 repository.writeData(
                     input.regular.recordType,
-                    input.regular.recordsJson
+                    input.regular.recordInput
                 )
             }
             TaskerPluginResultSucess(WriteDataOutput(healthConnectResult = result.toString()))

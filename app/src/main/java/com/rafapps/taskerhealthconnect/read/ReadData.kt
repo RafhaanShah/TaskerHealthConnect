@@ -10,7 +10,7 @@ import com.joaomgcd.taskerpluginlibrary.output.TaskerOutputVariable
 import com.rafapps.taskerhealthconnect.R
 import java.time.Instant
 
-class HealthDataActionHelper(config: TaskerPluginConfig<ReadDataInput>) :
+class ReadDataConfigHelper(config: TaskerPluginConfig<ReadDataInput>) :
     TaskerPluginConfigHelper<ReadDataInput, ReadDataOutput, ReadDataActionRunner>(config) {
     override val inputClass = ReadDataInput::class.java
     override val outputClass = ReadDataOutput::class.java

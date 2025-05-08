@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/readDataLayout"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".read.ReadDataActivity">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/recordTypeDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin"
+        android:layout_marginVertical="@dimen/margin_half"
+        android:text="@string/record_type_description" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/recordTypeText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin"
+        android:layout_marginVertical="@dimen/margin_half"
+        android:hint="@string/record_type">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/startTimeDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin"
+        android:layout_marginVertical="@dimen/margin_half"
+        android:text="@string/start_time_milliseconds_description" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/startTimeText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin"
+        android:layout_marginVertical="@dimen/margin_half"
+        android:hint="@string/start_time_milliseconds">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/endTimeDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin"
+        android:layout_marginVertical="@dimen/margin_half"
+        android:text="@string/end_time_milliseconds_description" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/endTimeText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin"
+        android:layout_marginVertical="@dimen/margin_half"
+        android:hint="@string/end_time_milliseconds">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+</LinearLayout>

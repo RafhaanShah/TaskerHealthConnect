@@ -9,7 +9,7 @@ import com.joaomgcd.taskerpluginlibrary.output.TaskerOutputObject
 import com.joaomgcd.taskerpluginlibrary.output.TaskerOutputVariable
 import com.rafapps.taskerhealthconnect.R
 
-class WriteDataActionHelper(config: TaskerPluginConfig<WriteDataInput>) :
+class WriteDataConfigHelper(config: TaskerPluginConfig<WriteDataInput>) :
     TaskerPluginConfigHelper<WriteDataInput, WriteDataOutput, WriteDataActionRunner>(config) {
     override val inputClass = WriteDataInput::class.java
     override val outputClass = WriteDataOutput::class.java
@@ -25,10 +25,10 @@ class WriteDataInput @JvmOverloads constructor(
         descriptionResId = R.string.record_type_description
     ) var recordType: String = "Record",
     @field:TaskerInputField(
-        key = "recordsJson",
+        key = "recordInput",
         labelResId = R.string.write_data_input,
         descriptionResId = R.string.write_data_input_description
-    ) var recordsJson: String = ""
+    ) var recordInput: String = ""
 ) {
     override fun toString(): String {
         return "recordType: $recordType"

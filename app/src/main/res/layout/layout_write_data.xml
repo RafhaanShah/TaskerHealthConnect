@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/writeDataLayout"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".write.WriteDataActivity">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/recordTypeDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin"
+        android:layout_marginVertical="@dimen/margin_half"
+        android:text="@string/record_type_description" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/recordTypeText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin"
+        android:layout_marginVertical="@dimen/margin_half"
+        android:hint="@string/record_type">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/recordDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin"
+        android:layout_marginVertical="@dimen/margin_half"
+        android:text="@string/write_data_input_description" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/recordText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/margin"
+        android:layout_marginVertical="@dimen/margin_half"
+        android:hint="@string/write_data_input">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+</LinearLayout>
