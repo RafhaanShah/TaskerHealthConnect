@@ -1,14 +1,25 @@
 package com.rafapps.taskerhealthconnect.aggregated
 
 import android.annotation.SuppressLint
+import com.joaomgcd.taskerpluginlibrary.config.TaskerPluginConfig
+import com.joaomgcd.taskerpluginlibrary.config.TaskerPluginConfigHelper
 import com.joaomgcd.taskerpluginlibrary.input.TaskerInputField
 import com.joaomgcd.taskerpluginlibrary.input.TaskerInputRoot
+import com.joaomgcd.taskerpluginlibrary.output.TaskerOutputObject
+import com.joaomgcd.taskerpluginlibrary.output.TaskerOutputVariable
 import com.rafapps.taskerhealthconnect.R
 import java.time.Instant
 
+class ReadAggregatedDataHelper(config: TaskerPluginConfig<ReadAggregatedDataInput>) :
+    TaskerPluginConfigHelper<ReadAggregatedDataInput, ReadAggregatedDataOutput, ReadAggregatedDataActionRunner>(config) {
+    override val inputClass = ReadAggregatedDataInput::class.java
+    override val outputClass = ReadAggregatedDataOutput::class.java
+    override val runnerClass = ReadAggregatedDataActionRunner::class.java
+}
+
 @SuppressLint("NonConstantResourceId") // TODO: check with nonFinalResIds
 @TaskerInputRoot
-class AggregatedHealthDataInput @JvmOverloads constructor(
+class ReadAggregatedDataInput @JvmOverloads constructor(
     @field:TaskerInputField(
         key = "aggregateMetric",
         labelResId = R.string.aggregate_metric,
@@ -32,5 +43,19 @@ class AggregatedHealthDataInput @JvmOverloads constructor(
 ) {
     override fun toString(): String {
         return "aggregateMetric: $aggregateMetric, startTime: $startTime, endTime: $endTime"
+    }
+}
+
+@SuppressLint("NonConstantResourceId") // TODO: check with nonFinalResIds
+@TaskerOutputObject
+class ReadAggregatedDataOutput(
+    @get:TaskerOutputVariable(
+        name = "healthConnectResult",
+        labelResId = R.string.read_aggregated_data,
+        htmlLabelResId = R.string.read_aggregated_data_description
+    ) val healthConnectResult: String = "{}"
+) {
+    override fun toString(): String {
+        return "healthConnectResult: $healthConnectResult"
     }
 }

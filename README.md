@@ -3,9 +3,9 @@
 [Tasker](https://tasker.joaoapps.com/) plugin to interface with [Health Connect](https://developer.android.com/health-connect) on Android
 
 ## Current Features
-- Read [Health Records](https://developer.android.com/health-and-fitness/guides/health-connect/develop/read-data)  as JSON.
-- Read [Aggregated Health Records](https://developer.android.com/health-and-fitness/guides/health-connect/develop/aggregate-data) as JSON.
-- Write [Health Records](https://developer.android.com/health-and-fitness/guides/health-connect/develop/write-data) from JSON.
+- Read [Health Data](https://developer.android.com/health-and-fitness/guides/health-connect/develop/read-data)  as JSON.
+- Read [Aggregated Health Data](https://developer.android.com/health-and-fitness/guides/health-connect/develop/aggregate-data) as JSON.
+- Write [Health Data](https://developer.android.com/health-and-fitness/guides/health-connect/develop/write-data) from JSON.
 
 ## Installation
 - Updates are currently released only on GitHub
@@ -14,6 +14,7 @@
 - Check release / update notes as the plugin is not considered stable, and breaking API changes are to be expected
 
 ## Usage
+- Caveat: this is not a beginner friendly plugin - it requires a fair amount of work and basic knowledge of JSON to use properly
 - Run the app, it will check to make sure that Health Connect is installed and will prompt for required permissions
 - Open Tasker, and look for 'Tasker Health Connect' inside Action -> Plugins
 - All Input and Output is in JSON format, you can use Tasker variables and Tasker's built-in JSON processing or other plugins

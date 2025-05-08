@@ -125,25 +125,25 @@
         </activity>
 
         <activity
-            android:name=".aggregated.AggregatedHealthDataActivity"
+            android:name=".aggregated.ReadAggregatedDataActivity"
             android:exported="true"
-            android:label="@string/aggregated_health_data">
+            android:label="@string/read_aggregated_data">
             <intent-filter>
                 <action android:name="com.twofortyfouram.locale.intent.action.EDIT_SETTING" />
             </intent-filter>
         </activity>
 
         <activity
-            android:name=".healthdata.HealthDataActivity"
+            android:name=".read.ReadDataActivity"
             android:exported="true"
-            android:label="@string/health_data">
+            android:label="@string/read_data">
             <intent-filter>
                 <action android:name="com.twofortyfouram.locale.intent.action.EDIT_SETTING" />
             </intent-filter>
         </activity>
 
         <activity
-            android:name=".writedata.WriteDataActivity"
+            android:name=".write.WriteDataActivity"
             android:exported="true"
             android:label="@string/write_data">
             <intent-filter>

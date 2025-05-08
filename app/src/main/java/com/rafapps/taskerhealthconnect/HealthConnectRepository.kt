@@ -54,7 +54,7 @@ class HealthConnectRepository(
         return granted.containsAll(permissions)
     }
 
-    suspend fun getAggregateData(
+    suspend fun readAggregatedData(
         aggregateMetric: String,
         startTime: Instant,
         endTime: Instant,
@@ -75,7 +75,7 @@ class HealthConnectRepository(
     }
 
     @Suppress("UNCHECKED_CAST")
-    suspend fun getData(recordClass: String, startTime: Instant, endTime: Instant): String {
+    suspend fun readData(recordClass: String, startTime: Instant, endTime: Instant): String {
         Log.d(TAG, "getData: $recordClass, $startTime")
         // convert it to a specific record type via reflection, will throw if fails
         val kClass = Class.forName("androidx.health.connect.client.records.$recordClass")
@@ -93,7 +93,7 @@ class HealthConnectRepository(
     }
 
     @Suppress("UNCHECKED_CAST")
-    suspend fun insertData(
+    suspend fun writeData(
         recordClass: String, recordString: String
     ): List<String> {
         Log.d(TAG, "insertData: $recordClass")

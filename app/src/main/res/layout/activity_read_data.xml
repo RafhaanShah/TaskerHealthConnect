@@ -7,31 +7,31 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     android:fitsSystemWindows="true"
-    tools:context=".aggregated.AggregatedHealthDataActivity">
+    tools:context=".aggregated.ReadAggregatedDataActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/aggregateMetricDescription"
+            android:id="@+id/recordTypeDescription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin"
-            android:text="@string/aggregate_metric_description"
+            android:text="@string/record_type_description"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/aggregateMetricText"
+            android:id="@+id/recordTypeText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin"
-            android:hint="@string/aggregate_metric"
+            android:hint="@string/record_type"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/aggregateMetricDescription">
+            app:layout_constraintTop_toBottomOf="@id/recordTypeDescription">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
@@ -46,7 +46,7 @@
             android:text="@string/start_time_milliseconds_description"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/aggregateMetricText" />
+            app:layout_constraintTop_toBottomOf="@id/recordTypeText" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/startTimeText"

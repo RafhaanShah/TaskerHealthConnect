@@ -1,4 +1,4 @@
-package com.rafapps.taskerhealthconnect.writedata
+package com.rafapps.taskerhealthconnect.write
 
 import android.content.Context
 import android.util.Log
@@ -9,8 +9,6 @@ import com.joaomgcd.taskerpluginlibrary.runner.TaskerPluginResultErrorWithOutput
 import com.joaomgcd.taskerpluginlibrary.runner.TaskerPluginResultSucess
 import com.rafapps.taskerhealthconnect.HealthConnectRepository
 import com.rafapps.taskerhealthconnect.R
-import com.rafapps.taskerhealthconnect.writedata.WriteDataInput
-import com.rafapps.taskerhealthconnect.writedata.WriteDataOutput
 import kotlinx.coroutines.runBlocking
 
 class WriteDataActionRunner :
@@ -37,12 +35,12 @@ class WriteDataActionRunner :
 
         return try {
             val result = runBlocking {
-                repository.insertData(
+                repository.writeData(
                     input.regular.recordType,
                     input.regular.recordsJson
                 )
             }
-            TaskerPluginResultSucess(WriteDataOutput(recordIds = result.toString()))
+            TaskerPluginResultSucess(WriteDataOutput(healthConnectResult = result.toString()))
         } catch (e: Exception) {
             Log.e(TAG, "run error", e)
             TaskerPluginResultErrorWithOutput(errCode, e.toString())

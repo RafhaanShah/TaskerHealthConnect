@@ -9,20 +9,20 @@
     <string name="debug">Debug</string>
     <string name="done">Done</string>
     <string name="record_type">Class of the type of Health Record</string>
-    <string name="record_type_description">The Class of the type of Health Record. This must be a valid class from androidx.health.connect.client.records.* package, e.g. StepsRecord. Supports Tasker Variables.</string>
-    <string name="start_time_milliseconds">Start Time Epoch Milliseconds</string>
+    <string name="record_type_description">The Class Name of the type of Health Record. This must be a valid class from androidx.health.connect.client.records.* package, e.g. StepsRecord. Supports Tasker Variables.</string>
+    <string name="start_time_milliseconds">Start Timestamp</string>
     <string name="start_time_milliseconds_description">The timestamp (in epoch milliseconds) to start fetching records from. Supports Tasker Variables.</string>
-    <string name="end_time_milliseconds">End Time Epoch Milliseconds</string>
+    <string name="end_time_milliseconds">End Timestamp</string>
     <string name="end_time_milliseconds_description">The timestamp (in epoch milliseconds) to stop fetching records from. Supports Tasker Variables.</string>
-    <string name="aggregated_health_data">Aggregated Health Data</string>
-    <string name="aggregated_health_data_description">Aggregated Health Data will be returned as a JSON array of records.</string>
+    <string name="read_aggregated_data">Read Aggregated Data</string>
+    <string name="read_aggregated_data_description">Data will be returned as a JSON object, see HealthConnectClient.aggregate API for the response format.</string>
     <string name="write_data">Write Data</string>
-    <string name="health_data">Health Data</string>
-    <string name="health_data_description">Health Data will be returned as a JSON array, each object in the array corresponds to record of data. The fields of the object will contain specific data for type of record.</string>
-    <string name="record_ids">Record IDs</string>
-    <string name="record_ids_description">The response will include a list of the record IDs inserted.</string>
-    <string name="records_json">JSON Object or List of Objects to write</string>
-    <string name="records_json_description">A JSON object or array of records to write.
+    <string name="read_data">Read Data</string>
+    <string name="read_data_description">Data will be returned as a JSON object, see HealthConnectClient.readRecords API for the response format.</string>
+    <string name="write_data_response">Write Data Response</string>
+    <string name="write_data_response_description">Data will be returned as a JSON object, see HealthConnectClient.insertRecords API for the response format.</string>
+    <string name="write_data_input">JSON Object or List of Objects to write</string>
+    <string name="write_data_input_description">A JSON object or array of records to write.
         Supports Tasker Variables. All fields that are not optional / nullable and don\'t have
         default values on the actual Class Constructor must be present, except for Metadata which
         will be set to a default value if missing. You can use epoch millisecond timestamps for Instant / Date

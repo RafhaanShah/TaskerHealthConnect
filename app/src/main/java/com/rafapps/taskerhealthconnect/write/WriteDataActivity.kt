@@ -1,4 +1,4 @@
-package com.rafapps.taskerhealthconnect.writedata
+package com.rafapps.taskerhealthconnect.write
 
 import android.content.Context
 import android.os.Bundle
@@ -15,7 +15,6 @@ import com.rafapps.taskerhealthconnect.BuildConfig
 import com.rafapps.taskerhealthconnect.HealthConnectRepository
 import com.rafapps.taskerhealthconnect.R
 import com.rafapps.taskerhealthconnect.databinding.ActivityWriteDataBinding
-import com.rafapps.taskerhealthconnect.healthdata.WriteDataActionHelper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -117,7 +116,7 @@ class WriteDataActivity : AppCompatActivity(),
                     runCatching {
                         val recordType = getInputRecordType()
                         val recordJson = getInputRecordsJson()
-                        val output = repository.insertData(recordType, recordJson)
+                        val output = repository.writeData(recordType, recordJson)
                         Log.d(TAG, output.toString())
                     }.onFailure { err ->
                         Log.e(TAG, "Repository error:", err)

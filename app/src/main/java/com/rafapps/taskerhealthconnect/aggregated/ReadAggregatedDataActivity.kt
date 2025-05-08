@@ -1,4 +1,4 @@
-package com.rafapps.taskerhealthconnect.healthdata
+package com.rafapps.taskerhealthconnect.aggregated
 
 import android.content.Context
 import android.os.Bundle
@@ -14,19 +14,19 @@ import com.joaomgcd.taskerpluginlibrary.input.TaskerInput
 import com.rafapps.taskerhealthconnect.BuildConfig
 import com.rafapps.taskerhealthconnect.HealthConnectRepository
 import com.rafapps.taskerhealthconnect.R
-import com.rafapps.taskerhealthconnect.databinding.ActivityHealthDataBinding
+import com.rafapps.taskerhealthconnect.databinding.ActivityAggregatedDataBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.Instant
 
-class HealthDataActivity : AppCompatActivity(),
-    TaskerPluginConfig<HealthDataInput> {
+class ReadAggregatedDataActivity : AppCompatActivity(),
+    TaskerPluginConfig<ReadAggregatedDataInput> {
 
-    private val TAG = "HealthDataActivity"
-    private lateinit var binding: ActivityHealthDataBinding
+    private val TAG = "AggregatedHealthDataActivity"
+    private lateinit var binding: ActivityAggregatedDataBinding
     private val repository by lazy { HealthConnectRepository(this) }
-    private val taskerHelper by lazy { HealthDataActionHelper(this) }
+    private val taskerHelper by lazy { ReadAggregatedDataHelper(this) }
 
     private val permissionsLauncher =
         registerForActivityResult(
@@ -39,17 +39,17 @@ class HealthDataActivity : AppCompatActivity(),
     override val context: Context
         get() = this
 
-    override val inputForTasker: TaskerInput<HealthDataInput>
+    override val inputForTasker: TaskerInput<ReadAggregatedDataInput>
         get() = TaskerInput(
-            HealthDataInput(
-                recordType = getInputRecordType(),
+            ReadAggregatedDataInput(
+                aggregateMetric = getInputAggregateMetric(),
                 startTime = getInputStartTime(),
                 endTime = getInputEndTime()
             )
         )
 
-    override fun assignFromInput(input: TaskerInput<HealthDataInput>) {
-        binding.recordTypeText.editText?.setText(input.regular.recordType)
+    override fun assignFromInput(input: TaskerInput<ReadAggregatedDataInput>) {
+        binding.aggregateMetricText.editText?.setText(input.regular.aggregateMetric)
         binding.startTimeText.editText?.setText(input.regular.startTime)
         binding.endTimeText.editText?.setText(input.regular.endTime)
     }
@@ -59,7 +59,7 @@ class HealthDataActivity : AppCompatActivity(),
         WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
 
-        binding = ActivityHealthDataBinding.inflate(layoutInflater)
+        binding = ActivityAggregatedDataBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setDebugButton()
         taskerHelper.onCreate()
@@ -99,7 +99,7 @@ class HealthDataActivity : AppCompatActivity(),
         }
     }
 
-    private fun getInputRecordType(): String = binding.recordTypeText.editText?.text.toString()
+    private fun getInputAggregateMetric(): String = binding.aggregateMetricText.editText?.text.toString()
 
     private fun getInputStartTime(): String = binding.startTimeText.editText?.text.toString()
 
@@ -118,10 +118,10 @@ class HealthDataActivity : AppCompatActivity(),
             lifecycleScope.launch {
                 withContext(Dispatchers.IO) {
                     runCatching {
-                        val recordType = getInputRecordType()
+                        val aggregateMetric = getInputAggregateMetric()
                         val startTime = Instant.ofEpochMilli(getInputStartTime().toLong())
                         val endTime = Instant.ofEpochMilli(getInputEndTime().toLong())
-                        val output = repository.getData(recordType, startTime, endTime)
+                        val output = repository.readAggregatedData(aggregateMetric, startTime, endTime)
                         Log.d(TAG, output)
                     }.onFailure { err ->
                         Log.e(TAG, "Repository error:", err)

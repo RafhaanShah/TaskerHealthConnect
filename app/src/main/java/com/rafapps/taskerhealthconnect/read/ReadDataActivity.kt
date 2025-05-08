@@ -1,4 +1,4 @@
-package com.rafapps.taskerhealthconnect.aggregated
+package com.rafapps.taskerhealthconnect.read
 
 import android.content.Context
 import android.os.Bundle
@@ -14,19 +14,19 @@ import com.joaomgcd.taskerpluginlibrary.input.TaskerInput
 import com.rafapps.taskerhealthconnect.BuildConfig
 import com.rafapps.taskerhealthconnect.HealthConnectRepository
 import com.rafapps.taskerhealthconnect.R
-import com.rafapps.taskerhealthconnect.databinding.ActivityAggregatedHealthDataBinding
+import com.rafapps.taskerhealthconnect.databinding.ActivityReadDataBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.Instant
 
-class AggregatedHealthDataActivity : AppCompatActivity(),
-    TaskerPluginConfig<AggregatedHealthDataInput> {
+class ReadDataActivity : AppCompatActivity(),
+    TaskerPluginConfig<ReadDataInput> {
 
-    private val TAG = "AggregatedHealthDataActivity"
-    private lateinit var binding: ActivityAggregatedHealthDataBinding
+    private val TAG = "HealthDataActivity"
+    private lateinit var binding: ActivityReadDataBinding
     private val repository by lazy { HealthConnectRepository(this) }
-    private val taskerHelper by lazy { AggregatedHealthDataActionHelper(this) }
+    private val taskerHelper by lazy { HealthDataActionHelper(this) }
 
     private val permissionsLauncher =
         registerForActivityResult(
@@ -39,17 +39,17 @@ class AggregatedHealthDataActivity : AppCompatActivity(),
     override val context: Context
         get() = this
 
-    override val inputForTasker: TaskerInput<AggregatedHealthDataInput>
+    override val inputForTasker: TaskerInput<ReadDataInput>
         get() = TaskerInput(
-            AggregatedHealthDataInput(
-                aggregateMetric = getInputAggregateMetric(),
+            ReadDataInput(
+                recordType = getInputRecordType(),
                 startTime = getInputStartTime(),
                 endTime = getInputEndTime()
             )
         )
 
-    override fun assignFromInput(input: TaskerInput<AggregatedHealthDataInput>) {
-        binding.aggregateMetricText.editText?.setText(input.regular.aggregateMetric)
+    override fun assignFromInput(input: TaskerInput<ReadDataInput>) {
+        binding.recordTypeText.editText?.setText(input.regular.recordType)
         binding.startTimeText.editText?.setText(input.regular.startTime)
         binding.endTimeText.editText?.setText(input.regular.endTime)
     }
@@ -59,7 +59,7 @@ class AggregatedHealthDataActivity : AppCompatActivity(),
         WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
 
-        binding = ActivityAggregatedHealthDataBinding.inflate(layoutInflater)
+        binding = ActivityReadDataBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setDebugButton()
         taskerHelper.onCreate()
@@ -99,7 +99,7 @@ class AggregatedHealthDataActivity : AppCompatActivity(),
         }
     }
 
-    private fun getInputAggregateMetric(): String = binding.aggregateMetricText.editText?.text.toString()
+    private fun getInputRecordType(): String = binding.recordTypeText.editText?.text.toString()
 
     private fun getInputStartTime(): String = binding.startTimeText.editText?.text.toString()
 
@@ -118,10 +118,10 @@ class AggregatedHealthDataActivity : AppCompatActivity(),
             lifecycleScope.launch {
                 withContext(Dispatchers.IO) {
                     runCatching {
-                        val aggregateMetric = getInputAggregateMetric()
+                        val recordType = getInputRecordType()
                         val startTime = Instant.ofEpochMilli(getInputStartTime().toLong())
                         val endTime = Instant.ofEpochMilli(getInputEndTime().toLong())
-                        val output = repository.getAggregateData(aggregateMetric, startTime, endTime)
+                        val output = repository.readData(recordType, startTime, endTime)
                         Log.d(TAG, output)
                     }.onFailure { err ->
                         Log.e(TAG, "Repository error:", err)

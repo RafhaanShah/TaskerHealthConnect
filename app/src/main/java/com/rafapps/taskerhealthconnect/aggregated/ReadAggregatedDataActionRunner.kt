@@ -13,8 +13,8 @@ import kotlinx.coroutines.runBlocking
 import java.time.Instant
 import java.time.ZonedDateTime
 
-class AggregatedHealthDataActionRunner :
-    TaskerPluginRunnerAction<AggregatedHealthDataInput, AggregatedHealthDataOutput>() {
+class ReadAggregatedDataActionRunner :
+    TaskerPluginRunnerAction<ReadAggregatedDataInput, ReadAggregatedDataOutput>() {
 
     private val TAG = "AggregatedHealthDataActionRunner"
     private val errCode = 1
@@ -24,8 +24,8 @@ class AggregatedHealthDataActionRunner :
 
     override fun run(
         context: Context,
-        input: TaskerInput<AggregatedHealthDataInput>
-    ): TaskerPluginResult<AggregatedHealthDataOutput> {
+        input: TaskerInput<ReadAggregatedDataInput>
+    ): TaskerPluginResult<ReadAggregatedDataOutput> {
         Log.d(TAG, "run: ${input.regular}")
         val repository = HealthConnectRepository(context)
         val startTime = runCatching { Instant.ofEpochMilli(input.regular.startTime.toLong()) }.getOrElse { e ->
@@ -46,9 +46,9 @@ class AggregatedHealthDataActionRunner :
 
         return try {
             val data = runBlocking {
-                repository.getAggregateData(input.regular.aggregateMetric, startTime, endTime)
+                repository.readAggregatedData(input.regular.aggregateMetric, startTime, endTime)
             }
-            TaskerPluginResultSucess(AggregatedHealthDataOutput(aggregatedHealthData = data))
+            TaskerPluginResultSucess(ReadAggregatedDataOutput(healthConnectResult = data))
         } catch (e: Exception) {
             Log.e(TAG, "run error", e)
             TaskerPluginResultErrorWithOutput(errCode, e.toString())

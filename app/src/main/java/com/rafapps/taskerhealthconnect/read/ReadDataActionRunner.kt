@@ -1,4 +1,4 @@
-package com.rafapps.taskerhealthconnect.healthdata
+package com.rafapps.taskerhealthconnect.read
 
 import android.content.Context
 import android.util.Log
@@ -12,8 +12,8 @@ import com.rafapps.taskerhealthconnect.R
 import kotlinx.coroutines.runBlocking
 import java.time.Instant
 
-class HealthDataActionRunner :
-    TaskerPluginRunnerAction<HealthDataInput, HealthDataOutput>() {
+class ReadDataActionRunner :
+    TaskerPluginRunnerAction<ReadDataInput, ReadDataOutput>() {
 
     private val TAG = "HealthDataActionRunner"
     private val errCode = 1
@@ -23,8 +23,8 @@ class HealthDataActionRunner :
 
     override fun run(
         context: Context,
-        input: TaskerInput<HealthDataInput>
-    ): TaskerPluginResult<HealthDataOutput> {
+        input: TaskerInput<ReadDataInput>
+    ): TaskerPluginResult<ReadDataOutput> {
         Log.d(TAG, "run: ${input.regular}")
         val repository = HealthConnectRepository(context)
         val startTime = runCatching { Instant.ofEpochMilli(input.regular.startTime.toLong()) }.getOrElse { e ->
@@ -45,13 +45,13 @@ class HealthDataActionRunner :
 
         return try {
             val data = runBlocking {
-                repository.getData(
+                repository.readData(
                     input.regular.recordType,
                     startTime,
                     endTime
                 )
             }
-            TaskerPluginResultSucess(HealthDataOutput(healthData = data.toString()))
+            TaskerPluginResultSucess(ReadDataOutput(healthConnectResult = data.toString()))
         } catch (e: Exception) {
             Log.e(TAG, "run error", e)
             TaskerPluginResultErrorWithOutput(errCode, e.toString())
