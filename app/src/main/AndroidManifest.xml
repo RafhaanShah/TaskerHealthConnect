@@ -4,6 +4,7 @@
 
     <!-- For Tasker Plugins -->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
 
     <!-- Health Connect Permissions https://developer.android.com/health-and-fitness/guides/health-connect/plan/data-types -->
     <uses-permission android:name="android.permission.health.READ_HEALTH_DATA_IN_BACKGROUND" />
@@ -197,5 +198,27 @@
                 <action android:name="com.twofortyfouram.locale.intent.action.EDIT_SETTING" />
             </intent-filter>
         </activity>
+
+        <!-- Try to fix ForegroundServiceDidNotStartInTimeException -->
+        <!-- https://github.com/joaomgcd/TaskerPluginSample/issues/24 -->
+        <!-- https://github.com/joaomgcd/TaskerPluginSample/issues/29 -->
+        <service
+            android:name="com.joaomgcd.taskerpluginlibrary.action.IntentServiceAction"
+            android:exported="true"
+            android:foregroundServiceType="specialUse"
+            tools:ignore="ExportedService">
+            <meta-data
+                android:name="canBind"
+                android:value="false"
+                tools:replace="android:value" />
+
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="@string/explanation_for_special_use_action" />
+
+            <intent-filter>
+                <action android:name="com.twofortyfouram.locale.intent.action.FIRE_SETTING" />
+            </intent-filter>
+        </service>
     </application>
 </manifest>

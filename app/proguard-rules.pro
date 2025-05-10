@@ -52,6 +52,8 @@
 -keep class androidx.health.connect.client.records.** { *; }
 -keep class androidx.health.connect.client.units.** { *; }
 -keep class androidx.health.connect.client.aggregate.** { *; }
+-keep class androidx.health.connect.client.request.** { *; }
+-keep class androidx.health.connect.client.response.** { *; }
 
 -dontwarn android.**
 -dontwarn com.google.**
