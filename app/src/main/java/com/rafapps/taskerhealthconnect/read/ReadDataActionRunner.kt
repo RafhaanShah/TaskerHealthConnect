@@ -22,7 +22,7 @@ class ReadDataActionRunner(
 ) :
     TaskerPluginRunnerAction<ReadDataInput, ReadDataOutput>() {
 
-    private val TAG = "HealthDataActionRunner"
+    private val TAG = "ReadDataActionRunner"
     private val errCode = 1
 
     override val notificationProperties

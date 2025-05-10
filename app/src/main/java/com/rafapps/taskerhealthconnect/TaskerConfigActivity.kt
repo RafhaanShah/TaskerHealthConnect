@@ -14,6 +14,10 @@ import androidx.lifecycle.lifecycleScope
 import com.joaomgcd.taskerpluginlibrary.config.TaskerPluginConfig
 import com.joaomgcd.taskerpluginlibrary.config.TaskerPluginConfigHelper
 import com.joaomgcd.taskerpluginlibrary.input.TaskerInput
+import com.joaomgcd.taskerpluginlibrary.runner.TaskerPluginResult
+import com.joaomgcd.taskerpluginlibrary.runner.TaskerPluginResultErrorWithOutput
+import com.joaomgcd.taskerpluginlibrary.runner.TaskerPluginResultSucess
+import com.joaomgcd.taskerpluginlibrary.runner.TaskerPluginResultUnknown
 import com.rafapps.taskerhealthconnect.databinding.ActivityHealthConnectTaskerBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -44,7 +48,7 @@ abstract class TaskerConfigActivity<TInput : Any,
 
     abstract override fun assignFromInput(input: TaskerInput<TInput>)
 
-    open suspend fun runDebugAction(): Any = { }
+    abstract suspend fun runDebugAction(): TaskerPluginResult<*>
 
     protected abstract fun provideContentView(layoutInflater: LayoutInflater): View
 
@@ -107,8 +111,19 @@ abstract class TaskerConfigActivity<TInput : Any,
             lifecycleScope.launch {
                 withContext(Dispatchers.IO) {
                     runCatching {
-                        val output = runDebugAction()
-                        Log.d(tag, output.toString())
+                        when (val output = runDebugAction()) {
+                            is TaskerPluginResultErrorWithOutput<*> -> Log.d(
+                                tag,
+                                "${output.success}: ${output.message}"
+                            )
+
+                            is TaskerPluginResultSucess<*> -> Log.d(
+                                tag,
+                                "${output.success}: ${output.regular}"
+                            )
+
+                            is TaskerPluginResultUnknown -> Log.d(tag, "${output.success}")
+                        }
                     }.onFailure { err ->
                         Log.e(tag, "runDebugAction error:", err)
                     }

@@ -12,7 +12,7 @@ import com.rafapps.taskerhealthconnect.HealthConnectRepository
 import com.rafapps.taskerhealthconnect.HealthConnectRepositoryProvider
 import com.rafapps.taskerhealthconnect.R
 import com.rafapps.taskerhealthconnect.Serializer
-import com.rafapps.taskerhealthconnect.healthConnectAggregatePackage
+import com.rafapps.taskerhealthconnect.healthConnectRecordsPackage
 import kotlinx.coroutines.runBlocking
 import java.time.Instant
 
@@ -22,7 +22,7 @@ class ReadAggregatedDataActionRunner(
 ) :
     TaskerPluginRunnerAction<ReadAggregatedDataInput, ReadAggregatedDataOutput>() {
 
-    private val tag = "AggregatedHealthDataActionRunner"
+    private val tag = "ReadAggregatedDataActionRunner"
     private val errCode = 1
 
     override val notificationProperties
@@ -46,7 +46,7 @@ class ReadAggregatedDataActionRunner(
 
         return try {
             val split = input.regular.aggregateMetric.split(".")
-            val clazz = Class.forName("$healthConnectAggregatePackage.${split[0]}")
+            val clazz = Class.forName("$healthConnectRecordsPackage.${split[0]}")
             val field = clazz.getField(split[1])
             val metric = field.get(null) as AggregateMetric<*>
             val data = runBlocking { repository.readAggregatedData(metric, startTime, endTime) }

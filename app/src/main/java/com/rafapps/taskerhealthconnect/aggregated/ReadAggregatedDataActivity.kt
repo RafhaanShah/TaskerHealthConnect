@@ -3,6 +3,7 @@ package com.rafapps.taskerhealthconnect.aggregated
 import android.view.LayoutInflater
 import android.view.View
 import com.joaomgcd.taskerpluginlibrary.input.TaskerInput
+import com.joaomgcd.taskerpluginlibrary.runner.TaskerPluginResult
 import com.rafapps.taskerhealthconnect.TaskerConfigActivity
 import com.rafapps.taskerhealthconnect.databinding.LayoutReadAggregatedDataBinding
 
@@ -13,7 +14,7 @@ class ReadAggregatedDataActivity :
     private val runner by lazy { ReadAggregatedDataActionRunner({ repository }) }
 
     override val tag = "ReadAggregatedDataActivity"
-    override val requiredPermissions: Set<String> = repository.readPermissions
+    override val requiredPermissions: Set<String> by lazy { repository.writePermissions }
     override val taskerHelper by lazy { ReadAggregatedDataConfigHelper(this) }
     override val inputForTasker: TaskerInput<ReadAggregatedDataInput>
         get() = TaskerInput(
@@ -29,7 +30,7 @@ class ReadAggregatedDataActivity :
         return binding.root
     }
 
-    override suspend fun runDebugAction(): Any {
+    override suspend fun runDebugAction(): TaskerPluginResult<*> {
         val aggregateMetric = getInputAggregateMetric()
         val startTime = getInputStartTime()
         val endTime = getInputEndTime()

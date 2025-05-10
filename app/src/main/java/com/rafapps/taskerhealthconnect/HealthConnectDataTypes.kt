@@ -93,4 +93,3 @@ val recordTypes: Set<KClass<out Record>> = setOf(
 )
 
 const val healthConnectRecordsPackage = "androidx.health.connect.client.records"
-const val healthConnectAggregatePackage = "androidx.health.connect.client.aggregate"

@@ -3,6 +3,7 @@ package com.rafapps.taskerhealthconnect.write
 import android.view.LayoutInflater
 import android.view.View
 import com.joaomgcd.taskerpluginlibrary.input.TaskerInput
+import com.joaomgcd.taskerpluginlibrary.runner.TaskerPluginResult
 import com.rafapps.taskerhealthconnect.TaskerConfigActivity
 import com.rafapps.taskerhealthconnect.databinding.LayoutWriteDataBinding
 
@@ -12,7 +13,7 @@ class WriteDataActivity : TaskerConfigActivity<WriteDataInput, WriteDataConfigHe
     private val runner by lazy { WriteDataActionRunner({ repository }) }
 
     override val tag = "WriteDataActivity"
-    override val requiredPermissions: Set<String> = repository.writePermissions
+    override val requiredPermissions: Set<String> by lazy { repository.writePermissions }
     override val taskerHelper by lazy { WriteDataConfigHelper(this) }
     override val inputForTasker: TaskerInput<WriteDataInput>
         get() = TaskerInput(
@@ -27,7 +28,7 @@ class WriteDataActivity : TaskerConfigActivity<WriteDataInput, WriteDataConfigHe
         return binding.root
     }
 
-    override suspend fun runDebugAction(): Any {
+    override suspend fun runDebugAction(): TaskerPluginResult<*> {
         val recordType = getInputRecordType()
         val recordInput = getInputRecord()
         return runner.run(context, TaskerInput(WriteDataInput(recordType, recordInput)))

@@ -21,7 +21,7 @@ class WriteDataActionRunner(
 ) :
     TaskerPluginRunnerAction<WriteDataInput, WriteDataOutput>() {
 
-    private val tag = "HealthDataActionRunner"
+    private val tag = "WriteDataActionRunner"
     private val errCode = 1
 
     override val notificationProperties
@@ -32,7 +32,7 @@ class WriteDataActionRunner(
         context: Context,
         input: TaskerInput<WriteDataInput>
     ): TaskerPluginResult<WriteDataOutput> {
-        Log.d(tag, "run")
+        Log.d(tag, "run ${input.regular.recordType}")
         val repository = repositoryProvider(context)
 
         return try {
