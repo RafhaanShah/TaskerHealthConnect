@@ -31,21 +31,19 @@ class WriteDataActionRunner(
     override fun run(
         context: Context,
         input: TaskerInput<WriteDataInput>
-    ): TaskerPluginResult<WriteDataOutput> {
-        Log.d(tag, "run ${input.regular.recordType}")
+    ): TaskerPluginResult<WriteDataOutput> = runCatching {
+        Log.d(tag, "runner start: ${input.regular}")
         val repository = repositoryProvider(context)
-
-        return try {
-            val clazz =
-                Class.forName("$healthConnectRecordsPackage.${input.regular.recordType}")
-            val records: List<Any> =
-                serializer.toObjectList(input.regular.recordInput, clazz, listOf("metadata"))
-            val result = runBlocking { repository.writeData(records as List<Record>) }
-            val serializedResult = serializer.toString(result)
-            TaskerPluginResultSucess(WriteDataOutput(healthConnectResult = serializedResult))
-        } catch (e: Exception) {
-            Log.e(tag, "run error", e)
-            TaskerPluginResultErrorWithOutput(errCode, e.toString())
-        }
+        val clazz =
+            Class.forName("$healthConnectRecordsPackage.${input.regular.recordType}")
+        val records: List<Any> =
+            serializer.toObjectList(input.regular.recordInput, clazz, listOf("metadata"))
+        val result = runBlocking { repository.writeData(records as List<Record>) }
+        val serializedResult = serializer.toString(result)
+        Log.d(tag, "runner complete, result size: ${serializedResult.length}")
+        TaskerPluginResultSucess(WriteDataOutput(healthConnectResult = serializedResult))
+    }.getOrElse {
+        Log.e(tag, "run error", it)
+        TaskerPluginResultErrorWithOutput(errCode, it.toString())
     }
 }

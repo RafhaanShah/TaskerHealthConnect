@@ -31,30 +31,21 @@ class ReadAggregatedDataActionRunner(
     override fun run(
         context: Context,
         input: TaskerInput<ReadAggregatedDataInput>
-    ): TaskerPluginResult<ReadAggregatedDataOutput> {
-        Log.d(tag, "run: ${input.regular}")
+    ): TaskerPluginResult<ReadAggregatedDataOutput> = runCatching {
+        Log.d(tag, "runner start: ${input.regular}")
         val repository = repositoryProvider(context)
-        val startTime = runCatching { Instant.ofEpochMilli(input.regular.startTime.toLong()) }.getOrElse { e ->
-            Log.e(tag, "invalid input: ${input.regular.startTime}")
-            return TaskerPluginResultErrorWithOutput(errCode, e.toString())
-        }
-
-        val endTime = runCatching { Instant.ofEpochMilli(input.regular.endTime.toLong()) }.getOrElse { e ->
-            Log.e(tag, "invalid input: ${input.regular.endTime}")
-            return TaskerPluginResultErrorWithOutput(errCode, e.toString())
-        }
-
-        return try {
-            val split = input.regular.aggregateMetric.split(".")
-            val clazz = Class.forName("$healthConnectRecordsPackage.${split[0]}")
-            val field = clazz.getField(split[1])
-            val metric = field.get(null) as AggregateMetric<*>
-            val data = runBlocking { repository.readAggregatedData(metric, startTime, endTime) }
-            val serializedResult = serializer.toString(data)
-            TaskerPluginResultSucess(ReadAggregatedDataOutput(healthConnectResult = serializedResult))
-        } catch (e: Exception) {
-            Log.e(tag, "run error", e)
-            TaskerPluginResultErrorWithOutput(errCode, e.toString())
-        }
+        val startTime = Instant.ofEpochMilli(input.regular.startTime.toLong())
+        val endTime = Instant.ofEpochMilli(input.regular.endTime.toLong())
+        val split = input.regular.aggregateMetric.split(".")
+        val clazz = Class.forName("$healthConnectRecordsPackage.${split[0]}")
+        val field = clazz.getField(split[1])
+        val metric = field.get(null) as AggregateMetric<*>
+        val data = runBlocking { repository.readAggregatedData(metric, startTime, endTime) }
+        val serializedResult = serializer.toString(data)
+        Log.d(tag, "runner complete, result size: ${serializedResult.length}")
+        TaskerPluginResultSucess(ReadAggregatedDataOutput(healthConnectResult = serializedResult))
+    }.getOrElse { e ->
+        Log.e(tag, "run error", e)
+        TaskerPluginResultErrorWithOutput(errCode, e.toString())
     }
 }

@@ -2,11 +2,9 @@ package com.rafapps.taskerhealthconnect
 
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.util.Log
 import android.widget.Toast
-import androidx.core.content.ContextCompat.startActivity
 import androidx.core.net.toUri
 import androidx.health.connect.client.HealthConnectClient
 import androidx.health.connect.client.HealthConnectFeatures
@@ -104,7 +102,6 @@ class HealthConnectRepository(
         val granted = client.permissionController.getGrantedPermissions()
         val missing = permissions.filterNot { it in granted }
         Log.i(tag, "hasPermissions missing: $missing")
-        Log.i(tag, "granted granted: $granted")
         return granted.containsAll(permissions)
     }
 
@@ -113,7 +110,7 @@ class HealthConnectRepository(
         startTime: Instant,
         endTime: Instant,
     ): AggregationResult {
-        Log.d(tag, "getAggregateData: ${aggregateMetric.javaClass.name} $startTime $endTime")
+        Log.d(tag, "readAggregatedData: ${aggregateMetric.javaClass.name} $startTime $endTime")
         val response = client.aggregate(
             AggregateRequest(
                 metrics = setOf(aggregateMetric),
@@ -123,7 +120,7 @@ class HealthConnectRepository(
 
         Log.d(
             tag,
-            "getAggregateData: result size ${response.longValues.size} + ${response.doubleValues.size}"
+            "readAggregatedData: result size ${response.longValues.size} + ${response.doubleValues.size}"
         )
         return response
     }
@@ -133,7 +130,7 @@ class HealthConnectRepository(
         startTime: Instant,
         endTime: Instant
     ): ReadRecordsResponse<Record> {
-        Log.d(tag, "getData: $recordClass, $startTime, $endTime")
+        Log.d(tag, "readData: $recordClass, $startTime, $endTime")
         val response = client.readRecords(
             ReadRecordsRequest(
                 recordType = recordClass.kotlin,
@@ -141,7 +138,7 @@ class HealthConnectRepository(
             )
         )
 
-        Log.d(tag, "getData: result size ${response.records.size}")
+        Log.d(tag, "readData: result size ${response.records.size}")
         return response
     }
 

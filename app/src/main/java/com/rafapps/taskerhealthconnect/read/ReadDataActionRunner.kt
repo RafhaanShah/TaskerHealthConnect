@@ -22,7 +22,7 @@ class ReadDataActionRunner(
 ) :
     TaskerPluginRunnerAction<ReadDataInput, ReadDataOutput>() {
 
-    private val TAG = "ReadDataActionRunner"
+    private val tag = "ReadDataActionRunner"
     private val errCode = 1
 
     override val notificationProperties
@@ -32,31 +32,20 @@ class ReadDataActionRunner(
     override fun run(
         context: Context,
         input: TaskerInput<ReadDataInput>
-    ): TaskerPluginResult<ReadDataOutput> {
-        Log.d(TAG, "run: ${input.regular}")
+    ): TaskerPluginResult<ReadDataOutput> = runCatching {
+        Log.d(tag, "runner start: ${input.regular}")
         val repository = repositoryProvider(context)
-        val startTime =
-            runCatching { Instant.ofEpochMilli(input.regular.startTime.toLong()) }.getOrElse { e ->
-                Log.e(TAG, "invalid input: ${input.regular.startTime}")
-                return TaskerPluginResultErrorWithOutput(errCode, e.toString())
-            }
-
-        val endTime =
-            runCatching { Instant.ofEpochMilli(input.regular.endTime.toLong()) }.getOrElse { e ->
-                Log.e(TAG, "invalid input: ${input.regular.endTime}")
-                return TaskerPluginResultErrorWithOutput(errCode, e.toString())
-            }
-
-        return try {
-            val clazz =
-                Class.forName("$healthConnectRecordsPackage.${input.regular.recordType}")
-                        as Class<Record>
-            val data = runBlocking { repository.readData(clazz , startTime, endTime) }
-            val serializedResult = serializer.toString(data)
-            TaskerPluginResultSucess(ReadDataOutput(healthConnectResult = serializedResult))
-        } catch (e: Exception) {
-            Log.e(TAG, "run error", e)
-            TaskerPluginResultErrorWithOutput(errCode, e.toString())
-        }
+        val startTime = Instant.ofEpochMilli(input.regular.startTime.toLong())
+        val endTime = Instant.ofEpochMilli(input.regular.endTime.toLong())
+        val clazz =
+            Class.forName("$healthConnectRecordsPackage.${input.regular.recordType}")
+                    as Class<Record>
+        val data = runBlocking { repository.readData(clazz, startTime, endTime) }
+        val serializedResult = serializer.toString(data)
+        Log.d(tag, "runner complete, result size: ${serializedResult.length}")
+        TaskerPluginResultSucess(ReadDataOutput(healthConnectResult = serializedResult))
+    }.getOrElse { e ->
+        Log.e(tag, "run error", e)
+        TaskerPluginResultErrorWithOutput(errCode, e.toString())
     }
 }
