@@ -5,14 +5,15 @@ import android.view.View
 import com.joaomgcd.taskerpluginlibrary.input.TaskerInput
 import com.rafapps.taskerhealthconnect.TaskerConfigActivity
 import com.rafapps.taskerhealthconnect.databinding.LayoutReadAggregatedDataBinding
-import java.time.Instant
 
 class ReadAggregatedDataActivity :
     TaskerConfigActivity<ReadAggregatedDataInput, ReadAggregatedDataConfigHelper>() {
 
     private lateinit var binding: LayoutReadAggregatedDataBinding
+    private val runner by lazy { ReadAggregatedDataActionRunner({ repository }) }
 
     override val tag = "ReadAggregatedDataActivity"
+    override val requiredPermissions: Set<String> = repository.readPermissions
     override val taskerHelper by lazy { ReadAggregatedDataConfigHelper(this) }
     override val inputForTasker: TaskerInput<ReadAggregatedDataInput>
         get() = TaskerInput(
@@ -28,11 +29,14 @@ class ReadAggregatedDataActivity :
         return binding.root
     }
 
-    override suspend fun debugAction(): Any {
+    override suspend fun runDebugAction(): Any {
         val aggregateMetric = getInputAggregateMetric()
-        val startTime = Instant.ofEpochMilli(getInputStartTime().toLong())
-        val endTime = Instant.ofEpochMilli(getInputEndTime().toLong())
-        return repository.readAggregatedData(aggregateMetric, startTime, endTime)
+        val startTime = getInputStartTime()
+        val endTime = getInputEndTime()
+        return runner.run(
+            context,
+            TaskerInput(ReadAggregatedDataInput(aggregateMetric, startTime, endTime))
+        )
     }
 
     override fun assignFromInput(input: TaskerInput<ReadAggregatedDataInput>) {

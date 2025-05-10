@@ -2,21 +2,27 @@ package com.rafapps.taskerhealthconnect.aggregated
 
 import android.content.Context
 import android.util.Log
+import androidx.health.connect.client.aggregate.AggregateMetric
 import com.joaomgcd.taskerpluginlibrary.action.TaskerPluginRunnerAction
 import com.joaomgcd.taskerpluginlibrary.input.TaskerInput
 import com.joaomgcd.taskerpluginlibrary.runner.TaskerPluginResult
 import com.joaomgcd.taskerpluginlibrary.runner.TaskerPluginResultErrorWithOutput
 import com.joaomgcd.taskerpluginlibrary.runner.TaskerPluginResultSucess
 import com.rafapps.taskerhealthconnect.HealthConnectRepository
+import com.rafapps.taskerhealthconnect.HealthConnectRepositoryProvider
 import com.rafapps.taskerhealthconnect.R
+import com.rafapps.taskerhealthconnect.Serializer
+import com.rafapps.taskerhealthconnect.healthConnectAggregatePackage
 import kotlinx.coroutines.runBlocking
 import java.time.Instant
-import java.time.ZonedDateTime
 
-class ReadAggregatedDataActionRunner :
+class ReadAggregatedDataActionRunner(
+    private val repositoryProvider: HealthConnectRepositoryProvider = { HealthConnectRepository(it) },
+    private val serializer: Serializer = Serializer()
+) :
     TaskerPluginRunnerAction<ReadAggregatedDataInput, ReadAggregatedDataOutput>() {
 
-    private val TAG = "AggregatedHealthDataActionRunner"
+    private val tag = "AggregatedHealthDataActionRunner"
     private val errCode = 1
 
     override val notificationProperties
@@ -26,44 +32,29 @@ class ReadAggregatedDataActionRunner :
         context: Context,
         input: TaskerInput<ReadAggregatedDataInput>
     ): TaskerPluginResult<ReadAggregatedDataOutput> {
-        Log.d(TAG, "run: ${input.regular}")
-        val repository = HealthConnectRepository(context)
+        Log.d(tag, "run: ${input.regular}")
+        val repository = repositoryProvider(context)
         val startTime = runCatching { Instant.ofEpochMilli(input.regular.startTime.toLong()) }.getOrElse { e ->
-            Log.e(TAG, "invalid input: ${input.regular.startTime}")
+            Log.e(tag, "invalid input: ${input.regular.startTime}")
             return TaskerPluginResultErrorWithOutput(errCode, e.toString())
         }
 
         val endTime = runCatching { Instant.ofEpochMilli(input.regular.endTime.toLong()) }.getOrElse { e ->
-            Log.e(TAG, "invalid input: ${input.regular.endTime}")
+            Log.e(tag, "invalid input: ${input.regular.endTime}")
             return TaskerPluginResultErrorWithOutput(errCode, e.toString())
         }
 
-        if (!repository.isAvailable() || runBlocking { !repository.hasPermissions() }) {
-            val errMessage = context.getString(R.string.health_connect_unavailable_or_permissions)
-            Log.e(TAG, errMessage)
-            return TaskerPluginResultErrorWithOutput(errCode, errMessage)
-        }
-
         return try {
-            val data = runBlocking {
-                repository.readAggregatedData(input.regular.aggregateMetric, startTime, endTime)
-            }
-            TaskerPluginResultSucess(ReadAggregatedDataOutput(healthConnectResult = data))
+            val split = input.regular.aggregateMetric.split(".")
+            val clazz = Class.forName("$healthConnectAggregatePackage.${split[0]}")
+            val field = clazz.getField(split[1])
+            val metric = field.get(null) as AggregateMetric<*>
+            val data = runBlocking { repository.readAggregatedData(metric, startTime, endTime) }
+            val serializedResult = serializer.toString(data)
+            TaskerPluginResultSucess(ReadAggregatedDataOutput(healthConnectResult = serializedResult))
         } catch (e: Exception) {
-            Log.e(TAG, "run error", e)
+            Log.e(tag, "run error", e)
             TaskerPluginResultErrorWithOutput(errCode, e.toString())
-        }
-    }
-
-    companion object {
-        // get the midnight instant of 'daysOffset' days ago
-        fun daysToOffsetTime(daysOffset: Long): Instant {
-            val zonedDateTime = ZonedDateTime.now()
-            return zonedDateTime.minusDays(daysOffset)
-                .minusHours(zonedDateTime.hour.toLong())
-                .minusMinutes(zonedDateTime.minute.toLong())
-                .minusSeconds(zonedDateTime.second.toLong())
-                .toInstant()
         }
     }
 }

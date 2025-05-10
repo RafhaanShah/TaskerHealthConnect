@@ -6,6 +6,7 @@
     <string name="health_connect_unavailable">Health connect is not installed or is unavailable, check for updates</string>
     <string name="health_connect_unavailable_or_permissions">Health Connect is unavailable or permissions are not granted</string>
     <string name="install">Install Health Connect</string>
+    <string name="failed_to_install">Failed to open Health Connect installation page</string>
     <string name="debug">Debug</string>
     <string name="done">Done</string>
     <string name="record_type">Class of the type of Health Record</string>

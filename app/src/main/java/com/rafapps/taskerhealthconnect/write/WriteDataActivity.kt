@@ -9,8 +9,10 @@ import com.rafapps.taskerhealthconnect.databinding.LayoutWriteDataBinding
 class WriteDataActivity : TaskerConfigActivity<WriteDataInput, WriteDataConfigHelper>() {
 
     private lateinit var binding: LayoutWriteDataBinding
+    private val runner by lazy { WriteDataActionRunner({ repository }) }
 
     override val tag = "WriteDataActivity"
+    override val requiredPermissions: Set<String> = repository.writePermissions
     override val taskerHelper by lazy { WriteDataConfigHelper(this) }
     override val inputForTasker: TaskerInput<WriteDataInput>
         get() = TaskerInput(
@@ -25,10 +27,10 @@ class WriteDataActivity : TaskerConfigActivity<WriteDataInput, WriteDataConfigHe
         return binding.root
     }
 
-    override suspend fun debugAction(): Any {
+    override suspend fun runDebugAction(): Any {
         val recordType = getInputRecordType()
         val recordInput = getInputRecord()
-        return repository.writeData(recordType, recordInput)
+        return runner.run(context, TaskerInput(WriteDataInput(recordType, recordInput)))
     }
 
     override fun assignFromInput(input: TaskerInput<WriteDataInput>) {

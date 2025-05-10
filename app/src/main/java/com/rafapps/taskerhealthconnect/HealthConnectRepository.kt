@@ -3,104 +3,107 @@ package com.rafapps.taskerhealthconnect
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import android.widget.Toast
 import androidx.core.net.toUri
 import androidx.health.connect.client.HealthConnectClient
 import androidx.health.connect.client.aggregate.AggregateMetric
+import androidx.health.connect.client.aggregate.AggregationResult
 import androidx.health.connect.client.permission.HealthPermission
 import androidx.health.connect.client.records.Record
 import androidx.health.connect.client.request.AggregateRequest
 import androidx.health.connect.client.request.ReadRecordsRequest
+import androidx.health.connect.client.response.InsertRecordsResponse
+import androidx.health.connect.client.response.ReadRecordsResponse
 import androidx.health.connect.client.time.TimeRangeFilter
 import java.time.Instant
-import kotlin.reflect.KClass
 
 class HealthConnectRepository(
     private val context: Context,
-    private val client: HealthConnectClient = HealthConnectClient.getOrCreate(context),
-    private val serializer: Serializer = Serializer()
+    private val client: HealthConnectClient = HealthConnectClient.getOrCreate(context)
 ) {
 
-    private val TAG = "HealthConnectRepository"
+    private val tag = "HealthConnectRepository"
+    private val providerPackageName = "com.google.android.apps.healthdata"
 
-    private val playStoreUri =
-        "https://play.google.com/store/apps/details?id=com.google.android.apps.healthdata"
+    val readPermissions by lazy {
+        recordTypes.map { HealthPermission.getReadPermission(it) }.toSet()
+    }
 
-    val permissions by lazy {
-        (singleRecordTypes + aggregateRecordTypes)
-            .flatMap {
-                listOf(
-                    HealthPermission.getReadPermission(it),
-                    HealthPermission.getWritePermission(it)
-                )
-            }
-            .toSet()
+    val writePermissions by lazy {
+        recordTypes.map { HealthPermission.getWritePermission(it) }.toSet()
     }
 
     fun installHealthConnect() {
-        Log.d(TAG, "installHealthConnect")
-        val intent = Intent(Intent.ACTION_VIEW).apply {
-            data = playStoreUri.toUri()
-            setPackage("com.android.vending")
+        Log.d(tag, "installHealthConnect")
+        val uriString =
+            "market://details?id=$providerPackageName&url=healthconnect%3A%2F%2Fonboarding"
+        runCatching {
+            context.startActivity(
+                Intent(Intent.ACTION_VIEW).apply {
+                    setPackage("com.android.vending")
+                    data = uriString.toUri()
+                    putExtra("overlay", true)
+                }
+            )
+        }.onFailure {
+            Log.d(tag, "installHealthConnect failed", it)
+            Toast.makeText(context, R.string.failed_to_install, Toast.LENGTH_SHORT).show()
         }
-
-        runCatching { context.startActivity(intent) }
     }
 
     fun isAvailable(): Boolean =
         HealthConnectClient.getSdkStatus(context) == HealthConnectClient.SDK_AVAILABLE
 
-    suspend fun hasPermissions(): Boolean {
+    suspend fun hasPermissions(permissions: Collection<String>): Boolean {
         val granted = client.permissionController.getGrantedPermissions()
         return granted.containsAll(permissions)
     }
 
     suspend fun readAggregatedData(
-        aggregateMetric: String,
+        aggregateMetric: AggregateMetric<*>,
         startTime: Instant,
         endTime: Instant,
-    ): String {
-        Log.d(TAG, "getAggregateData: $aggregateMetric $startTime $endTime")
-        val split = aggregateMetric.split(".")
-        val clazz = Class.forName("androidx.health.connect.client.aggregate.${split[0]}")
-        val field = clazz.getField(split[1])
-        val metric = field.get(null) as AggregateMetric<*>
-
+    ): AggregationResult {
+        Log.d(tag, "getAggregateData: $aggregateMetric $startTime $endTime")
         val response = client.aggregate(
             AggregateRequest(
-                metrics = setOf(metric),
+                metrics = setOf(aggregateMetric),
                 timeRangeFilter = TimeRangeFilter.between(startTime, endTime)
             )
         )
-        return serializer.toString(response)
+
+        Log.d(
+            tag,
+            "getAggregateData: result size ${response.longValues.size} ${response.doubleValues.size}"
+        )
+        return response
     }
 
-    @Suppress("UNCHECKED_CAST")
-    suspend fun readData(recordClass: String, startTime: Instant, endTime: Instant): String {
-        Log.d(TAG, "getData: $recordClass, $startTime")
-        // convert it to a specific record type via reflection, will throw if fails
-        val kClass = Class.forName("androidx.health.connect.client.records.$recordClass")
-            .kotlin as KClass<Record>
-
-        // fetch the records for the given type
+    suspend fun readData(
+        recordClass: Class<Record>,
+        startTime: Instant,
+        endTime: Instant
+    ): ReadRecordsResponse<Record> {
+        Log.d(tag, "getData: $recordClass, $startTime, $endTime")
         val response = client.readRecords(
             ReadRecordsRequest(
-                recordType = kClass,
+                recordType = recordClass.kotlin,
                 timeRangeFilter = TimeRangeFilter.between(startTime, endTime)
             )
         )
 
-        return serializer.toString(response)
+        Log.d(tag, "getData: result size ${response.records.size}")
+        return response
     }
 
-    @Suppress("UNCHECKED_CAST")
     suspend fun writeData(
-        recordClass: String, recordString: String
-    ): List<String> {
-        Log.d(TAG, "insertData: $recordClass")
-        val kClass = Class.forName("androidx.health.connect.client.records.$recordClass")
-        val records: List<Any> = serializer.toObjectList(recordString, kClass, listOf("metadata"))
-        val result = client.insertRecords(records as List<Record>)
-        Log.d(TAG, "insertData: result size ${result.recordIdsList.size}")
-        return result.recordIdsList
+        records: List<Record>
+    ): InsertRecordsResponse {
+        Log.d(tag, "insertData: records size ${records.size}")
+        val result = client.insertRecords(records)
+        Log.d(tag, "insertData: result size ${result.recordIdsList.size}")
+        return result
     }
 }
+
+typealias HealthConnectRepositoryProvider = (Context) -> HealthConnectRepository

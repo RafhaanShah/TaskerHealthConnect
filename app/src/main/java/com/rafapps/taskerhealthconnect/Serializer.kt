@@ -42,7 +42,7 @@ class Serializer(private val mapper: ObjectMapper = objectMapper) {
 
     fun <T> toObjectList(
         json: String,
-        kClass: Class<T>,
+        clazz: Class<T>,
         fieldsToAdd: List<String> = emptyList()
     ): List<T> {
         val jsonNode: JsonNode = mapper.readTree(json)
@@ -50,7 +50,7 @@ class Serializer(private val mapper: ObjectMapper = objectMapper) {
             if (jsonNode.isObject) addMissingField(jsonNode, field)
             else jsonNode.forEach { node -> addMissingField(node, field) }
         }
-        val type = TypeFactory.defaultInstance().constructCollectionType(List::class.java, kClass)
+        val type = TypeFactory.defaultInstance().constructCollectionType(List::class.java, clazz)
         val record: List<T> = mapper.treeToValue(jsonNode, type)
         return record
     }

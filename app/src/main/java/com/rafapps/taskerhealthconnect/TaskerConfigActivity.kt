@@ -25,27 +25,28 @@ abstract class TaskerConfigActivity<TInput : Any,
 
     private lateinit var binding: ActivityHealthConnectTaskerBinding
     protected val repository by lazy { HealthConnectRepository(this) }
-    abstract val taskerHelper: TConfigHelper
-    abstract val tag: String
-
-    private val permissionsLauncher =
-        registerForActivityResult(
-            PermissionController.createRequestPermissionResultContract()
-        ) { granted ->
-            if (granted.containsAll(repository.permissions))
-                onPermissionGranted()
-        }
+    protected abstract val taskerHelper: TConfigHelper
+    protected abstract val tag: String
+    protected abstract val requiredPermissions: Set<String>
 
     override val context: Context
         get() = this
 
     abstract override val inputForTasker: TaskerInput<TInput>
 
+    private val permissionsLauncher =
+        registerForActivityResult(
+            PermissionController.createRequestPermissionResultContract()
+        ) { granted ->
+            if (granted.containsAll(requiredPermissions))
+                onPermissionGranted()
+        }
+
     abstract override fun assignFromInput(input: TaskerInput<TInput>)
 
-    protected abstract fun provideContentView(layoutInflater: LayoutInflater): View
+    open suspend fun runDebugAction(): Any = { }
 
-    protected abstract suspend fun debugAction(): Any
+    protected abstract fun provideContentView(layoutInflater: LayoutInflater): View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d(tag, "onCreate")
@@ -72,10 +73,10 @@ abstract class TaskerConfigActivity<TInput : Any,
                     binding.button.setOnClickListener { repository.installHealthConnect() }
                 }
 
-                !repository.hasPermissions() -> {
+                !repository.hasPermissions(requiredPermissions) -> {
                     binding.button.text = getString(R.string.grant_permissions)
                     binding.button.setOnClickListener {
-                        permissionsLauncher.launch(repository.permissions)
+                        permissionsLauncher.launch(requiredPermissions)
                     }
                 }
 
@@ -106,10 +107,10 @@ abstract class TaskerConfigActivity<TInput : Any,
             lifecycleScope.launch {
                 withContext(Dispatchers.IO) {
                     runCatching {
-                        val output = debugAction()
+                        val output = runDebugAction()
                         Log.d(tag, output.toString())
                     }.onFailure { err ->
-                        Log.e(tag, "Debug Action error:", err)
+                        Log.e(tag, "runDebugAction error:", err)
                     }
                 }
             }

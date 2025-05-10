@@ -5,13 +5,17 @@ import android.view.View
 import com.joaomgcd.taskerpluginlibrary.input.TaskerInput
 import com.rafapps.taskerhealthconnect.TaskerConfigActivity
 import com.rafapps.taskerhealthconnect.databinding.LayoutReadDataBinding
+import com.rafapps.taskerhealthconnect.write.WriteDataActionRunner
+import com.rafapps.taskerhealthconnect.write.WriteDataInput
 import java.time.Instant
 
 class ReadDataActivity : TaskerConfigActivity<ReadDataInput, ReadDataConfigHelper>() {
 
     private lateinit var binding: LayoutReadDataBinding
+    private val runner by lazy { ReadDataActionRunner({ repository }) }
 
     override val tag = "ReadDataActivity"
+    override val requiredPermissions: Set<String> = repository.readPermissions
     override val taskerHelper by lazy { ReadDataConfigHelper(this) }
     override val inputForTasker: TaskerInput<ReadDataInput>
         get() = TaskerInput(
@@ -27,11 +31,11 @@ class ReadDataActivity : TaskerConfigActivity<ReadDataInput, ReadDataConfigHelpe
         return binding.root
     }
 
-    override suspend fun debugAction(): Any {
+    override suspend fun runDebugAction(): Any {
         val recordType = getInputRecordType()
-        val startTime = Instant.ofEpochMilli(getInputStartTime().toLong())
-        val endTime = Instant.ofEpochMilli(getInputEndTime().toLong())
-        return repository.readData(recordType, startTime, endTime)
+        val startTime = getInputStartTime()
+        val endTime = getInputEndTime()
+        return runner.run(context, TaskerInput(ReadDataInput(recordType, startTime, endTime)))
     }
 
     override fun assignFromInput(input: TaskerInput<ReadDataInput>) {
