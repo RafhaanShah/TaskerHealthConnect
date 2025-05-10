@@ -30,7 +30,25 @@ jobs:
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v3
 
+    - name: Update build.gradle version info
+      run: |
+        file=app/build.gradle
+        versionCode=$(grep -oP 'versionCode\s+\K\d+' $file)
+        newCode=$((versionCode + 1))
+        sed -i "s/versionCode\s\+$versionCode/versionCode $newCode/" $file
+        sed -i "s/versionName\s\+\".*\"/versionName \"${{ steps.vars.outputs.tag }}\"/" $file
+
+    - name: Commit version changes
+      run: |
+        git config user.name "GitHub Actions"
+        git config user.email "actions@github.com"
+        git add app/build.gradle
+        git commit -m "Bump version to ${{ steps.vars.outputs.tag }}"
+        git push
+
     - name: Build APK with Gradle
+      env:
+        KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
       run: ./gradlew assembleRelease
         
     - name: Upload APK

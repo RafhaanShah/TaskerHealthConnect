@@ -8,17 +8,22 @@
 - Write [Health Data](https://developer.android.com/health-and-fitness/guides/health-connect/develop/write-data) from JSON.
 
 ## Installation
-- Updates are currently released only on GitHub
-- Get the latest APK from the [releases](https://github.com/RafhaanShah/TaskerHealthConnect/releases) page
-- [Google Play Protect](https://developers.google.com/android/play-protect) may complain about untrusted applications because the APK is currently only signed with [Android Debug Certificates](https://developer.android.com/studio/publish/app-signing)
+- Get the APK from the [GitHub releases](https://github.com/RafhaanShah/TaskerHealthConnect/releases) page, or through [Obtainium](https://obtainium.imranr.dev/)
 - Check release / update notes as the plugin is not considered stable, and breaking API changes are to be expected
+
+[<img src="https://raw.githubusercontent.com/NeoApplications/Neo-Backup/refs/heads/main/badge_github.png"
+  alt="Get it on GitHub"
+  height="80">](https://github.com/RafhaanShah/TaskerHealthConnect/releases)
+[<img src="https://raw.githubusercontent.com/ImranR98/Obtainium/refs/heads/main/assets/graphics/badge_obtainium.png"
+  alt="Get it on Obtainium"
+  height="80">](obtainium://app/%7B%22id%22%3A%22com.rafapps.taskerhealthconnect%22%2C%22url%22%3A%22https%3A%2F%2Fgithub.com%2FRafhaanShah%2FTaskerHealthConnect%22%2C%22author%22%3A%22RafhaanShah%22%2C%22name%22%3A%22Tasker%20Health%20Connect%22%2C%22preferredApkIndex%22%3A0%2C%22additionalSettings%22%3A%22%7B%5C%22includePrereleases%5C%22%3Afalse%2C%5C%22fallbackToOlderReleases%5C%22%3Atrue%2C%5C%22filterReleaseTitlesByRegEx%5C%22%3A%5C%22%5C%22%2C%5C%22filterReleaseNotesByRegEx%5C%22%3A%5C%22%5C%22%2C%5C%22verifyLatestTag%5C%22%3Afalse%2C%5C%22sortMethodChoice%5C%22%3A%5C%22date%5C%22%2C%5C%22useLatestAssetDateAsReleaseDate%5C%22%3Afalse%2C%5C%22releaseTitleAsVersion%5C%22%3Atrue%2C%5C%22trackOnly%5C%22%3Afalse%2C%5C%22versionExtractionRegEx%5C%22%3A%5C%22%5C%22%2C%5C%22matchGroupToUse%5C%22%3A%5C%22%5C%22%2C%5C%22versionDetection%5C%22%3Atrue%2C%5C%22releaseDateAsVersion%5C%22%3Afalse%2C%5C%22useVersionCodeAsOSVersion%5C%22%3Afalse%2C%5C%22apkFilterRegEx%5C%22%3A%5C%22%5C%22%2C%5C%22invertAPKFilter%5C%22%3Afalse%2C%5C%22autoApkFilterByArch%5C%22%3Atrue%2C%5C%22appName%5C%22%3A%5C%22TaskerHealthConnect%5C%22%2C%5C%22appAuthor%5C%22%3A%5C%22RafhaanShah%5C%22%2C%5C%22shizukuPretendToBeGooglePlay%5C%22%3Afalse%2C%5C%22allowInsecure%5C%22%3Afalse%2C%5C%22exemptFromBackgroundUpdates%5C%22%3Afalse%2C%5C%22skipUpdateNotifications%5C%22%3Afalse%2C%5C%22about%5C%22%3A%5C%22%5C%22%2C%5C%22refreshBeforeDownload%5C%22%3Afalse%7D%22%7D)
 
 ## Usage
 - Caveat: this is not a beginner friendly plugin - it requires a fair amount of work and basic knowledge of JSON to use properly
 - Run the app, it will check to make sure that Health Connect is installed and will prompt for required permissions
 - Open Tasker, and look for 'Tasker Health Connect' inside Action -> Plugins
 - All Input and Output is in JSON format, you can use Tasker variables and Tasker's built-in JSON processing or other plugins
-- For the expected format of the input and output, look at the documentation for the (Health Connect API)[https://developer.android.com/reference/kotlin/androidx/health/connect/client/HealthConnectClient]
+- For the expected format of the input and output, look at the documentation for the [Health Connect API](https://developer.android.com/reference/kotlin/androidx/health/connect/client/HealthConnectClient)
 
 ## Building
 - Clone the repository: `git clone https://github.com/RafhaanShah/TaskerHealthConnect`
