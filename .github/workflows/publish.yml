@@ -5,7 +5,7 @@ name: Publish APK
 
 on:
   release:
-    types: [published]
+    types: [ "published" ]
 
 jobs:
   publish_to_release:
@@ -44,7 +44,7 @@ jobs:
         git config user.email "actions@github.com"
         git add app/build.gradle
         git commit -m "Bump version to ${{ steps.vars.outputs.tag }}"
-        git push
+        git push origin HEAD:main
 
     - name: Build APK with Gradle
       env:
