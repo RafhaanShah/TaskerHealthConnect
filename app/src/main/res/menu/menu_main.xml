@@ -3,4 +3,10 @@
     <item
         android:id="@+id/check_updates"
         android:title="@string/check_updates"/>
+    <item
+        android:id="@+id/health_connect_toolbox"
+        android:title="@string/health_connect_toolbox"/>
+    <item
+        android:id="@+id/health_connect_api"
+        android:title="@string/health_connect_api"/>
 </menu>

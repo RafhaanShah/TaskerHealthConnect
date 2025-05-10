@@ -1,7 +1,6 @@
 package com.rafapps.taskerhealthconnect
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
@@ -18,24 +17,20 @@ import androidx.core.net.toUri
 
 class MainActivity : AppCompatActivity() {
 
-    private val TAG = "MainActivity"
+    private val tag = "MainActivity"
     private val releaseUrl = "https://github.com/RafhaanShah/TaskerHealthConnect/releases"
+    private val apiUrl = "https://developer.android.com/reference/kotlin/androidx/health/connect/client/package-summary"
     private lateinit var binding: ActivityMainBinding
     private val repository by lazy { HealthConnectRepository(this) }
     private val allPermissions by lazy { repository.readPermissions + repository.writePermissions }
     private val permissionsLauncher =
         registerForActivityResult(
             PermissionController.createRequestPermissionResultContract()
-        ) { granted ->
-            if (granted.containsAll(allPermissions))
-                onPermissionGranted()
-            else
-                onPermissionDenied()
-        }
+        ) { _ -> onPermissionStateUpdated() }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        Log.d(TAG, "onCreate")
+        Log.d(tag, "onCreate")
         WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
 
@@ -53,8 +48,18 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.check_updates -> {
-                Log.d(TAG, "onOptionsItemSelected check_updates")
+                Log.d(tag, "onOptionsItemSelected check_updates")
                 runCatching { startActivity(Intent(Intent.ACTION_VIEW, releaseUrl.toUri())) }
+                true
+            }
+            R.id.health_connect_api -> {
+                Log.d(tag, "onOptionsItemSelected health_connect_api")
+                runCatching { startActivity(Intent(Intent.ACTION_VIEW, apiUrl.toUri())) }
+                true
+            }
+            R.id.health_connect_toolbox -> {
+                Log.d(tag, "onOptionsItemSelected health_connect_toolbox")
+                repository.openHealthConnectToolbox()
                 true
             }
 
@@ -71,40 +76,43 @@ class MainActivity : AppCompatActivity() {
         if (!repository.isAvailable())
             onHealthConnectUnavailable()
         else
-            lifecycleScope.launch {
-                if (repository.hasPermissions(allPermissions))
-                    onPermissionGranted()
-                else
-                    onPermissionDenied()
-            }
+            onPermissionStateUpdated()
+    }
+
+    private fun onPermissionStateUpdated() {
+        lifecycleScope.launch {
+            if (repository.hasPermissions(allPermissions))
+                onPermissionGranted()
+            else
+                onPermissionDenied()
+        }
     }
 
     private fun requestPermission() = permissionsLauncher.launch(allPermissions)
 
     private fun onHealthConnectUnavailable() {
-        Log.d(TAG, "onHealthConnectUnavailable")
+        Log.d(tag, "onHealthConnectUnavailable")
         with(binding) {
             textView.text = getString(R.string.health_connect_unavailable)
             button.text = getString(R.string.install)
-            button.isVisible = true
             button.setOnClickListener { repository.installHealthConnect() }
         }
     }
 
     private fun onPermissionGranted() {
-        Log.d(TAG, "onPermissionGranted")
+        Log.d(tag, "onPermissionGranted")
         with(binding) {
             textView.text = getString(R.string.app_ready)
-            button.isVisible = false
+            button.text = getString(R.string.open)
+            button.setOnClickListener { repository.openHealthConnect() }
         }
     }
 
     private fun onPermissionDenied() {
-        Log.d(TAG, "onPermissionDenied")
+        Log.d(tag, "onPermissionDenied")
         with(binding) {
             textView.text = getString(R.string.permissions_not_granted)
             button.text = getString(R.string.grant_permissions)
-            button.isVisible = true
             button.setOnClickListener { requestPermission() }
         }
     }

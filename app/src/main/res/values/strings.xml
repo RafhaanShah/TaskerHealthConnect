@@ -6,7 +6,10 @@
     <string name="health_connect_unavailable">Health connect is not installed or is unavailable, check for updates</string>
     <string name="health_connect_unavailable_or_permissions">Health Connect is unavailable or permissions are not granted</string>
     <string name="install">Install Health Connect</string>
+    <string name="open">Open Health Connect</string>
     <string name="failed_to_install">Failed to open Health Connect installation page</string>
+    <string name="failed_to_open">Failed to open Health Connect settings page</string>
+    <string name="failed_to_open_toolbox">Failed to open Health Connect Toolbox</string>
     <string name="debug">Debug</string>
     <string name="done">Done</string>
     <string name="record_type">Class of the type of Health Record</string>
@@ -32,6 +35,8 @@
         E.g. for BasalBodyTemperatureRecord:"\n{\n  \"time\": 1746646657868,\n  \"temperature\": {\n    \"value\": 38.0,\n    \"type\": \"CELSIUS\"\n  }\n}"</string>
     <string name="version">Version %s</string>
     <string name="check_updates">Check for updates</string>
+    <string name="health_connect_api">Health Connect API</string>
+    <string name="health_connect_toolbox">Health Connect Toolbox</string>
     <string name="aggregate_metric">Aggregate Metric Class.Field</string>
     <string name="aggregate_metric_description">The Aggregate Metric to return from androidx.health.connect.client.records.* package, must be in the format ClassName.FieldName, e.g. StepsRecord.COUNT_TOTAL</string>
 </resources>

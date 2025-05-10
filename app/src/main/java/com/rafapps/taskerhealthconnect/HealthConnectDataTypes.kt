@@ -46,8 +46,6 @@ import androidx.health.connect.client.records.WheelchairPushesRecord
 import kotlin.reflect.KClass
 
 
-// record types that do not support aggregations
-@OptIn(ExperimentalMindfulnessSessionApi::class)
 val recordTypes: Set<KClass<out Record>> = setOf(
     ActiveCaloriesBurnedRecord::class,
     BasalBodyTemperatureRecord::class,
@@ -65,14 +63,14 @@ val recordTypes: Set<KClass<out Record>> = setOf(
     ExerciseSessionRecord::class,
     FloorsClimbedRecord::class,
     HeartRateRecord::class,
-    HeartRateVariabilityRmssdRecord::class,
+//    HeartRateVariabilityRmssdRecord::class, -> does not get requested yet
     HeightRecord::class,
     HydrationRecord::class,
     IntermenstrualBleedingRecord::class,
     LeanBodyMassRecord::class,
     MenstruationFlowRecord::class,
     MenstruationPeriodRecord::class,
-    MindfulnessSessionRecord::class,
+//    MindfulnessSessionRecord::class, -> does not get requested yet
     NutritionRecord::class,
     OvulationTestRecord::class,
     OxygenSaturationRecord::class,

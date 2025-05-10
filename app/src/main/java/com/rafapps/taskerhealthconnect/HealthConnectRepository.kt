@@ -2,10 +2,15 @@ package com.rafapps.taskerhealthconnect
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import android.util.Log
 import android.widget.Toast
+import androidx.core.content.ContextCompat.startActivity
 import androidx.core.net.toUri
 import androidx.health.connect.client.HealthConnectClient
+import androidx.health.connect.client.HealthConnectFeatures
+import androidx.health.connect.client.HealthConnectFeatures.Companion.Feature
 import androidx.health.connect.client.aggregate.AggregateMetric
 import androidx.health.connect.client.aggregate.AggregationResult
 import androidx.health.connect.client.permission.HealthPermission
@@ -26,7 +31,17 @@ class HealthConnectRepository(
     private val providerPackageName = "com.google.android.apps.healthdata"
 
     val readPermissions by lazy {
-        recordTypes.map { HealthPermission.getReadPermission(it) }.toSet()
+        val basePermissions = recordTypes
+            .map { HealthPermission.getReadPermission(it) }
+            .toMutableSet()
+
+        if (isFeatureAvailable(HealthConnectFeatures.FEATURE_READ_HEALTH_DATA_HISTORY))
+            basePermissions += HealthPermission.PERMISSION_READ_HEALTH_DATA_HISTORY
+
+        if (isFeatureAvailable(HealthConnectFeatures.FEATURE_READ_HEALTH_DATA_IN_BACKGROUND))
+            basePermissions += HealthPermission.PERMISSION_READ_HEALTH_DATA_IN_BACKGROUND
+
+        basePermissions.toSet()
     }
 
     val writePermissions by lazy {
@@ -51,11 +66,45 @@ class HealthConnectRepository(
         }
     }
 
+    fun openHealthConnect() {
+        Log.d(tag, "openHealthConnect")
+        val action =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+                "android.health.connect.action.HEALTH_HOME_SETTINGS"
+            else "androidx.health.ACTION_HEALTH_CONNECT_SETTINGS"
+        runCatching {
+            context.startActivity(
+                Intent(action)
+            )
+        }.onFailure {
+            Log.d(tag, "openHealthConnect failed", it)
+            Toast.makeText(context, R.string.failed_to_install, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun openHealthConnectToolbox() {
+        Log.d(tag, "openHealthConnectToolbox")
+        val url =
+            "https://developer.android.com/health-and-fitness/guides/health-connect/test/health-connect-toolbox"
+        runCatching {
+            val intent =
+                context.packageManager.getLaunchIntentForPackage("androidx.health.connect.client.devtool")
+                    ?: Intent(Intent.ACTION_VIEW, url.toUri())
+            context.startActivity(intent)
+        }.onFailure {
+            Log.d(tag, "openHealthConnectToolbox failed", it)
+            Toast.makeText(context, R.string.failed_to_open_toolbox, Toast.LENGTH_SHORT).show()
+        }
+    }
+
     fun isAvailable(): Boolean =
         HealthConnectClient.getSdkStatus(context) == HealthConnectClient.SDK_AVAILABLE
 
-    suspend fun hasPermissions(permissions: Collection<String>): Boolean {
+    suspend fun hasPermissions(permissions: Set<String>): Boolean {
         val granted = client.permissionController.getGrantedPermissions()
+        val missing = permissions.filterNot { it in granted }
+        Log.i(tag, "hasPermissions missing: $missing")
+        Log.i(tag, "granted granted: $granted")
         return granted.containsAll(permissions)
     }
 
@@ -104,6 +153,9 @@ class HealthConnectRepository(
         Log.d(tag, "insertData: result size ${result.recordIdsList.size}")
         return result
     }
+
+    private fun isFeatureAvailable(@Feature feature: Int) =
+        client.features.getFeatureStatus(feature) == HealthConnectFeatures.FEATURE_STATUS_AVAILABLE
 }
 
 typealias HealthConnectRepositoryProvider = (Context) -> HealthConnectRepository
