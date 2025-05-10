@@ -32,4 +32,10 @@ jobs:
       uses: gradle/actions/setup-gradle@v3
 
     - name: Build with Gradle
-      run: ./gradlew test
+      run: ./gradlew test lint
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: reports
+        path: app/build/reports
