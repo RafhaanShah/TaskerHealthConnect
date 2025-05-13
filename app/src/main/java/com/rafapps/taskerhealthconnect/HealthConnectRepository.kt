@@ -99,7 +99,11 @@ class HealthConnectRepository(
         HealthConnectClient.getSdkStatus(context) == HealthConnectClient.SDK_AVAILABLE
 
     suspend fun hasPermissions(permissions: Set<String>): Boolean {
-        val granted = client.permissionController.getGrantedPermissions()
+        val granted =
+            runCatching { client.permissionController.getGrantedPermissions() }.getOrElse {
+                Log.e(tag, "hasPermissions failed", it)
+                return false
+            }
         val missing = permissions.filterNot { it in granted }
         Log.i(tag, "hasPermissions missing: $missing")
         return granted.containsAll(permissions)

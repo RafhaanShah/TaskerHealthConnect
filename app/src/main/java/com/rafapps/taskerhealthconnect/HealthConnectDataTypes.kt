@@ -1,6 +1,5 @@
 package com.rafapps.taskerhealthconnect
 
-import androidx.health.connect.client.feature.ExperimentalMindfulnessSessionApi
 import androidx.health.connect.client.records.ActiveCaloriesBurnedRecord
 import androidx.health.connect.client.records.BasalBodyTemperatureRecord
 import androidx.health.connect.client.records.BasalMetabolicRateRecord
@@ -17,14 +16,12 @@ import androidx.health.connect.client.records.ElevationGainedRecord
 import androidx.health.connect.client.records.ExerciseSessionRecord
 import androidx.health.connect.client.records.FloorsClimbedRecord
 import androidx.health.connect.client.records.HeartRateRecord
-import androidx.health.connect.client.records.HeartRateVariabilityRmssdRecord
 import androidx.health.connect.client.records.HeightRecord
 import androidx.health.connect.client.records.HydrationRecord
 import androidx.health.connect.client.records.IntermenstrualBleedingRecord
 import androidx.health.connect.client.records.LeanBodyMassRecord
 import androidx.health.connect.client.records.MenstruationFlowRecord
 import androidx.health.connect.client.records.MenstruationPeriodRecord
-import androidx.health.connect.client.records.MindfulnessSessionRecord
 import androidx.health.connect.client.records.NutritionRecord
 import androidx.health.connect.client.records.OvulationTestRecord
 import androidx.health.connect.client.records.OxygenSaturationRecord
@@ -63,14 +60,14 @@ val recordTypes: Set<KClass<out Record>> = setOf(
     ExerciseSessionRecord::class,
     FloorsClimbedRecord::class,
     HeartRateRecord::class,
-//    HeartRateVariabilityRmssdRecord::class, -> does not get requested yet
+//    HeartRateVariabilityRmssdRecord::class, -> permission does not get requested?
     HeightRecord::class,
     HydrationRecord::class,
     IntermenstrualBleedingRecord::class,
     LeanBodyMassRecord::class,
     MenstruationFlowRecord::class,
     MenstruationPeriodRecord::class,
-//    MindfulnessSessionRecord::class, -> does not get requested yet
+//    MindfulnessSessionRecord::class, -> permission does not get requested?
     NutritionRecord::class,
     OvulationTestRecord::class,
     OxygenSaturationRecord::class,
