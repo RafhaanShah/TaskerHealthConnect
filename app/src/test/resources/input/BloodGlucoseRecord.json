@@ -1,0 +1,12 @@
+[
+  {
+    "time": 1746800000000,
+    "level": {
+      "value": 95.0,
+      "type": "MILLIGRAMS_PER_DECILITER"
+    },
+    "specimenSource": 1,
+    "mealType": 1,
+    "relationToMeal": 1
+  }
+]

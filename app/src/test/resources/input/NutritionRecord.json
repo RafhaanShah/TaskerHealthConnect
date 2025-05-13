@@ -1,0 +1,176 @@
+[
+  {
+    "startTime": 1746800000000,
+    "endTime": 1746810000000,
+    "energy": {
+      "value": 500.0,
+      "type": "CALORIES"
+    },
+    "energyFromFat": {
+      "value": 500.0,
+      "type": "CALORIES"
+    },
+    "biotin": {
+      "value": 5.0,
+      "type": "GRAMS"
+    },
+    "caffeine": {
+      "value": 5.0,
+      "type": "GRAMS"
+    },
+    "calcium": {
+      "value": 5.0,
+      "type": "GRAMS"
+    },
+    "chloride": {
+      "value": 5.0,
+      "type": "GRAMS"
+    },
+    "cholesterol": {
+      "value": 5.0,
+      "type": "GRAMS"
+    },
+    "chromium": {
+      "value": 5.0,
+      "type": "GRAMS"
+    },
+    "copper": {
+      "value": 5.0,
+      "type": "GRAMS"
+    },
+    "dietaryFiber": {
+      "value": 5.0,
+      "type": "GRAMS"
+    },
+    "folate": {
+      "value": 5.0,
+      "type": "GRAMS"
+    },
+    "folicAcid": {
+      "value": 5.0,
+      "type": "GRAMS"
+    },
+    "iodine": {
+      "value": 5.0,
+      "type": "GRAMS"
+    },
+    "iron": {
+      "value": 5.0,
+      "type": "GRAMS"
+    },
+    "magnesium": {
+      "value": 5.0,
+      "type": "GRAMS"
+    },
+    "manganese": {
+      "value": 5.0,
+      "type": "GRAMS"
+    },
+    "molybdenum": {
+      "value": 5.0,
+      "type": "GRAMS"
+    },
+    "monounsaturatedFat": {
+      "value": 5.0,
+      "type": "GRAMS"
+    },
+    "niacin": {
+      "value": 5.0,
+      "type": "GRAMS"
+    },
+    "pantothenicAcid": {
+      "value": 5.0,
+      "type": "GRAMS"
+    },
+    "phosphorus": {
+      "value": 5.0,
+      "type": "GRAMS"
+    },
+    "polyunsaturatedFat": {
+      "value": 5.0,
+      "type": "GRAMS"
+    },
+    "potassium": {
+      "value": 5.0,
+      "type": "GRAMS"
+    },
+    "protein": {
+      "value": 5.0,
+      "type": "GRAMS"
+    },
+    "riboflavin": {
+      "value": 5.0,
+      "type": "GRAMS"
+    },
+    "saturatedFat": {
+      "value": 5.0,
+      "type": "GRAMS"
+    },
+    "selenium": {
+      "value": 5.0,
+      "type": "GRAMS"
+    },
+    "sodium": {
+      "value": 5.0,
+      "type": "GRAMS"
+    },
+    "sugar": {
+      "value": 5.0,
+      "type": "GRAMS"
+    },
+    "thiamin": {
+      "value": 5.0,
+      "type": "GRAMS"
+    },
+    "totalCarbohydrate": {
+      "value": 5.0,
+      "type": "GRAMS"
+    },
+    "totalFat": {
+      "value": 5.0,
+      "type": "GRAMS"
+    },
+    "transFat": {
+      "value": 5.0,
+      "type": "GRAMS"
+    },
+    "unsaturatedFat": {
+      "value": 5.0,
+      "type": "GRAMS"
+    },
+    "vitaminA": {
+      "value": 5.0,
+      "type": "GRAMS"
+    },
+    "vitaminB12": {
+      "value": 5.0,
+      "type": "GRAMS"
+    },
+    "vitaminB6": {
+      "value": 5.0,
+      "type": "GRAMS"
+    },
+    "vitaminC": {
+      "value": 5.0,
+      "type": "GRAMS"
+    },
+    "vitaminD": {
+      "value": 5.0,
+      "type": "GRAMS"
+    },
+    "vitaminE": {
+      "value": 5.0,
+      "type": "GRAMS"
+    },
+    "vitaminK": {
+      "value": 5.0,
+      "type": "GRAMS"
+    },
+    "zinc": {
+      "value": 5.0,
+      "type": "GRAMS"
+    },
+    "mealType": 1,
+    "name": "Slurp Juice"
+  }
+]

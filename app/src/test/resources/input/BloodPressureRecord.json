@@ -1,0 +1,13 @@
+[
+  {
+    "time": 1746800000000,
+    "systolic": {
+      "value": 120.0
+    },
+    "diastolic": {
+      "value": 80.0
+    },
+    "bodyPosition": 1,
+    "measurementLocation": 1
+  }
+]

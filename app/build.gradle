@@ -80,6 +80,9 @@ dependencies {
     implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.18.2"
 
     testImplementation 'junit:junit:4.13.2'
+
+    // https://developer.android.com/health-and-fitness/guides/health-connect/test/unit-tests
+    testImplementation 'androidx.health.connect:connect-testing:1.0.0-alpha03'
     androidTestImplementation 'androidx.test.ext:junit:1.2.1'
 }
 

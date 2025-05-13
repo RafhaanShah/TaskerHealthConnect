@@ -1,0 +1,10 @@
+[
+  {
+    "startTime": 1746800000000,
+    "endTime": 1746810000000,
+    "energy": {
+      "value": 500.0,
+      "type": "CALORIES"
+    }
+  }
+]

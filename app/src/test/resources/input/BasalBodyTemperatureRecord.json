@@ -1,0 +1,10 @@
+[
+  {
+    "time": 1746800000000,
+    "temperature": {
+      "value": 36.5,
+      "type": "CELSIUS"
+    },
+    "measurementLocation": 1
+  }
+]

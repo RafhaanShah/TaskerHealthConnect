@@ -1,0 +1,77 @@
+[
+  {
+    "startTime": 1746800000000,
+    "endTime": 1746803600000,
+    "hasExplicitTime": true,
+    "exerciseType": 1,
+    "completedExerciseSessionId": "completedExerciseSessionId",
+    "title": "title",
+    "notes": "notes",
+    "blocks": [
+      {
+        "repetitions": 1,
+        "description": "description",
+        "steps": [
+          {
+            "exerciseType": 1,
+            "exercisePhase": 1,
+            "description": "description",
+            "completionGoal": {
+              "distance": {
+                "value": 1000.0,
+                "type": "METERS"
+              },
+              "duration": 1000000
+            },
+            "performanceTargets": [
+              {
+                "minCadence": 60.0,
+                "maxCadence": 90.0
+              },
+              {
+                "minPower": {
+                  "value": 5.0,
+                  "type": "WATTS"
+                },
+                "maxPower": {
+                  "value": 10.0,
+                  "type": "WATTS"
+                },
+                "minHeartRate": 90.0,
+                "maxHeartRate": 180.0,
+                "rpe": 50
+              }
+            ]
+          },
+          {
+            "exerciseType": 1,
+            "exercisePhase": 1,
+            "description": "description",
+            "completionGoal": {
+              "totalCalories": {
+                "value": 1000.0,
+                "type": "CALORIES"
+              }
+            },
+            "performanceTargets": [
+              {
+                "minSpeed": {
+                  "value": 10.0,
+                  "type": "KILOMETERS_PER_HOUR"
+                },
+                "maxSpeed": {
+                  "value": 20.0,
+                  "type": "KILOMETERS_PER_HOUR"
+                },
+                "mass": {
+                  "value": 50.0,
+                  "type": "KILOGRAMS"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

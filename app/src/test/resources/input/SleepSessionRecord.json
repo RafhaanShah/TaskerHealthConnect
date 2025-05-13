@@ -1,0 +1,30 @@
+[
+  {
+    "startTime": 1746800000000,
+    "endTime": 1746803600000,
+    "title": "title",
+    "notes": "notes",
+    "stages": [
+      {
+        "startTime": 1746800000000,
+        "endTime": 1746800600000,
+        "stage": 0
+      },
+      {
+        "startTime": 1746800600000,
+        "endTime": 1746801200000,
+        "stage": 1
+      },
+      {
+        "startTime": 1746801200000,
+        "endTime": 1746801800000,
+        "stage": 2
+      },
+      {
+        "startTime": 1746801800000,
+        "endTime": 1746802400000,
+        "stage": 3
+      }
+    ]
+  }
+]

@@ -1,0 +1,46 @@
+[
+  {
+    "startTime": 1746800000000,
+    "endTime": 1746810000000,
+    "exerciseType": 0,
+    "segments": [
+      {
+        "startTime": 1746801000000,
+        "endTime": 1746802000000,
+        "segmentType": 0,
+        "repetitions": 10
+      }
+    ],
+    "exerciseRouteResult": {
+      "exerciseRoute": {
+        "route": [
+          {
+            "time": 1746801000000,
+            "latitude": 37.7749,
+            "longitude": -122.4194
+          },
+          {
+            "time": 1746801500000,
+            "latitude": 37.7750,
+            "longitude": -122.4195
+          }
+        ]
+      }
+    }
+  },
+  {
+    "startTime": 1746900000000,
+    "endTime": 1746910000000,
+    "exerciseType": 0,
+    "laps": [
+      {
+        "startTime": 1746901000000,
+        "endTime": 1746902000000,
+        "length": {
+          "value": 500.0,
+          "type": "METERS"
+        }
+      }
+    ]
+  }
+]

@@ -1,0 +1,9 @@
+[
+  {
+    "time": 1746800000000,
+    "basalMetabolicRate": {
+      "value": 85.0,
+      "type": "WATTS"
+    }
+  }
+]

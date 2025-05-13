@@ -1,0 +1,19 @@
+[
+  {
+    "startTime": 1746800000000,
+    "endTime": 1746803600000,
+    "baseline": {
+      "value": 36.5,
+      "type": "CELSIUS"
+    },
+    "deltas": [
+      {
+        "time": 1746800000000,
+        "delta": {
+          "value": 0.5,
+          "temperatureUnit": "CELSIUS"
+        }
+      }
+    ]
+  }
+]
