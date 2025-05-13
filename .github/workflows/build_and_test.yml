@@ -32,7 +32,7 @@ jobs:
       uses: gradle/actions/setup-gradle@v3
 
     - name: Build with Gradle
-      run: ./gradlew test lint
+      run: ./gradlew testDebugUnitTest lint
 
     - name: Upload Artifacts
       uses: actions/upload-artifact@v4
