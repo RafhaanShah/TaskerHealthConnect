@@ -163,7 +163,13 @@ class HealthConnectRepository(
     }
 
     private fun isFeatureAvailable(@Feature feature: Int) =
-        client.features.getFeatureStatus(feature) == HealthConnectFeatures.FEATURE_STATUS_AVAILABLE
+        (client.features.getFeatureStatus(feature)
+                == HealthConnectFeatures.FEATURE_STATUS_AVAILABLE).also {
+            Log.d(
+                tag,
+                "isFeatureAvailable: $feature=$it"
+            )
+        }
 }
 
 typealias HealthConnectClientProvider = (Context) -> HealthConnectClient
