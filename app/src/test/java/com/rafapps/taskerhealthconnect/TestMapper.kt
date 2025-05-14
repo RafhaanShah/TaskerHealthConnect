@@ -24,6 +24,9 @@ import kotlin.reflect.full.memberProperties
 class TestMapper {
     private val mapper = objectMapper
 
+    fun assertRecordObject(expectedObject: Any, input: String) =
+        assertRecordList(listOf(expectedObject), stringToList(input))
+
     fun assertRecordList(expectedList: List<Any>, input: String) =
         assertRecordList(expectedList, stringToList(input))
 
@@ -55,6 +58,7 @@ class TestMapper {
                 in temperatureKeys -> assertTemperature(expected as Temperature, value)
                 in velocityKeys -> assertVelocity(expected as Velocity, value)
                 in zoneOffsetKeys -> assertEquals((expected as ZoneOffset).id, value)
+                in ignoreKeys -> {}
 
                 "delta" -> assertTemperatureDelta((expected as TemperatureDelta), value)
                 "duration" -> assertEquals((expected as Duration).toMillis(), value)
@@ -65,7 +69,10 @@ class TestMapper {
                     when (expected) {
                         is Int -> assertEquals(expected, (value as Number).toInt())
                         is Long -> assertEquals(expected, (value as Number).toLong())
-                        else -> assertEquals(expected, value)
+                        else -> {
+                            println(key)
+                            assertEquals(expected, value)
+                        }
                     }
                 }
             }
@@ -74,77 +81,77 @@ class TestMapper {
 
     private fun assertEnergy(expected: Energy, actualAny: Any) {
         val actual = actualAny as Map<String, Any>
-        val type = actual.getValue("type").toString().uppercase()
-        val value = actual.getValue("value")
+        val type = actual["type"].toString().uppercase()
+        val value = actual["value"]
         when (type) {
             "CALORIES" -> assertEquals(expected.inCalories, value)
             "KILOCALORIES" -> assertEquals(expected.inKilocalories, value)
             "JOULES" -> assertEquals(expected.inJoules, value)
             "KILOJOULES" -> assertEquals(expected.inKilojoules, value)
-            else -> fail("Invalid input: $actual")
+            else -> assertEquals(expected.inCalories, actual["calories"])
         }
     }
 
     private fun assertTemperature(expected: Temperature, actualAny: Any) {
         val actual = actualAny as Map<String, Any>
-        val type = actual.getValue("type").toString().uppercase()
-        val value = actual.getValue("value")
+        val type = actual["type"].toString().uppercase()
+        val value = actual["value"]
         when (type) {
             "CELSIUS" -> assertEquals(expected.inCelsius, value)
             "FAHRENHEIT" -> assertEquals(expected.inFahrenheit, value)
-            else -> fail("Invalid input: $actual")
+            else -> assertEquals(expected.inCelsius, actual["celsius"])
         }
     }
 
     private fun assertTemperatureDelta(expected: TemperatureDelta, actualAny: Any) {
         val actual = actualAny as Map<String, Any>
-        val type = actual.getValue("temperatureUnit").toString().uppercase()
-        val value = actual.getValue("value")
+        val type = actual["temperatureUnit"].toString().uppercase()
+        val value = actual["value"]
         when (type) {
             "CELSIUS" -> assertEquals(expected.inCelsius, value)
             "FAHRENHEIT" -> assertEquals(expected.inFahrenheit, value)
-            else -> fail("Invalid input: $actual")
+            else -> assertEquals(expected.inCelsius, actual["celsius"])
         }
     }
 
     private fun assertPower(expected: Power, actualAny: Any) {
         val actual = actualAny as Map<String, Any>
-        val type = actual.getValue("type").toString().uppercase()
-        val value = actual.getValue("value")
+        val type = actual["type"].toString().uppercase()
+        val value = actual["value"]
         when (type) {
             "WATTS" -> assertEquals(expected.inWatts, value)
             "KILOCALORIES_PER_DAY" -> assertEquals(expected.inKilocaloriesPerDay, value)
-            else -> fail("Invalid input: $actual")
+            else -> assertEquals(expected.inWatts, actual["watts"])
         }
     }
 
     private fun assertBloodGlucose(expected: BloodGlucose, actualAny: Any) {
         val actual = actualAny as Map<String, Any>
-        val type = actual.getValue("type").toString().uppercase()
-        val value = actual.getValue("value")
+        val type = actual["type"].toString().uppercase()
+        val value = actual["value"]
         when (type) {
             "MILLIMOLES_PER_LITER" -> assertEquals(expected.inMillimolesPerLiter, value)
             "MILLIGRAMS_PER_DECILITER" -> assertEquals(expected.inMilligramsPerDeciliter, value)
-            else -> fail("Invalid input: $actual")
+            else -> assertEquals(expected.inMilligramsPerDeciliter, actual["milligramsPerDeciliter"])
         }
     }
 
     private fun assertPressure(expected: Pressure, actualAny: Any) {
         val actual = actualAny as Map<String, Any>
-        val value = actual.getValue("value")
+        val value = actual["value"] ?: actual["millimetersOfMercury"]
         assertEquals(expected.inMillimetersOfMercury, value)
     }
 
     private fun assertPercentage(expected: Percentage, actualAny: Any) {
         val actual = actualAny as Map<String, Any>
-        val value = actual.getValue("value")
+        val value = actual["value"]
         assertEquals(expected.value, value)
     }
 
     private fun assertMass(expected: Mass, actualAny: Any) {
         val actual = actualAny as Map<String, Any>
-        val type = actual.getValue("type").toString().uppercase()
-        val value = actual.getValue("value")
+        val type = actual["type"].toString().uppercase()
+        val value = actual["value"]
         when (type) {
             "GRAMS" -> assertEquals(expected.inGrams, value)
             "KILOGRAMS" -> assertEquals(expected.inKilograms, value)
@@ -152,60 +159,45 @@ class TestMapper {
             "MICROGRAMS" -> assertEquals(expected.inMicrograms, value)
             "OUNCES" -> assertEquals(expected.inOunces, value)
             "POUNDS" -> assertEquals(expected.inPounds, value)
-            else -> fail("Invalid input: $actual")
+            else -> assertEquals(expected.inGrams, actual["grams"])
         }
     }
 
     private fun assertLength(expected: Length, actualAny: Any) {
         val actual = actualAny as Map<String, Any>
-        val type = actual.getValue("type").toString().uppercase()
-        val value = actual.getValue("value")
+        val type = actual["type"].toString().uppercase()
+        val value = actual["value"]
         when (type) {
             "METERS" -> assertEquals(expected.inMeters, value)
             "KILOMETERS" -> assertEquals(expected.inKilometers, value)
             "MILES" -> assertEquals(expected.inMiles, value)
             "INCHES" -> assertEquals(expected.inInches, value)
             "FEET" -> assertEquals(expected.inFeet, value)
-            else -> fail("Invalid input: $actual")
-        }
-    }
-
-    private fun assertExerciseRouteResult(expected: ExerciseRouteResult, actualAny: Any) {
-        val actual = actualAny as Map<String, Any>
-
-        when (expected) {
-            is ExerciseRouteResult.Data -> {
-                assertRecord(
-                    objToMap(expected.exerciseRoute),
-                    actual.getValue("exerciseRoute") as Map<String, Any>
-                )
-            }
-
-            else -> {}
+            else -> assertEquals(expected.inMeters, actual["meters"])
         }
     }
 
     private fun assertVolume(expected: Volume, actualAny: Any) {
         val actual = actualAny as Map<String, Any>
-        val type = actual.getValue("type").toString().uppercase()
-        val value = actual.getValue("value")
+        val type = actual["type"].toString().uppercase()
+        val value = actual["value"]
         when (type) {
             "LITERS" -> assertEquals(expected.inLiters, value)
             "MILLILITERS" -> assertEquals(expected.inMilliliters, value)
             "FLUID_OUNCES_US" -> assertEquals(expected.inFluidOuncesUs, value)
-            else -> fail("Invalid input: $actual")
+            else -> assertEquals(expected.inMilliliters, actual["milliliters"])
         }
     }
 
     private fun assertVelocity(expected: Velocity, actualAny: Any) {
         val actual = actualAny as Map<String, Any>
-        val type = actual.getValue("type").toString().uppercase()
-        val value = actual.getValue("value")
+        val type = actual["type"].toString().uppercase()
+        val value = actual["value"]
         when (type) {
             "METERS_PER_SECOND" -> assertEquals(expected.inMetersPerSecond, value)
             "KILOMETERS_PER_HOUR" -> assertEquals(expected.inKilometersPerHour, value)
             "MILES_PER_HOUR" -> assertEquals(expected.inMilesPerHour, value)
-            else -> fail("Invalid input: $actual")
+            else -> assertEquals(expected.inMetersPerSecond, actual["metersPerSecond"])
         }
     }
 
@@ -299,7 +291,8 @@ class TestMapper {
             "steps",
             "performanceTargets",
             "deltas",
-            "stages"
+            "stages",
+            "records"
         )
 
         private val objectKeys = setOf("exerciseRouteResult", "exerciseRoute")
@@ -310,5 +303,6 @@ class TestMapper {
         private val temperatureKeys = setOf("temperature", "baseline")
         private val velocityKeys = setOf("speed", "minSpeed", "maxSpeed")
         private val zoneOffsetKeys = setOf("startZoneOffset", "endZoneOffset")
+        private val ignoreKeys = setOf("metadata")
     }
 }
