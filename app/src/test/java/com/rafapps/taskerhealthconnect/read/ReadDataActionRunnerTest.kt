@@ -2,7 +2,6 @@ package com.rafapps.taskerhealthconnect.read
 
 import androidx.health.connect.client.records.PlannedExerciseSessionRecord
 import androidx.health.connect.client.records.Record
-import androidx.health.connect.client.response.ReadRecordsResponse
 import androidx.health.connect.client.testing.FakeHealthConnectClient
 import com.joaomgcd.taskerpluginlibrary.input.TaskerInput
 import com.joaomgcd.taskerpluginlibrary.runner.TaskerPluginResultSucess
@@ -35,7 +34,7 @@ class ReadDataActionRunnerTest(
     private val client = FakeHealthConnectClient()
     private val mapper = TestMapper()
     private val serializer = Serializer()
-    private val repository = HealthConnectRepository(context, client)
+    private val repository = HealthConnectRepository(context, { client })
     private val runner = ReadDataActionRunner({ repository }, serializer)
 
     companion object {

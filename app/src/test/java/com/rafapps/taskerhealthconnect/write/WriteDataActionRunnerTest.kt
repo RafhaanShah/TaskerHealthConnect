@@ -31,7 +31,7 @@ class WriteDataActionRunnerTest(
     private val client = FakeHealthConnectClient()
     private val mapper = TestMapper()
     private val serializer = Serializer()
-    private val repository = HealthConnectRepository(context, client)
+    private val repository = HealthConnectRepository(context, { client })
     private val runner = WriteDataActionRunner({ repository }, serializer)
 
     companion object {

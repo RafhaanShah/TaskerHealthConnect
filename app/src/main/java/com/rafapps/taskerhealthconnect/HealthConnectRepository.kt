@@ -22,28 +22,35 @@ import java.time.Instant
 
 class HealthConnectRepository(
     private val context: Context,
-    private val client: HealthConnectClient = HealthConnectClient.getOrCreate(context)
+    private val clientProvider: HealthConnectClientProvider = { HealthConnectClient.getOrCreate(it) }
 ) {
 
     private val tag = "HealthConnectRepository"
     private val providerPackageName = "com.google.android.apps.healthdata"
+    private val client: HealthConnectClient by lazy { clientProvider(context) }
 
-    val readPermissions by lazy {
-        val basePermissions = recordTypes
+    private val backgroundPermissions = setOf(
+        HealthPermission.PERMISSION_READ_HEALTH_DATA_HISTORY,
+        HealthPermission.PERMISSION_READ_HEALTH_DATA_IN_BACKGROUND
+    )
+
+    val readPermissions: Set<String> by lazy {
+        recordTypes
             .map { HealthPermission.getReadPermission(it) }
-            .toMutableSet()
-
-        if (isFeatureAvailable(HealthConnectFeatures.FEATURE_READ_HEALTH_DATA_HISTORY))
-            basePermissions += HealthPermission.PERMISSION_READ_HEALTH_DATA_HISTORY
-
-        if (isFeatureAvailable(HealthConnectFeatures.FEATURE_READ_HEALTH_DATA_IN_BACKGROUND))
-            basePermissions += HealthPermission.PERMISSION_READ_HEALTH_DATA_IN_BACKGROUND
-
-        basePermissions.toSet()
+            .plus(backgroundPermissions)
+            .filter { permission ->
+                featureBasedPermissions[permission]?.let { feature -> isFeatureAvailable(feature) }
+                    ?: true
+            }.toSet()
     }
 
     val writePermissions by lazy {
-        recordTypes.map { HealthPermission.getWritePermission(it) }.toSet()
+        recordTypes
+            .map { HealthPermission.getWritePermission(it) }
+            .filter { permission ->
+                featureBasedPermissions[permission]?.let { feature -> isFeatureAvailable(feature) }
+                    ?: true
+            }.toSet()
     }
 
     fun installHealthConnect() {
@@ -159,4 +166,5 @@ class HealthConnectRepository(
         client.features.getFeatureStatus(feature) == HealthConnectFeatures.FEATURE_STATUS_AVAILABLE
 }
 
+typealias HealthConnectClientProvider = (Context) -> HealthConnectClient
 typealias HealthConnectRepositoryProvider = (Context) -> HealthConnectRepository
