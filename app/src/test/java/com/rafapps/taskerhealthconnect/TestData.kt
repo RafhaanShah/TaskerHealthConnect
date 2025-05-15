@@ -9,7 +9,6 @@ import androidx.health.connect.client.records.BodyFatRecord
 import androidx.health.connect.client.records.BodyTemperatureRecord
 import androidx.health.connect.client.records.BodyWaterMassRecord
 import androidx.health.connect.client.records.BoneMassRecord
-import androidx.health.connect.client.records.CyclingPedalingCadenceRecord
 import androidx.health.connect.client.records.CervicalMucusRecord
 import androidx.health.connect.client.records.DistanceRecord
 import androidx.health.connect.client.records.ElevationGainedRecord
@@ -62,6 +61,7 @@ import java.time.Duration
 import java.time.Instant
 import java.time.ZoneOffset
 import kotlin.reflect.KClass
+import kotlin.reflect.full.companionObject
 
 private val metadata = Metadata.manualEntry()
 
@@ -139,9 +139,6 @@ val testData: Map<KClass<out Record>, Record> = recordTypes.associateWith { kCla
         )
 
         BodyFatRecord::class -> BodyFatRecord(
-            time = time,
-            zoneOffset = zoneOffset,
-            percentage = percentage,
             metadata = metadata
         )
 
@@ -157,7 +154,7 @@ val testData: Map<KClass<out Record>, Record> = recordTypes.associateWith { kCla
             time = time,
             zoneOffset = zoneOffset,
             mass = mass,
-            metadata = metadata
+            time = time, zoneOffset = zoneOffset, mass = mass, metadata = metadata
         )
 
         BoneMassRecord::class -> BoneMassRecord(
@@ -168,8 +165,6 @@ val testData: Map<KClass<out Record>, Record> = recordTypes.associateWith { kCla
         )
 
         CervicalMucusRecord::class -> CervicalMucusRecord(
-            time = time,
-            zoneOffset = zoneOffset,
             metadata = metadata,
             appearance = 0,
             sensation = 0
@@ -183,7 +178,6 @@ val testData: Map<KClass<out Record>, Record> = recordTypes.associateWith { kCla
             metadata = metadata,
             samples = listOf(
                 CyclingPedalingCadenceRecord.Sample(
-                    time = time,
                     revolutionsPerMinute = 8.9
                 )
             )
@@ -219,7 +213,6 @@ val testData: Map<KClass<out Record>, Record> = recordTypes.associateWith { kCla
                     startTime = time,
                     endTime = endTime,
                     segmentType = 0,
-                    repetitions = 1
                 )
             ),
             laps = listOf(ExerciseLap(startTime = time, endTime = endTime, length = length)),
@@ -252,6 +245,7 @@ val testData: Map<KClass<out Record>, Record> = recordTypes.associateWith { kCla
             metadata = metadata
         )
 
+        HeightRecord::class -> HeightRecord(
         HydrationRecord::class -> HydrationRecord(
             startTime = startTime,
             startZoneOffset = startZoneOffset,
@@ -264,7 +258,7 @@ val testData: Map<KClass<out Record>, Record> = recordTypes.associateWith { kCla
         IntermenstrualBleedingRecord::class -> IntermenstrualBleedingRecord(
             time = time,
             zoneOffset = zoneOffset,
-            metadata = metadata
+            time = time, zoneOffset = zoneOffset, metadata = metadata
         )
 
         LeanBodyMassRecord::class -> LeanBodyMassRecord(
@@ -275,9 +269,6 @@ val testData: Map<KClass<out Record>, Record> = recordTypes.associateWith { kCla
         )
 
         MenstruationFlowRecord::class -> MenstruationFlowRecord(
-            time = time,
-            zoneOffset = zoneOffset,
-            metadata = metadata,
             flow = 1
         )
 
@@ -349,7 +340,6 @@ val testData: Map<KClass<out Record>, Record> = recordTypes.associateWith { kCla
         )
 
         OxygenSaturationRecord::class -> OxygenSaturationRecord(
-            time = time,
             zoneOffset = zoneOffset,
             percentage = percentage,
             metadata = metadata
@@ -379,7 +369,6 @@ val testData: Map<KClass<out Record>, Record> = recordTypes.associateWith { kCla
                             ),
                             description = "description"
                         )
-                    ),
                     description = "description"
                 )
             ),
@@ -409,8 +398,6 @@ val testData: Map<KClass<out Record>, Record> = recordTypes.associateWith { kCla
         )
 
         SexualActivityRecord::class -> SexualActivityRecord(
-            time = time,
-            zoneOffset = zoneOffset,
             metadata = metadata,
             protectionUsed = 1
         )
@@ -436,8 +423,6 @@ val testData: Map<KClass<out Record>, Record> = recordTypes.associateWith { kCla
             notes = "notes",
             stages = listOf(
                 SleepSessionRecord.Stage(
-                    startTime = startTime,
-                    endTime = endTime,
                     stage = 1
                 )
             )

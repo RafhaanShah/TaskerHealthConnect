@@ -16,6 +16,7 @@ import androidx.health.connect.client.records.ElevationGainedRecord
 import androidx.health.connect.client.records.ExerciseSessionRecord
 import androidx.health.connect.client.records.FloorsClimbedRecord
 import androidx.health.connect.client.records.HeartRateRecord
+import androidx.health.connect.client.records.HeartRateVariabilityRmssdRecord
 import androidx.health.connect.client.records.HeightRecord
 import androidx.health.connect.client.records.HydrationRecord
 import androidx.health.connect.client.records.IntermenstrualBleedingRecord
@@ -60,14 +61,13 @@ val recordTypes: Set<KClass<out Record>> = setOf(
     ExerciseSessionRecord::class,
     FloorsClimbedRecord::class,
     HeartRateRecord::class,
-//    HeartRateVariabilityRmssdRecord::class, -> permission does not get requested?
+    HeartRateVariabilityRmssdRecord::class,
     HeightRecord::class,
     HydrationRecord::class,
     IntermenstrualBleedingRecord::class,
     LeanBodyMassRecord::class,
     MenstruationFlowRecord::class,
     MenstruationPeriodRecord::class,
-//    MindfulnessSessionRecord::class, -> permission does not get requested?
     NutritionRecord::class,
     OvulationTestRecord::class,
     OxygenSaturationRecord::class,

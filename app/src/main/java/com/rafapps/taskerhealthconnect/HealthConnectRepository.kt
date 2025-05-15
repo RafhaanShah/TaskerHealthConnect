@@ -121,7 +121,7 @@ class HealthConnectRepository(
         startTime: Instant,
         endTime: Instant,
     ): AggregationResult {
-        Log.d(tag, "readAggregatedData: ${aggregateMetric.javaClass.name} $startTime $endTime")
+        Log.d(tag, "readAggregatedData: ${aggregateMetric.javaClass.simpleName} $startTime $endTime")
         val response = client.aggregate(
             AggregateRequest(
                 metrics = setOf(aggregateMetric),
