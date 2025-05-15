@@ -1,5 +1,6 @@
 package com.rafapps.taskerhealthconnect
 
+import androidx.health.connect.client.aggregate.AggregateMetric
 import androidx.health.connect.client.records.ActiveCaloriesBurnedRecord
 import androidx.health.connect.client.records.BasalBodyTemperatureRecord
 import androidx.health.connect.client.records.BasalMetabolicRateRecord
@@ -10,6 +11,7 @@ import androidx.health.connect.client.records.BodyTemperatureRecord
 import androidx.health.connect.client.records.BodyWaterMassRecord
 import androidx.health.connect.client.records.BoneMassRecord
 import androidx.health.connect.client.records.CervicalMucusRecord
+import androidx.health.connect.client.records.CyclingPedalingCadenceRecord
 import androidx.health.connect.client.records.DistanceRecord
 import androidx.health.connect.client.records.ElevationGainedRecord
 import androidx.health.connect.client.records.ExerciseCompletionGoal
@@ -17,9 +19,9 @@ import androidx.health.connect.client.records.ExerciseLap
 import androidx.health.connect.client.records.ExercisePerformanceTarget
 import androidx.health.connect.client.records.ExerciseSegment
 import androidx.health.connect.client.records.ExerciseSessionRecord
-import androidx.health.connect.client.records.PlannedExerciseSessionRecord
 import androidx.health.connect.client.records.FloorsClimbedRecord
 import androidx.health.connect.client.records.HeartRateRecord
+import androidx.health.connect.client.records.HeartRateVariabilityRmssdRecord
 import androidx.health.connect.client.records.HeightRecord
 import androidx.health.connect.client.records.HydrationRecord
 import androidx.health.connect.client.records.IntermenstrualBleedingRecord
@@ -30,6 +32,7 @@ import androidx.health.connect.client.records.NutritionRecord
 import androidx.health.connect.client.records.OvulationTestRecord
 import androidx.health.connect.client.records.OxygenSaturationRecord
 import androidx.health.connect.client.records.PlannedExerciseBlock
+import androidx.health.connect.client.records.PlannedExerciseSessionRecord
 import androidx.health.connect.client.records.PlannedExerciseStep
 import androidx.health.connect.client.records.PowerRecord
 import androidx.health.connect.client.records.Record
@@ -60,8 +63,11 @@ import androidx.health.connect.client.units.Volume
 import java.time.Duration
 import java.time.Instant
 import java.time.ZoneOffset
+import kotlin.random.Random
 import kotlin.reflect.KClass
 import kotlin.reflect.full.companionObject
+import kotlin.reflect.full.companionObjectInstance
+import kotlin.reflect.full.memberProperties
 
 private val metadata = Metadata.manualEntry()
 
@@ -139,7 +145,7 @@ val testData: Map<KClass<out Record>, Record> = recordTypes.associateWith { kCla
         )
 
         BodyFatRecord::class -> BodyFatRecord(
-            metadata = metadata
+            time = time, zoneOffset = zoneOffset, percentage = percentage, metadata = metadata
         )
 
         BodyTemperatureRecord::class -> BodyTemperatureRecord(
@@ -151,23 +157,15 @@ val testData: Map<KClass<out Record>, Record> = recordTypes.associateWith { kCla
         )
 
         BodyWaterMassRecord::class -> BodyWaterMassRecord(
-            time = time,
-            zoneOffset = zoneOffset,
-            mass = mass,
             time = time, zoneOffset = zoneOffset, mass = mass, metadata = metadata
         )
 
         BoneMassRecord::class -> BoneMassRecord(
-            time = time,
-            zoneOffset = zoneOffset,
-            mass = mass,
-            metadata = metadata
+            time = time, zoneOffset = zoneOffset, mass = mass, metadata = metadata
         )
 
         CervicalMucusRecord::class -> CervicalMucusRecord(
-            metadata = metadata,
-            appearance = 0,
-            sensation = 0
+            time = time, zoneOffset = zoneOffset, metadata = metadata, appearance = 0, sensation = 0
         )
 
         CyclingPedalingCadenceRecord::class -> CyclingPedalingCadenceRecord(
@@ -178,7 +176,7 @@ val testData: Map<KClass<out Record>, Record> = recordTypes.associateWith { kCla
             metadata = metadata,
             samples = listOf(
                 CyclingPedalingCadenceRecord.Sample(
-                    revolutionsPerMinute = 8.9
+                    time = time, revolutionsPerMinute = 8.9
                 )
             )
         )
@@ -210,9 +208,7 @@ val testData: Map<KClass<out Record>, Record> = recordTypes.associateWith { kCla
             exerciseType = 0,
             segments = listOf(
                 ExerciseSegment(
-                    startTime = time,
-                    endTime = endTime,
-                    segmentType = 0,
+                    startTime = time, endTime = endTime, segmentType = 0, repetitions = 1
                 )
             ),
             laps = listOf(ExerciseLap(startTime = time, endTime = endTime, length = length)),
@@ -238,14 +234,17 @@ val testData: Map<KClass<out Record>, Record> = recordTypes.associateWith { kCla
             metadata = metadata,
         )
 
-        HeightRecord::class -> HeightRecord(
+        HeartRateVariabilityRmssdRecord::class -> HeartRateVariabilityRmssdRecord(
             time = time,
             zoneOffset = zoneOffset,
-            height = height,
+            heartRateVariabilityMillis = 1.0,
             metadata = metadata
         )
 
         HeightRecord::class -> HeightRecord(
+            time = time, zoneOffset = zoneOffset, height = height, metadata = metadata
+        )
+
         HydrationRecord::class -> HydrationRecord(
             startTime = startTime,
             startZoneOffset = startZoneOffset,
@@ -256,20 +255,15 @@ val testData: Map<KClass<out Record>, Record> = recordTypes.associateWith { kCla
         )
 
         IntermenstrualBleedingRecord::class -> IntermenstrualBleedingRecord(
-            time = time,
-            zoneOffset = zoneOffset,
             time = time, zoneOffset = zoneOffset, metadata = metadata
         )
 
         LeanBodyMassRecord::class -> LeanBodyMassRecord(
-            time = time,
-            zoneOffset = zoneOffset,
-            mass = mass,
-            metadata = metadata
+            time = time, zoneOffset = zoneOffset, mass = mass, metadata = metadata
         )
 
         MenstruationFlowRecord::class -> MenstruationFlowRecord(
-            flow = 1
+            time = time, zoneOffset = zoneOffset, metadata = metadata, flow = 1
         )
 
         MenstruationPeriodRecord::class -> MenstruationPeriodRecord(
@@ -333,16 +327,11 @@ val testData: Map<KClass<out Record>, Record> = recordTypes.associateWith { kCla
         )
 
         OvulationTestRecord::class -> OvulationTestRecord(
-            time = time,
-            zoneOffset = zoneOffset,
-            result = 1,
-            metadata = metadata
+            time = time, zoneOffset = zoneOffset, result = 1, metadata = metadata
         )
 
         OxygenSaturationRecord::class -> OxygenSaturationRecord(
-            zoneOffset = zoneOffset,
-            percentage = percentage,
-            metadata = metadata
+            time = time, zoneOffset = zoneOffset, percentage = percentage, metadata = metadata
         )
 
         PlannedExerciseSessionRecord::class -> PlannedExerciseSessionRecord(
@@ -353,14 +342,12 @@ val testData: Map<KClass<out Record>, Record> = recordTypes.associateWith { kCla
             metadata = metadata,
             blocks = listOf(
                 PlannedExerciseBlock(
-                    repetitions = 1,
-                    steps = listOf(
+                    repetitions = 1, steps = listOf(
                         PlannedExerciseStep(
                             exerciseType = 0,
                             exercisePhase = 0,
                             completionGoal = ExerciseCompletionGoal.DistanceAndDurationGoal(
-                                distance = distance,
-                                duration = duration
+                                distance = distance, duration = duration
                             ),
                             performanceTargets = listOf(
                                 ExercisePerformanceTarget.RateOfPerceivedExertionTarget(
@@ -369,7 +356,7 @@ val testData: Map<KClass<out Record>, Record> = recordTypes.associateWith { kCla
                             ),
                             description = "description"
                         )
-                    description = "description"
+                    ), description = "description"
                 )
             ),
             exerciseType = 0,
@@ -391,15 +378,11 @@ val testData: Map<KClass<out Record>, Record> = recordTypes.associateWith { kCla
         )
 
         RestingHeartRateRecord::class -> RestingHeartRateRecord(
-            time = time,
-            zoneOffset = zoneOffset,
-            beatsPerMinute = 67,
-            metadata = metadata
+            time = time, zoneOffset = zoneOffset, beatsPerMinute = 67, metadata = metadata
         )
 
         SexualActivityRecord::class -> SexualActivityRecord(
-            metadata = metadata,
-            protectionUsed = 1
+            time = time, zoneOffset = zoneOffset, metadata = metadata, protectionUsed = 1
         )
 
         SkinTemperatureRecord::class -> SkinTemperatureRecord(
@@ -423,7 +406,7 @@ val testData: Map<KClass<out Record>, Record> = recordTypes.associateWith { kCla
             notes = "notes",
             stages = listOf(
                 SleepSessionRecord.Stage(
-                    stage = 1
+                    startTime = startTime, endTime = endTime, stage = 1
                 )
             )
         )
@@ -473,10 +456,7 @@ val testData: Map<KClass<out Record>, Record> = recordTypes.associateWith { kCla
         )
 
         WeightRecord::class -> WeightRecord(
-            time = time,
-            zoneOffset = zoneOffset,
-            weight = weight,
-            metadata = metadata
+            time = time, zoneOffset = zoneOffset, weight = weight, metadata = metadata
         )
 
         WheelchairPushesRecord::class -> WheelchairPushesRecord(
@@ -489,5 +469,52 @@ val testData: Map<KClass<out Record>, Record> = recordTypes.associateWith { kCla
         )
 
         else -> throw IllegalArgumentException("Unsupported record type: $kClass")
+    }
+}
+
+data class AggregateTestData(
+    val key: String,
+    val metric: AggregateMetric<*>,
+    val testData: Any
+)
+
+val aggregateMetrics: List<AggregateTestData> = recordTypes.flatMap { clazz ->
+    val companionInstance =
+        runCatching { clazz.companionObjectInstance }.getOrNull() ?: return@flatMap emptyList()
+
+    runCatching {
+        clazz.companionObject
+            ?.memberProperties
+            ?.filter { it.returnType.classifier == AggregateMetric::class }
+            ?.mapNotNull { member ->
+                val value = member.call(companionInstance)
+                val genericType = member.returnType.arguments.first().type?.classifier as KClass<*>
+                if (value is AggregateMetric<*>) {
+                    AggregateTestData(
+                        key = "${clazz.simpleName}.${member.name}",
+                        metric = value,
+                        testData = generateTestData(genericType)
+                    ).also { println(it) }
+                } else null
+            }
+    }.getOrNull() ?: emptyList()
+}
+
+private fun generateTestData(value: KClass<*>): Any {
+    return when (value) {
+        Int::class -> Random.nextInt(1, 100)
+        Long::class -> Random.nextLong(1,100)
+        Double::class -> Random.nextDouble(1.0, 100.0)
+        Duration::class -> Duration.ofMinutes(Random.nextLong(1, 60))
+        Energy::class -> Energy.calories(Random.nextDouble(1.0, 100.0))
+        Length::class -> Length.meters(Random.nextDouble(1.0, 100.0))
+        Mass::class -> Mass.kilograms(Random.nextDouble(1.0, 100.0))
+        Power::class -> Power.watts(Random.nextDouble(1.0, 100.0))
+        Volume::class -> Volume.liters(Random.nextDouble(1.0, 100.0))
+        Pressure::class -> Pressure.millimetersOfMercury(Random.nextDouble(1.0, 100.0))
+        Temperature::class -> Temperature.celsius(Random.nextDouble(1.0, 100.0))
+        TemperatureDelta::class -> TemperatureDelta.celsius(Random.nextDouble(1.0, 100.0))
+        Velocity::class -> Velocity.kilometersPerHour(Random.nextDouble(1.0, 100.0))
+        else -> throw IllegalArgumentException("Unsupported Test Data Type: ${value.simpleName}")
     }
 }

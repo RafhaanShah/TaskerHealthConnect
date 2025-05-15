@@ -1,6 +1,5 @@
 package com.rafapps.taskerhealthconnect
 
-import androidx.health.connect.client.records.ExerciseRouteResult
 import androidx.health.connect.client.units.BloodGlucose
 import androidx.health.connect.client.units.Energy
 import androidx.health.connect.client.units.Length
@@ -14,7 +13,6 @@ import androidx.health.connect.client.units.Velocity
 import androidx.health.connect.client.units.Volume
 import com.fasterxml.jackson.core.type.TypeReference
 import org.junit.Assert.assertEquals
-import org.junit.Assert.fail
 import java.time.Duration
 import java.time.Instant
 import java.time.ZoneOffset
@@ -49,6 +47,7 @@ class TestMapper {
                     value as Map<String, Any>
                 )
 
+                in mapKeys -> assertRecord(expected as Map<String, Any>, value as Map<String, Any>)
                 in energyKeys -> assertEnergy(expected as Energy, value)
                 in instantKeys -> assertEquals((expected as Instant).toEpochMilli(), value)
                 in lengthKeys -> assertLength((expected as Length), value)
@@ -70,7 +69,6 @@ class TestMapper {
                         is Int -> assertEquals(expected, (value as Number).toInt())
                         is Long -> assertEquals(expected, (value as Number).toLong())
                         else -> {
-                            println(key)
                             assertEquals(expected, value)
                         }
                     }
@@ -296,6 +294,7 @@ class TestMapper {
         )
 
         private val objectKeys = setOf("exerciseRouteResult", "exerciseRoute")
+        private val mapKeys = setOf("longValues", "doubleValues")
         private val energyKeys = setOf("energy", "totalCalories", "energyFromFat")
         private val instantKeys = setOf("time", "startTime", "endTime")
         private val powerKeys = setOf("power", "minPower", "maxPower", "basalMetabolicRate")
@@ -303,6 +302,6 @@ class TestMapper {
         private val temperatureKeys = setOf("temperature", "baseline")
         private val velocityKeys = setOf("speed", "minSpeed", "maxSpeed")
         private val zoneOffsetKeys = setOf("startZoneOffset", "endZoneOffset")
-        private val ignoreKeys = setOf("metadata")
+        private val ignoreKeys = setOf("metadata", "dataOrigins")
     }
 }

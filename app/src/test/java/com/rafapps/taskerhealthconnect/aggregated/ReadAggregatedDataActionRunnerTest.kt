@@ -1,76 +1,69 @@
-package com.rafapps.taskerhealthconnect.read
+package com.rafapps.taskerhealthconnect.aggregated
 
 import android.util.Log
-import androidx.health.connect.client.records.PlannedExerciseSessionRecord
-import androidx.health.connect.client.records.Record
+import androidx.health.connect.client.aggregate.AggregateMetric
+import androidx.health.connect.client.testing.AggregationResult
 import androidx.health.connect.client.testing.FakeHealthConnectClient
+import androidx.health.connect.client.testing.stubs.stub
 import com.joaomgcd.taskerpluginlibrary.input.TaskerInput
 import com.joaomgcd.taskerpluginlibrary.runner.TaskerPluginResultSucess
 import com.rafapps.taskerhealthconnect.FakeContext
 import com.rafapps.taskerhealthconnect.HealthConnectRepository
 import com.rafapps.taskerhealthconnect.Serializer
 import com.rafapps.taskerhealthconnect.TestMapper
+import com.rafapps.taskerhealthconnect.aggregateMetrics
 import com.rafapps.taskerhealthconnect.endTime
-import com.rafapps.taskerhealthconnect.recordTypes
 import com.rafapps.taskerhealthconnect.startTime
-import com.rafapps.taskerhealthconnect.testData
-import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertTrue
 import org.junit.Assume.assumeTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
-import kotlin.reflect.KClass
 
 @RunWith(Parameterized::class)
-class ReadDataActionRunnerTest(
-    private val testName: String,
+class ReadAggregatedDataActionRunnerTest(
+    private val metricKey: String,
+    private val metric: AggregateMetric<*>,
+    private val testData: Any,
     private val startTime: Long,
-    private val endTime: Long,
-    private val recordType: KClass<out Record>,
-    private val expectedList: List<Record>
+    private val endTime: Long
 ) {
 
     private val context = FakeContext()
     private val client = FakeHealthConnectClient()
     private val mapper = TestMapper()
     private val serializer = Serializer()
-    private val repository = HealthConnectRepository(context, { client })
-    private val runner = ReadDataActionRunner({ repository }, serializer)
+    private val repository = HealthConnectRepository(context) { client }
+    private val runner = ReadAggregatedDataActionRunner({ repository }, serializer)
 
     companion object {
         @JvmStatic
         @Parameterized.Parameters(name = "{index}:{0}")
         fun data(): List<Array<Any>> {
-            if (recordTypes.size != testData.size) error("TestData is missing records")
-
-            return recordTypes.map { className ->
+            return aggregateMetrics.map { data ->
                 arrayOf(
-                    className.simpleName.toString(),
+                    data.key,
+                    data.metric,
+                    data.testData,
                     startTime.toEpochMilli(),
                     endTime.toEpochMilli(),
-                    className,
-                    listOf(testData.getValue(className))
                 )
+            }.also {
+                check(it.isNotEmpty()) { "No aggregate metrics found" }
             }
         }
-
-        // not supported to insert
-        val unsupported = setOf(PlannedExerciseSessionRecord::class)
     }
 
     @Test
     fun testRun() {
-        assumeTrue(!unsupported.contains(recordType))
-        runBlocking { client.insertRecords(expectedList) }
+        val aggregateResult = AggregationResult(metrics = mapOf(metric to testData))
+        assumeTrue(aggregateResult.doubleValues.isNotEmpty() or aggregateResult.longValues.isNotEmpty())
+        client.overrides.aggregate = stub(aggregateResult)
 
         val output = runner.run(
-            context,
-            TaskerInput(
-                ReadDataInput(
-                    recordType.simpleName.toString(),
-                    startTime.toString(),
-                    endTime.toString()
+            context, TaskerInput(
+                ReadAggregatedDataInput(
+                    metricKey, startTime.toString(), endTime.toString()
                 )
             )
         )
@@ -79,10 +72,7 @@ class ReadDataActionRunnerTest(
         val outputString: String =
             (output as TaskerPluginResultSucess).regular?.healthConnectResult.toString()
 
-        // assert all inserted values were read as expected
         Log.i("TEST", outputString)
-        mapper.assertRecordObject(TestReadRecordsResponse(expectedList), outputString)
+        mapper.assertRecordObject(aggregateResult, outputString)
     }
 }
-
-class TestReadRecordsResponse(val records: List<Record>)

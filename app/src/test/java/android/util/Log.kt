@@ -27,7 +27,8 @@ object Log {
 
     @JvmStatic
     fun e(tag: String, msg: String, t: Throwable): Int {
-        println("ERROR: $tag: $msg, ${t.message}")
+        println("ERROR: $tag: $msg, $t")
+        t.printStackTrace()
         return 0
     }
 }

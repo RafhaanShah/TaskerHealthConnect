@@ -1,5 +1,7 @@
 package com.rafapps.taskerhealthconnect.write
 
+import android.util.Log
+import androidx.health.connect.client.records.PlannedExerciseSessionRecord
 import androidx.health.connect.client.records.Record
 import androidx.health.connect.client.request.ReadRecordsRequest
 import androidx.health.connect.client.testing.FakeHealthConnectClient
@@ -63,7 +65,7 @@ class WriteDataActionRunnerTest(
         }
 
         // not supported to insert
-        val unsupported = setOf("PlannedExerciseSessionRecord")
+        val unsupported = setOf(PlannedExerciseSessionRecord::class.simpleName.toString())
     }
 
     @Test
@@ -99,6 +101,7 @@ class WriteDataActionRunnerTest(
         }
 
         // assert all provided values were inserted as expected
+        Log.i("TEST", outputString)
         mapper.assertRecordList(expectedRecords, inputString)
     }
 }
