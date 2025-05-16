@@ -6,6 +6,7 @@
 - Read [Health Data](https://developer.android.com/health-and-fitness/guides/health-connect/develop/read-data)  as JSON.
 - Read [Aggregated Health Data](https://developer.android.com/health-and-fitness/guides/health-connect/develop/aggregate-data) as JSON.
 - Write [Health Data](https://developer.android.com/health-and-fitness/guides/health-connect/develop/write-data) from JSON.
+- Note that the Health Connect API is only designed for on-demand fetching and pushing of data, it does NOT support getting notified of changes and so you cannot build application that react to changes in data.
 
 ## Installation
 - Get the APK from the [GitHub releases](https://github.com/RafhaanShah/TaskerHealthConnect/releases) page, or through [Obtainium](https://obtainium.imranr.dev/)
