@@ -27,6 +27,7 @@
 - For the expected format of the input and output, look at the documentation for the [Health Connect API](https://developer.android.com/reference/kotlin/androidx/health/connect/client/HealthConnectClient)
 - You can find sample input data inside the [unit test resources/input](app/src/test/resources/input)
 - You can find sample output data inside the [unit test resources/output](app/src/test/resources/output)
+- You can find sample aggregated data inside the [unit test resources/aggregated](app/src/test/resources/aggregated)
 
 ## Building
 - Clone the repository: `git clone https://github.com/RafhaanShah/TaskerHealthConnect`

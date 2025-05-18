@@ -13,7 +13,9 @@ import com.rafapps.taskerhealthconnect.Serializer
 import com.rafapps.taskerhealthconnect.TestMapper
 import com.rafapps.taskerhealthconnect.aggregateMetrics
 import com.rafapps.taskerhealthconnect.endTime
+import com.rafapps.taskerhealthconnect.readTestFile
 import com.rafapps.taskerhealthconnect.startTime
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Assume.assumeTrue
 import org.junit.Test
@@ -26,7 +28,8 @@ class ReadAggregatedDataActionRunnerTest(
     private val metric: AggregateMetric<*>,
     private val testData: Any,
     private val startTime: Long,
-    private val endTime: Long
+    private val endTime: Long,
+    private val expectedOutput: String
 ) {
 
     private val context = FakeContext()
@@ -39,19 +42,19 @@ class ReadAggregatedDataActionRunnerTest(
     companion object {
         @JvmStatic
         @Parameterized.Parameters(name = "{index}:{0}")
-        fun data(): List<Array<Any>> {
-            return aggregateMetrics.map { data ->
+        fun data(): List<Array<Any>> =
+            aggregateMetrics.map { data ->
                 arrayOf(
                     data.key,
                     data.metric,
                     data.testData,
                     startTime.toEpochMilli(),
                     endTime.toEpochMilli(),
+                    readTestFile("aggregated", data.key)
                 )
             }.also {
                 check(it.isNotEmpty()) { "No aggregate metrics found" }
             }
-        }
     }
 
     @Test
@@ -59,6 +62,7 @@ class ReadAggregatedDataActionRunnerTest(
         val aggregateResult = AggregationResult(metrics = mapOf(metric to testData))
         assumeTrue(aggregateResult.doubleValues.isNotEmpty() or aggregateResult.longValues.isNotEmpty())
         client.overrides.aggregate = stub(aggregateResult)
+        Log.i("Input", "$metricKey: $testData")
 
         val output = runner.run(
             context, TaskerInput(
@@ -72,7 +76,8 @@ class ReadAggregatedDataActionRunnerTest(
         val outputString: String =
             (output as TaskerPluginResultSucess).regular?.healthConnectResult.toString()
 
-        Log.i("TEST", outputString)
+        Log.i("Output", outputString)
+        assertEquals(expectedOutput, outputString)
         mapper.assertRecordObject(aggregateResult, outputString)
     }
 }
