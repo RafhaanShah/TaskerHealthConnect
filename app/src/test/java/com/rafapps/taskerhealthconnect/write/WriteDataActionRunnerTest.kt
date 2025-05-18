@@ -13,6 +13,7 @@ import com.rafapps.taskerhealthconnect.HealthConnectRepository
 import com.rafapps.taskerhealthconnect.Serializer
 import com.rafapps.taskerhealthconnect.TestMapper
 import com.rafapps.taskerhealthconnect.healthConnectRecordsPackage
+import com.rafapps.taskerhealthconnect.readTestFile
 import com.rafapps.taskerhealthconnect.recordTypes
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertTrue
@@ -20,7 +21,6 @@ import org.junit.Assume.assumeTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
-import java.io.File
 import java.time.Instant
 
 @RunWith(Parameterized::class)
@@ -39,29 +39,9 @@ class WriteDataActionRunnerTest(
     companion object {
         @JvmStatic
         @Parameterized.Parameters(name = "{index}:{0}")
-        fun data(): List<Array<Any>> {
-            val inputDir = File("src/test/resources/input")
-            val recordTypeSet: Set<String> = recordTypes.map { it.simpleName.toString() }.toSet()
-
-            if (!inputDir.exists() || !inputDir.isDirectory)
-                error("Input directory not found: ${inputDir.absolutePath}")
-
-            val res = inputDir
-                .listFiles { file -> file.extension == "json" }
-                ?.map { file ->
-                    val className = file.nameWithoutExtension
-                    require(recordTypeSet.contains(className)) {
-                        "Unknown record type: $className"
-                    }
-                    arrayOf<Any>(className, file.readText(Charsets.UTF_8))
-                } ?: error("No JSON files found in input directory: ${inputDir.absolutePath}")
-
-            require(recordTypeSet.size == res.size) {
-                "Missing record types: ${recordTypeSet - res.map { it[0] }.toSet()}"
-            }
-
-
-            return res
+        fun data(): List<Array<Any>> = recordTypes.map { className ->
+            val name = className.simpleName.toString()
+            arrayOf(name, readTestFile("input", name))
         }
 
         // not supported to insert
@@ -72,15 +52,17 @@ class WriteDataActionRunnerTest(
     @Suppress("UNCHECKED_CAST")
     fun testRun() {
         assumeTrue(!unsupported.contains(recordType))
+        Log.i("Input", inputString)
 
-        val clazz = Class.forName("$healthConnectRecordsPackage.$recordType")
         val output = runner.run(context, TaskerInput(WriteDataInput(recordType, inputString)))
         assertTrue(output.success)
         assertTrue(output is TaskerPluginResultSucess)
 
         val outputString: String =
             (output as TaskerPluginResultSucess).regular?.healthConnectResult.toString()
+        Log.i("Output", outputString)
 
+        val clazz = Class.forName("$healthConnectRecordsPackage.$recordType")
         val expectedRecords = runBlocking {
             client.readRecords(
                 ReadRecordsRequest(
@@ -90,6 +72,7 @@ class WriteDataActionRunnerTest(
             ).records
         }
 
+        require(expectedRecords.isNotEmpty()) { "No expected records found"}
         val outputIds = mapper.stringToList(outputString)
             .first()
             .getValue("recordIdsList")
@@ -101,7 +84,6 @@ class WriteDataActionRunnerTest(
         }
 
         // assert all provided values were inserted as expected
-        Log.i("TEST", outputString)
         mapper.assertRecordList(expectedRecords, inputString)
     }
 }

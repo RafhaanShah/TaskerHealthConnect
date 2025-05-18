@@ -1,0 +1,28 @@
+{
+  "pageToken": null,
+  "records": [
+    {
+      "endTime": 1746803600000,
+      "endZoneOffset": null,
+      "metadata": {
+        "clientRecordId": null,
+        "clientRecordVersion": 0,
+        "dataOrigin": {
+          "packageName": "androidx.health.connect.test"
+        },
+        "device": null,
+        "id": "testHCid0",
+        "lastModifiedTime": 1746800000000,
+        "recordingMethod": 3
+      },
+      "samples": [
+        {
+          "rate": 10.0,
+          "time": 1746800000000
+        }
+      ],
+      "startTime": 1746800000000,
+      "startZoneOffset": null
+    }
+  ]
+}

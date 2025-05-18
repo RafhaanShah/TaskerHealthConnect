@@ -1,0 +1,28 @@
+{
+  "pageToken": null,
+  "records": [
+    {
+      "mass": {
+        "grams": 50000.0,
+        "kilograms": 50.0,
+        "micrograms": 5.0E10,
+        "milligrams": 5.0E7,
+        "ounces": 1763.6982918934784,
+        "pounds": 110.23113109243879
+      },
+      "metadata": {
+        "clientRecordId": null,
+        "clientRecordVersion": 0,
+        "dataOrigin": {
+          "packageName": "androidx.health.connect.test"
+        },
+        "device": null,
+        "id": "testHCid0",
+        "lastModifiedTime": 1746800000000,
+        "recordingMethod": 3
+      },
+      "time": 1746800000000,
+      "zoneOffset": null
+    }
+  ]
+}

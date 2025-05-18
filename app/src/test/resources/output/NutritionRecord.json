@@ -1,0 +1,356 @@
+{
+  "pageToken": null,
+  "records": [
+    {
+      "biotin": {
+        "grams": 1.0,
+        "kilograms": 0.001,
+        "micrograms": 1000000.0,
+        "milligrams": 1000.0,
+        "ounces": 0.03527396583786957,
+        "pounds": 0.002204622621848776
+      },
+      "caffeine": {
+        "grams": 1.0,
+        "kilograms": 0.001,
+        "micrograms": 1000000.0,
+        "milligrams": 1000.0,
+        "ounces": 0.03527396583786957,
+        "pounds": 0.002204622621848776
+      },
+      "calcium": {
+        "grams": 1.0,
+        "kilograms": 0.001,
+        "micrograms": 1000000.0,
+        "milligrams": 1000.0,
+        "ounces": 0.03527396583786957,
+        "pounds": 0.002204622621848776
+      },
+      "chloride": {
+        "grams": 1.0,
+        "kilograms": 0.001,
+        "micrograms": 1000000.0,
+        "milligrams": 1000.0,
+        "ounces": 0.03527396583786957,
+        "pounds": 0.002204622621848776
+      },
+      "cholesterol": {
+        "grams": 1.0,
+        "kilograms": 0.001,
+        "micrograms": 1000000.0,
+        "milligrams": 1000.0,
+        "ounces": 0.03527396583786957,
+        "pounds": 0.002204622621848776
+      },
+      "chromium": {
+        "grams": 1.0,
+        "kilograms": 0.001,
+        "micrograms": 1000000.0,
+        "milligrams": 1000.0,
+        "ounces": 0.03527396583786957,
+        "pounds": 0.002204622621848776
+      },
+      "copper": {
+        "grams": 1.0,
+        "kilograms": 0.001,
+        "micrograms": 1000000.0,
+        "milligrams": 1000.0,
+        "ounces": 0.03527396583786957,
+        "pounds": 0.002204622621848776
+      },
+      "dietaryFiber": {
+        "grams": 1.0,
+        "kilograms": 0.001,
+        "micrograms": 1000000.0,
+        "milligrams": 1000.0,
+        "ounces": 0.03527396583786957,
+        "pounds": 0.002204622621848776
+      },
+      "endTime": 1746803600000,
+      "endZoneOffset": null,
+      "energy": {
+        "calories": 23.0,
+        "joules": 96.23200001516616,
+        "kilocalories": 0.023,
+        "kilojoules": 0.09623200001516616
+      },
+      "energyFromFat": {
+        "calories": 23.0,
+        "joules": 96.23200001516616,
+        "kilocalories": 0.023,
+        "kilojoules": 0.09623200001516616
+      },
+      "folate": {
+        "grams": 1.0,
+        "kilograms": 0.001,
+        "micrograms": 1000000.0,
+        "milligrams": 1000.0,
+        "ounces": 0.03527396583786957,
+        "pounds": 0.002204622621848776
+      },
+      "folicAcid": {
+        "grams": 1.0,
+        "kilograms": 0.001,
+        "micrograms": 1000000.0,
+        "milligrams": 1000.0,
+        "ounces": 0.03527396583786957,
+        "pounds": 0.002204622621848776
+      },
+      "iodine": {
+        "grams": 1.0,
+        "kilograms": 0.001,
+        "micrograms": 1000000.0,
+        "milligrams": 1000.0,
+        "ounces": 0.03527396583786957,
+        "pounds": 0.002204622621848776
+      },
+      "iron": {
+        "grams": 1.0,
+        "kilograms": 0.001,
+        "micrograms": 1000000.0,
+        "milligrams": 1000.0,
+        "ounces": 0.03527396583786957,
+        "pounds": 0.002204622621848776
+      },
+      "magnesium": {
+        "grams": 1.0,
+        "kilograms": 0.001,
+        "micrograms": 1000000.0,
+        "milligrams": 1000.0,
+        "ounces": 0.03527396583786957,
+        "pounds": 0.002204622621848776
+      },
+      "manganese": {
+        "grams": 1.0,
+        "kilograms": 0.001,
+        "micrograms": 1000000.0,
+        "milligrams": 1000.0,
+        "ounces": 0.03527396583786957,
+        "pounds": 0.002204622621848776
+      },
+      "mealType": 1,
+      "metadata": {
+        "clientRecordId": null,
+        "clientRecordVersion": 0,
+        "dataOrigin": {
+          "packageName": "androidx.health.connect.test"
+        },
+        "device": null,
+        "id": "testHCid0",
+        "lastModifiedTime": 1746800000000,
+        "recordingMethod": 3
+      },
+      "molybdenum": {
+        "grams": 1.0,
+        "kilograms": 0.001,
+        "micrograms": 1000000.0,
+        "milligrams": 1000.0,
+        "ounces": 0.03527396583786957,
+        "pounds": 0.002204622621848776
+      },
+      "monounsaturatedFat": {
+        "grams": 1.0,
+        "kilograms": 0.001,
+        "micrograms": 1000000.0,
+        "milligrams": 1000.0,
+        "ounces": 0.03527396583786957,
+        "pounds": 0.002204622621848776
+      },
+      "name": "name",
+      "niacin": {
+        "grams": 1.0,
+        "kilograms": 0.001,
+        "micrograms": 1000000.0,
+        "milligrams": 1000.0,
+        "ounces": 0.03527396583786957,
+        "pounds": 0.002204622621848776
+      },
+      "pantothenicAcid": {
+        "grams": 1.0,
+        "kilograms": 0.001,
+        "micrograms": 1000000.0,
+        "milligrams": 1000.0,
+        "ounces": 0.03527396583786957,
+        "pounds": 0.002204622621848776
+      },
+      "phosphorus": {
+        "grams": 1.0,
+        "kilograms": 0.001,
+        "micrograms": 1000000.0,
+        "milligrams": 1000.0,
+        "ounces": 0.03527396583786957,
+        "pounds": 0.002204622621848776
+      },
+      "polyunsaturatedFat": {
+        "grams": 1.0,
+        "kilograms": 0.001,
+        "micrograms": 1000000.0,
+        "milligrams": 1000.0,
+        "ounces": 0.03527396583786957,
+        "pounds": 0.002204622621848776
+      },
+      "potassium": {
+        "grams": 1.0,
+        "kilograms": 0.001,
+        "micrograms": 1000000.0,
+        "milligrams": 1000.0,
+        "ounces": 0.03527396583786957,
+        "pounds": 0.002204622621848776
+      },
+      "protein": {
+        "grams": 1.0,
+        "kilograms": 0.001,
+        "micrograms": 1000000.0,
+        "milligrams": 1000.0,
+        "ounces": 0.03527396583786957,
+        "pounds": 0.002204622621848776
+      },
+      "riboflavin": {
+        "grams": 1.0,
+        "kilograms": 0.001,
+        "micrograms": 1000000.0,
+        "milligrams": 1000.0,
+        "ounces": 0.03527396583786957,
+        "pounds": 0.002204622621848776
+      },
+      "saturatedFat": {
+        "grams": 1.0,
+        "kilograms": 0.001,
+        "micrograms": 1000000.0,
+        "milligrams": 1000.0,
+        "ounces": 0.03527396583786957,
+        "pounds": 0.002204622621848776
+      },
+      "selenium": {
+        "grams": 1.0,
+        "kilograms": 0.001,
+        "micrograms": 1000000.0,
+        "milligrams": 1000.0,
+        "ounces": 0.03527396583786957,
+        "pounds": 0.002204622621848776
+      },
+      "sodium": {
+        "grams": 1.0,
+        "kilograms": 0.001,
+        "micrograms": 1000000.0,
+        "milligrams": 1000.0,
+        "ounces": 0.03527396583786957,
+        "pounds": 0.002204622621848776
+      },
+      "startTime": 1746800000000,
+      "startZoneOffset": null,
+      "sugar": {
+        "grams": 1.0,
+        "kilograms": 0.001,
+        "micrograms": 1000000.0,
+        "milligrams": 1000.0,
+        "ounces": 0.03527396583786957,
+        "pounds": 0.002204622621848776
+      },
+      "thiamin": {
+        "grams": 1.0,
+        "kilograms": 0.001,
+        "micrograms": 1000000.0,
+        "milligrams": 1000.0,
+        "ounces": 0.03527396583786957,
+        "pounds": 0.002204622621848776
+      },
+      "totalCarbohydrate": {
+        "grams": 1.0,
+        "kilograms": 0.001,
+        "micrograms": 1000000.0,
+        "milligrams": 1000.0,
+        "ounces": 0.03527396583786957,
+        "pounds": 0.002204622621848776
+      },
+      "totalFat": {
+        "grams": 1.0,
+        "kilograms": 0.001,
+        "micrograms": 1000000.0,
+        "milligrams": 1000.0,
+        "ounces": 0.03527396583786957,
+        "pounds": 0.002204622621848776
+      },
+      "transFat": {
+        "grams": 1.0,
+        "kilograms": 0.001,
+        "micrograms": 1000000.0,
+        "milligrams": 1000.0,
+        "ounces": 0.03527396583786957,
+        "pounds": 0.002204622621848776
+      },
+      "unsaturatedFat": {
+        "grams": 1.0,
+        "kilograms": 0.001,
+        "micrograms": 1000000.0,
+        "milligrams": 1000.0,
+        "ounces": 0.03527396583786957,
+        "pounds": 0.002204622621848776
+      },
+      "vitaminA": {
+        "grams": 1.0,
+        "kilograms": 0.001,
+        "micrograms": 1000000.0,
+        "milligrams": 1000.0,
+        "ounces": 0.03527396583786957,
+        "pounds": 0.002204622621848776
+      },
+      "vitaminB12": {
+        "grams": 1.0,
+        "kilograms": 0.001,
+        "micrograms": 1000000.0,
+        "milligrams": 1000.0,
+        "ounces": 0.03527396583786957,
+        "pounds": 0.002204622621848776
+      },
+      "vitaminB6": {
+        "grams": 1.0,
+        "kilograms": 0.001,
+        "micrograms": 1000000.0,
+        "milligrams": 1000.0,
+        "ounces": 0.03527396583786957,
+        "pounds": 0.002204622621848776
+      },
+      "vitaminC": {
+        "grams": 1.0,
+        "kilograms": 0.001,
+        "micrograms": 1000000.0,
+        "milligrams": 1000.0,
+        "ounces": 0.03527396583786957,
+        "pounds": 0.002204622621848776
+      },
+      "vitaminD": {
+        "grams": 1.0,
+        "kilograms": 0.001,
+        "micrograms": 1000000.0,
+        "milligrams": 1000.0,
+        "ounces": 0.03527396583786957,
+        "pounds": 0.002204622621848776
+      },
+      "vitaminE": {
+        "grams": 1.0,
+        "kilograms": 0.001,
+        "micrograms": 1000000.0,
+        "milligrams": 1000.0,
+        "ounces": 0.03527396583786957,
+        "pounds": 0.002204622621848776
+      },
+      "vitaminK": {
+        "grams": 1.0,
+        "kilograms": 0.001,
+        "micrograms": 1000000.0,
+        "milligrams": 1000.0,
+        "ounces": 0.03527396583786957,
+        "pounds": 0.002204622621848776
+      },
+      "zinc": {
+        "grams": 1.0,
+        "kilograms": 0.001,
+        "micrograms": 1000000.0,
+        "milligrams": 1000.0,
+        "ounces": 0.03527396583786957,
+        "pounds": 0.002204622621848776
+      }
+    }
+  ]
+}

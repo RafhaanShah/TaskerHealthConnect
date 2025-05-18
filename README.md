@@ -25,7 +25,8 @@
 - Open Tasker, and look for 'Tasker Health Connect' inside Action -> Plugins
 - All Input and Output is in JSON format, you can use Tasker variables and Tasker's built-in JSON processing or other plugins
 - For the expected format of the input and output, look at the documentation for the [Health Connect API](https://developer.android.com/reference/kotlin/androidx/health/connect/client/HealthConnectClient)
-- You can find sample input data inside the [unit test resources](app/src/test/resources/input)
+- You can find sample input data inside the [unit test resources/input](app/src/test/resources/input)
+- You can find sample output data inside the [unit test resources/output](app/src/test/resources/output)
 
 ## Building
 - Clone the repository: `git clone https://github.com/RafhaanShah/TaskerHealthConnect`

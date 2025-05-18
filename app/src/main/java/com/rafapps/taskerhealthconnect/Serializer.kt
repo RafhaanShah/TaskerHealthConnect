@@ -28,6 +28,7 @@ val objectMapper: ObjectMapper by lazy {
         .enable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
         .enable(SerializationFeature.WRITE_DATE_KEYS_AS_TIMESTAMPS)
         .disable(SerializationFeature.WRITE_DATE_TIMESTAMPS_AS_NANOSECONDS)
+        .disable(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS)
         .enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
         .disable(DeserializationFeature.READ_DATE_TIMESTAMPS_AS_NANOSECONDS)
         .disable(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE)
@@ -35,6 +36,7 @@ val objectMapper: ObjectMapper by lazy {
         .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS)
         .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_VALUES)
         .enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
+        .enable(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY)
         .registerModule(
             JavaTimeModule()
                 .enable(JavaTimeFeature.ALWAYS_ALLOW_STRINGIFIED_DATE_TIMESTAMPS)

@@ -56,7 +56,7 @@ class TestMapper {
                 in pressureKeys -> assertPressure(expected as Pressure, value)
                 in temperatureKeys -> assertTemperature(expected as Temperature, value)
                 in velocityKeys -> assertVelocity(expected as Velocity, value)
-                in zoneOffsetKeys -> assertEquals((expected as ZoneOffset).id, value)
+                in zoneOffsetKeys -> assertEquals((expected as ZoneOffset?)?.id, value)
                 in ignoreKeys -> {}
 
                 "delta" -> assertTemperatureDelta((expected as TemperatureDelta), value)

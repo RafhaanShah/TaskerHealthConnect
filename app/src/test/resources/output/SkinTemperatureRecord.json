@@ -1,0 +1,36 @@
+{
+  "pageToken": null,
+  "records": [
+    {
+      "baseline": {
+        "celsius": 36.0,
+        "fahrenheit": 96.8
+      },
+      "deltas": [
+        {
+          "delta": {
+            "celsius": 1.0,
+            "fahrenheit": 1.8
+          },
+          "time": 1746800000000
+        }
+      ],
+      "endTime": 1746803600000,
+      "endZoneOffset": null,
+      "measurementLocation": 1,
+      "metadata": {
+        "clientRecordId": null,
+        "clientRecordVersion": 0,
+        "dataOrigin": {
+          "packageName": "androidx.health.connect.test"
+        },
+        "device": null,
+        "id": "testHCid0",
+        "lastModifiedTime": 1746800000000,
+        "recordingMethod": 3
+      },
+      "startTime": 1746800000000,
+      "startZoneOffset": null
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 package com.rafapps.taskerhealthconnect
 
+import android.util.Log
 import androidx.health.connect.client.aggregate.AggregateMetric
 import androidx.health.connect.client.records.ActiveCaloriesBurnedRecord
 import androidx.health.connect.client.records.BasalBodyTemperatureRecord
@@ -60,10 +61,10 @@ import androidx.health.connect.client.units.Temperature
 import androidx.health.connect.client.units.TemperatureDelta
 import androidx.health.connect.client.units.Velocity
 import androidx.health.connect.client.units.Volume
+import java.io.File
 import java.time.Duration
 import java.time.Instant
 import java.time.ZoneOffset
-import kotlin.random.Random
 import kotlin.reflect.KClass
 import kotlin.reflect.full.companionObject
 import kotlin.reflect.full.companionObjectInstance
@@ -74,7 +75,7 @@ private val metadata = Metadata.manualEntry()
 private val zoneOffset: ZoneOffset? = null
 private val startZoneOffset = zoneOffset
 private val endZoneOffset = zoneOffset
-private val time = Instant.ofEpochMilli(1746800000000)
+val time = Instant.ofEpochMilli(1746800000000)
 val startTime: Instant = time
 val endTime: Instant = time.plusSeconds(60 * 60)
 private val energy = Energy.calories(23.0)
@@ -212,8 +213,8 @@ val testData: Map<KClass<out Record>, Record> = recordTypes.associateWith { kCla
                 )
             ),
             laps = listOf(ExerciseLap(startTime = time, endTime = endTime, length = length)),
-            title = "Morning Run",
-            notes = "Test Exercise Session Record"
+            title = "title",
+            notes = "notes"
         )
 
         FloorsClimbedRecord::class -> FloorsClimbedRecord(
@@ -322,7 +323,7 @@ val testData: Map<KClass<out Record>, Record> = recordTypes.associateWith { kCla
             vitaminE = Mass.grams(1.0),
             vitaminK = Mass.grams(1.0),
             zinc = Mass.grams(1.0),
-            name = "Slurp Juice",
+            name = "name",
             mealType = 1
         )
 
@@ -494,27 +495,32 @@ val aggregateMetrics: List<AggregateTestData> = recordTypes.flatMap { clazz ->
                         key = "${clazz.simpleName}.${member.name}",
                         metric = value,
                         testData = generateTestData(genericType)
-                    ).also { println(it) }
+                    ).also { Log.i("AggregateMetric", it.toString()) }
                 } else null
             }
     }.getOrNull() ?: emptyList()
 }
 
-private fun generateTestData(value: KClass<*>): Any {
-    return when (value) {
-        Int::class -> Random.nextInt(1, 100)
-        Long::class -> Random.nextLong(1,100)
-        Double::class -> Random.nextDouble(1.0, 100.0)
-        Duration::class -> Duration.ofMinutes(Random.nextLong(1, 60))
-        Energy::class -> Energy.calories(Random.nextDouble(1.0, 100.0))
-        Length::class -> Length.meters(Random.nextDouble(1.0, 100.0))
-        Mass::class -> Mass.kilograms(Random.nextDouble(1.0, 100.0))
-        Power::class -> Power.watts(Random.nextDouble(1.0, 100.0))
-        Volume::class -> Volume.liters(Random.nextDouble(1.0, 100.0))
-        Pressure::class -> Pressure.millimetersOfMercury(Random.nextDouble(1.0, 100.0))
-        Temperature::class -> Temperature.celsius(Random.nextDouble(1.0, 100.0))
-        TemperatureDelta::class -> TemperatureDelta.celsius(Random.nextDouble(1.0, 100.0))
-        Velocity::class -> Velocity.kilometersPerHour(Random.nextDouble(1.0, 100.0))
-        else -> throw IllegalArgumentException("Unsupported Test Data Type: ${value.simpleName}")
+private fun generateTestData(kClass: KClass<*>): Any {
+    return when (kClass) {
+        Int::class -> 10
+        Long::class -> 10L
+        Double::class -> 10.0
+        Duration::class -> Duration.ofMinutes(10)
+        Energy::class -> Energy.calories(100.0)
+        Length::class -> Length.meters(10.0)
+        Mass::class -> Mass.kilograms(10.0)
+        Power::class -> Power.watts(10.0)
+        Volume::class -> Volume.liters(10.0)
+        Pressure::class -> Pressure.millimetersOfMercury(10.0)
+        Temperature::class -> Temperature.celsius(10.0)
+        TemperatureDelta::class -> TemperatureDelta.celsius(1.0)
+        Velocity::class -> Velocity.kilometersPerHour(10.0)
+        else -> throw IllegalArgumentException("Unsupported Test Data Type: ${kClass.simpleName}")
     }
 }
+
+fun readTestFile(dir: String, fileName: String): String =
+    File("src/test/resources/$dir/$fileName.json")
+        .readLines(Charsets.UTF_8)
+        .joinToString("") { it.replace("\\s+".toRegex(),"") }

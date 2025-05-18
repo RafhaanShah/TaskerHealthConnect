@@ -1,0 +1,24 @@
+{
+  "pageToken": null,
+  "records": [
+    {
+      "basalMetabolicRate": {
+        "kilocaloriesPerDay": 206.50095613349956,
+        "watts": 10.0
+      },
+      "metadata": {
+        "clientRecordId": null,
+        "clientRecordVersion": 0,
+        "dataOrigin": {
+          "packageName": "androidx.health.connect.test"
+        },
+        "device": null,
+        "id": "testHCid0",
+        "lastModifiedTime": 1746800000000,
+        "recordingMethod": 3
+      },
+      "time": 1746800000000,
+      "zoneOffset": null
+    }
+  ]
+}

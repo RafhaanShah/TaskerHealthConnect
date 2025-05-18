@@ -1,0 +1,27 @@
+{
+  "pageToken": null,
+  "records": [
+    {
+      "level": {
+        "milligramsPerDeciliter": 2.0,
+        "millimolesPerLiter": 0.1111111111111111
+      },
+      "mealType": 0,
+      "metadata": {
+        "clientRecordId": null,
+        "clientRecordVersion": 0,
+        "dataOrigin": {
+          "packageName": "androidx.health.connect.test"
+        },
+        "device": null,
+        "id": "testHCid0",
+        "lastModifiedTime": 1746800000000,
+        "recordingMethod": 3
+      },
+      "relationToMeal": 0,
+      "specimenSource": 0,
+      "time": 1746800000000,
+      "zoneOffset": null
+    }
+  ]
+}

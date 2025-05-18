@@ -1,0 +1,25 @@
+{
+  "pageToken": null,
+  "records": [
+    {
+      "measurementLocation": 0,
+      "metadata": {
+        "clientRecordId": null,
+        "clientRecordVersion": 0,
+        "dataOrigin": {
+          "packageName": "androidx.health.connect.test"
+        },
+        "device": null,
+        "id": "testHCid0",
+        "lastModifiedTime": 1746800000000,
+        "recordingMethod": 3
+      },
+      "temperature": {
+        "celsius": 36.0,
+        "fahrenheit": 96.8
+      },
+      "time": 1746800000000,
+      "zoneOffset": null
+    }
+  ]
+}

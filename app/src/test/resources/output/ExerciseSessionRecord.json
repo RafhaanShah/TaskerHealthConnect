@@ -1,0 +1,48 @@
+{
+  "pageToken": null,
+  "records": [
+    {
+      "endTime": 1746803600000,
+      "endZoneOffset": null,
+      "exerciseRouteResult": {},
+      "exerciseType": 0,
+      "laps": [
+        {
+          "endTime": 1746803600000,
+          "length": {
+            "feet": 6.561679790026246,
+            "inches": 78.74015748031496,
+            "kilometers": 0.002,
+            "meters": 2.0,
+            "miles": 0.0012427454732996137
+          },
+          "startTime": 1746800000000
+        }
+      ],
+      "metadata": {
+        "clientRecordId": null,
+        "clientRecordVersion": 0,
+        "dataOrigin": {
+          "packageName": "androidx.health.connect.test"
+        },
+        "device": null,
+        "id": "testHCid0",
+        "lastModifiedTime": 1746800000000,
+        "recordingMethod": 3
+      },
+      "notes": "notes",
+      "plannedExerciseSessionId": null,
+      "segments": [
+        {
+          "endTime": 1746803600000,
+          "repetitions": 1,
+          "segmentType": 0,
+          "startTime": 1746800000000
+        }
+      ],
+      "startTime": 1746800000000,
+      "startZoneOffset": null,
+      "title": "title"
+    }
+  ]
+}

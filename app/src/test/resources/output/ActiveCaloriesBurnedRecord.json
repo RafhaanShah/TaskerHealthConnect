@@ -1,0 +1,28 @@
+{
+  "pageToken": null,
+  "records": [
+    {
+      "endTime": 1746803600000,
+      "endZoneOffset": null,
+      "energy": {
+        "calories": 23.0,
+        "joules": 96.23200001516616,
+        "kilocalories": 0.023,
+        "kilojoules": 0.09623200001516616
+      },
+      "metadata": {
+        "clientRecordId": null,
+        "clientRecordVersion": 0,
+        "dataOrigin": {
+          "packageName": "androidx.health.connect.test"
+        },
+        "device": null,
+        "id": "testHCid0",
+        "lastModifiedTime": 1746800000000,
+        "recordingMethod": 3
+      },
+      "startTime": 1746800000000,
+      "startZoneOffset": null
+    }
+  ]
+}

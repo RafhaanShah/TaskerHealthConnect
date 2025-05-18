@@ -1,0 +1,32 @@
+{
+  "pageToken": null,
+  "records": [
+    {
+      "endTime": 1746803600000,
+      "endZoneOffset": null,
+      "metadata": {
+        "clientRecordId": null,
+        "clientRecordVersion": 0,
+        "dataOrigin": {
+          "packageName": "androidx.health.connect.test"
+        },
+        "device": null,
+        "id": "testHCid0",
+        "lastModifiedTime": 1746800000000,
+        "recordingMethod": 3
+      },
+      "samples": [
+        {
+          "speed": {
+            "kilometersPerHour": 10.0,
+            "metersPerSecond": 2.7777777777777777,
+            "milesPerHour": 6.2137069514077785
+          },
+          "time": 1746800000000
+        }
+      ],
+      "startTime": 1746800000000,
+      "startZoneOffset": null
+    }
+  ]
+}

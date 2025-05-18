@@ -1,0 +1,27 @@
+{
+  "pageToken": null,
+  "records": [
+    {
+      "height": {
+        "feet": 6.561679790026246,
+        "inches": 78.74015748031496,
+        "kilometers": 0.002,
+        "meters": 2.0,
+        "miles": 0.0012427454732996137
+      },
+      "metadata": {
+        "clientRecordId": null,
+        "clientRecordVersion": 0,
+        "dataOrigin": {
+          "packageName": "androidx.health.connect.test"
+        },
+        "device": null,
+        "id": "testHCid0",
+        "lastModifiedTime": 1746800000000,
+        "recordingMethod": 3
+      },
+      "time": 1746800000000,
+      "zoneOffset": null
+    }
+  ]
+}
