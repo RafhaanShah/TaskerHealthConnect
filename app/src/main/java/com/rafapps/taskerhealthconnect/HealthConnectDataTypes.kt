@@ -1,6 +1,7 @@
 package com.rafapps.taskerhealthconnect
 
 import androidx.health.connect.client.records.ActiveCaloriesBurnedRecord
+import androidx.health.connect.client.records.ActivityIntensityRecord
 import androidx.health.connect.client.records.BasalBodyTemperatureRecord
 import androidx.health.connect.client.records.BasalMetabolicRateRecord
 import androidx.health.connect.client.records.BloodGlucoseRecord
@@ -23,6 +24,7 @@ import androidx.health.connect.client.records.IntermenstrualBleedingRecord
 import androidx.health.connect.client.records.LeanBodyMassRecord
 import androidx.health.connect.client.records.MenstruationFlowRecord
 import androidx.health.connect.client.records.MenstruationPeriodRecord
+import androidx.health.connect.client.records.MindfulnessSessionRecord
 import androidx.health.connect.client.records.NutritionRecord
 import androidx.health.connect.client.records.OvulationTestRecord
 import androidx.health.connect.client.records.OxygenSaturationRecord
@@ -46,6 +48,7 @@ import kotlin.reflect.KClass
 
 val recordTypes: Set<KClass<out Record>> = setOf(
     ActiveCaloriesBurnedRecord::class,
+    ActivityIntensityRecord::class,
     BasalBodyTemperatureRecord::class,
     BasalMetabolicRateRecord::class,
     BloodGlucoseRecord::class,
@@ -68,6 +71,7 @@ val recordTypes: Set<KClass<out Record>> = setOf(
     LeanBodyMassRecord::class,
     MenstruationFlowRecord::class,
     MenstruationPeriodRecord::class,
+    MindfulnessSessionRecord::class,
     NutritionRecord::class,
     OvulationTestRecord::class,
     OxygenSaturationRecord::class,

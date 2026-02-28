@@ -49,7 +49,7 @@
     <uses-permission android:name="android.permission.health.READ_ELEVATION_GAINED" />
     <uses-permission android:name="android.permission.health.WRITE_ELEVATION_GAINED" />
 
-    <uses-permission android:name="android.permission.health.READ_EXERCISE_ROUTE" />
+    <uses-permission android:name="android.permission.health.READ_EXERCISE_ROUTES" />
     <uses-permission android:name="android.permission.health.WRITE_EXERCISE_ROUTE" />
 
     <uses-permission android:name="android.permission.health.READ_FLOORS_CLIMBED" />
@@ -76,8 +76,8 @@
     <uses-permission android:name="android.permission.health.READ_MENSTRUATION" />
     <uses-permission android:name="android.permission.health.WRITE_MENSTRUATION" />
 
-    <uses-permission android:name="android.permission.health.READ_MINDFULNESS_SESSION" />
-    <uses-permission android:name="android.permission.health.WRITE_MINDFULNESS_SESSION" />
+    <uses-permission android:name="android.permission.health.READ_MINDFULNESS" />
+    <uses-permission android:name="android.permission.health.WRITE_MINDFULNESS" />
 
     <uses-permission android:name="android.permission.health.READ_NUTRITION" />
     <uses-permission android:name="android.permission.health.WRITE_NUTRITION" />
@@ -126,6 +126,12 @@
 
     <uses-permission android:name="android.permission.health.READ_WHEELCHAIR_PUSHES" />
     <uses-permission android:name="android.permission.health.WRITE_WHEELCHAIR_PUSHES" />
+
+    <uses-permission android:name="android.permission.health.READ_ACTIVITY_INTENSITY" />
+    <uses-permission android:name="android.permission.health.WRITE_ACTIVITY_INTENSITY" />
+
+    <uses-permission android:name="android.permission.health.READ_MINDFULNESS" />
+    <uses-permission android:name="android.permission.health.WRITE_MINDFULNESS" />
 
     <!-- To see if Health Connect is installed -->
     <queries>

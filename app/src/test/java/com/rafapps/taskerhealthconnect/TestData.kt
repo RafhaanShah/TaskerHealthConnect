@@ -3,6 +3,7 @@ package com.rafapps.taskerhealthconnect
 import android.util.Log
 import androidx.health.connect.client.aggregate.AggregateMetric
 import androidx.health.connect.client.records.ActiveCaloriesBurnedRecord
+import androidx.health.connect.client.records.ActivityIntensityRecord
 import androidx.health.connect.client.records.BasalBodyTemperatureRecord
 import androidx.health.connect.client.records.BasalMetabolicRateRecord
 import androidx.health.connect.client.records.BloodGlucoseRecord
@@ -29,6 +30,7 @@ import androidx.health.connect.client.records.IntermenstrualBleedingRecord
 import androidx.health.connect.client.records.LeanBodyMassRecord
 import androidx.health.connect.client.records.MenstruationFlowRecord
 import androidx.health.connect.client.records.MenstruationPeriodRecord
+import androidx.health.connect.client.records.MindfulnessSessionRecord
 import androidx.health.connect.client.records.NutritionRecord
 import androidx.health.connect.client.records.OvulationTestRecord
 import androidx.health.connect.client.records.OxygenSaturationRecord
@@ -81,7 +83,7 @@ val endTime: Instant = time.plusSeconds(60 * 60)
 private val energy = Energy.calories(23.0)
 private val temperature = Temperature.celsius(36.0)
 private val baseline = temperature
-private val delta = TemperatureDelta.celsius(1.0)
+private val delta = TemperatureDelta.celsius(10.0)
 private val power = Power.watts(10.0)
 private val basalMetabolicRate = power
 private val bloodGlucose = BloodGlucose.milligramsPerDeciliter(2.0)
@@ -108,6 +110,15 @@ val testData: Map<KClass<out Record>, Record> = recordTypes.associateWith { kCla
             endZoneOffset = endZoneOffset,
             energy = energy,
             metadata = metadata
+        )
+
+        ActivityIntensityRecord::class -> ActivityIntensityRecord(
+            startTime = startTime,
+            startZoneOffset = startZoneOffset,
+            endTime = endTime,
+            endZoneOffset = endZoneOffset,
+            metadata = metadata,
+            activityIntensityType = ActivityIntensityRecord.ACTIVITY_INTENSITY_TYPE_MODERATE
         )
 
         BasalBodyTemperatureRecord::class -> BasalBodyTemperatureRecord(
@@ -273,6 +284,17 @@ val testData: Map<KClass<out Record>, Record> = recordTypes.associateWith { kCla
             endTime = endTime,
             endZoneOffset = endZoneOffset,
             metadata = metadata,
+        )
+
+        MindfulnessSessionRecord::class -> MindfulnessSessionRecord(
+            startTime = startTime,
+            startZoneOffset = startZoneOffset,
+            endTime = endTime,
+            endZoneOffset = endZoneOffset,
+            metadata = metadata,
+            mindfulnessSessionType = MindfulnessSessionRecord.MINDFULNESS_SESSION_TYPE_MEDITATION,
+            title = "title",
+            notes = "notes"
         )
 
         NutritionRecord::class -> NutritionRecord(
@@ -513,9 +535,9 @@ private fun generateTestData(kClass: KClass<*>): Any {
         Power::class -> Power.watts(10.0)
         Volume::class -> Volume.liters(10.0)
         Pressure::class -> Pressure.millimetersOfMercury(10.0)
-        Temperature::class -> Temperature.celsius(10.0)
-        TemperatureDelta::class -> TemperatureDelta.celsius(1.0)
-        Velocity::class -> Velocity.kilometersPerHour(10.0)
+        Temperature::class -> 10.0 // test library does not work with Delta
+        TemperatureDelta::class -> 10.0 // test library does not work with Delta
+        Velocity::class -> 10.0 // // test library does not work with Velocity
         else -> throw IllegalArgumentException("Unsupported Test Data Type: ${kClass.simpleName}")
     }
 }

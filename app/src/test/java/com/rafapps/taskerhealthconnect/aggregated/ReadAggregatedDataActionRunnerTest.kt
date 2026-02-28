@@ -17,7 +17,6 @@ import com.rafapps.taskerhealthconnect.readTestFile
 import com.rafapps.taskerhealthconnect.startTime
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
-import org.junit.Assume.assumeTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.runners.Parameterized
@@ -60,7 +59,6 @@ class ReadAggregatedDataActionRunnerTest(
     @Test
     fun testRun() {
         val aggregateResult = AggregationResult(metrics = mapOf(metric to testData))
-        assumeTrue(aggregateResult.doubleValues.isNotEmpty() or aggregateResult.longValues.isNotEmpty())
         client.overrides.aggregate = stub(aggregateResult)
         Log.i("Input", "$metricKey: $testData")
 
