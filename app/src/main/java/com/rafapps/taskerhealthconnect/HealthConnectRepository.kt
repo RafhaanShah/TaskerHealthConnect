@@ -19,6 +19,7 @@ import androidx.health.connect.client.response.InsertRecordsResponse
 import androidx.health.connect.client.response.ReadRecordsResponse
 import androidx.health.connect.client.time.TimeRangeFilter
 import java.time.Instant
+import kotlin.reflect.KClass
 
 class HealthConnectRepository(
     private val context: Context,
@@ -29,28 +30,24 @@ class HealthConnectRepository(
     private val providerPackageName = "com.google.android.apps.healthdata"
     private val client: HealthConnectClient by lazy { clientProvider(context) }
 
-    private val backgroundPermissions = setOf(
-        HealthPermission.PERMISSION_READ_HEALTH_DATA_HISTORY,
-        HealthPermission.PERMISSION_READ_HEALTH_DATA_IN_BACKGROUND
-    )
 
     val readPermissions: Set<String> by lazy {
-        recordTypes
+        val recordPermissions = recordTypes
+            .filter { isFeatureAvailable(it) }
             .map { HealthPermission.getReadPermission(it) }
-            .plus(backgroundPermissions)
-            .filter { permission ->
-                featureBasedPermissions[permission]?.let { feature -> isFeatureAvailable(feature) }
-                    ?: true
-            }.toSet()
+
+        val bgPermissions = backgroundPermissions
+            .filter { isFeatureAvailable(it.value) }
+            .keys
+
+        (recordPermissions + bgPermissions).toSet()
     }
 
-    val writePermissions by lazy {
+    val writePermissions: Set<String> by lazy {
         recordTypes
+            .filter { isFeatureAvailable(it) }
             .map { HealthPermission.getWritePermission(it) }
-            .filter { permission ->
-                featureBasedPermissions[permission]?.let { feature -> isFeatureAvailable(feature) }
-                    ?: true
-            }.toSet()
+            .toSet()
     }
 
     fun installHealthConnect() {
@@ -162,7 +159,15 @@ class HealthConnectRepository(
         return result
     }
 
-    private fun isFeatureAvailable(@Feature feature: Int) =
+    private fun isFeatureAvailable(recordType: KClass<out Record>): Boolean =
+        featureBasedPermissions[recordType]?.let { feature -> isFeatureAvailable(feature).also {
+            Log.d(
+                tag,
+                "isFeatureAvailable: $feature=$it"
+            )
+        } } ?: true
+
+    private fun isFeatureAvailable(@Feature feature: Int): Boolean =
         (client.features.getFeatureStatus(feature)
                 == HealthConnectFeatures.FEATURE_STATUS_AVAILABLE).also {
             Log.d(

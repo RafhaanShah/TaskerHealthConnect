@@ -6,9 +6,16 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
 
-    <!-- Health Connect Permissions https://developer.android.com/health-and-fitness/guides/health-connect/plan/data-types -->
+    <!-- For Background Reads https://developer.android.com/health-and-fitness/health-connect/read-data#background-read-example -->
     <uses-permission android:name="android.permission.health.READ_HEALTH_DATA_IN_BACKGROUND" />
     <uses-permission android:name="android.permission.health.READ_HEALTH_DATA_HISTORY" />
+
+    <!-- Health Connect Permissions https://developer.android.com/health-and-fitness/guides/health-connect/plan/data-types -->
+    <uses-permission android:name="android.permission.health.READ_ACTIVE_CALORIES_BURNED" />
+    <uses-permission android:name="android.permission.health.WRITE_ACTIVE_CALORIES_BURNED" />
+
+    <uses-permission android:name="android.permission.health.READ_ACTIVITY_INTENSITY" />
+    <uses-permission android:name="android.permission.health.WRITE_ACTIVITY_INTENSITY" />
 
     <uses-permission android:name="android.permission.health.READ_BASAL_BODY_TEMPERATURE" />
     <uses-permission android:name="android.permission.health.WRITE_BASAL_BODY_TEMPERATURE" />
@@ -24,9 +31,6 @@
 
     <uses-permission android:name="android.permission.health.READ_BODY_FAT" />
     <uses-permission android:name="android.permission.health.WRITE_BODY_FAT" />
-
-    <uses-permission android:name="android.permission.health.READ_ACTIVE_CALORIES_BURNED" />
-    <uses-permission android:name="android.permission.health.WRITE_ACTIVE_CALORIES_BURNED" />
 
     <uses-permission android:name="android.permission.health.READ_BODY_TEMPERATURE" />
     <uses-permission android:name="android.permission.health.WRITE_BODY_TEMPERATURE" />
@@ -126,12 +130,6 @@
 
     <uses-permission android:name="android.permission.health.READ_WHEELCHAIR_PUSHES" />
     <uses-permission android:name="android.permission.health.WRITE_WHEELCHAIR_PUSHES" />
-
-    <uses-permission android:name="android.permission.health.READ_ACTIVITY_INTENSITY" />
-    <uses-permission android:name="android.permission.health.WRITE_ACTIVITY_INTENSITY" />
-
-    <uses-permission android:name="android.permission.health.READ_MINDFULNESS" />
-    <uses-permission android:name="android.permission.health.WRITE_MINDFULNESS" />
 
     <!-- To see if Health Connect is installed -->
     <queries>
