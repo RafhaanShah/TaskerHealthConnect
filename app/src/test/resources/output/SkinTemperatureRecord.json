@@ -9,8 +9,8 @@
       "deltas": [
         {
           "delta": {
-            "celsius": 1.0,
-            "fahrenheit": 1.8
+            "celsius": 10.0,
+            "fahrenheit": 18.0
           },
           "time": 1746800000000
         }
