@@ -159,6 +159,18 @@ class HealthConnectRepository(
         return result
     }
 
+    suspend fun deleteData(
+        recordClass: Class<Record>,
+        startTime: Instant,
+        endTime: Instant
+    ) {
+        Log.d(tag, "deleteData: $recordClass, $startTime, $endTime")
+        client.deleteRecords(
+            recordType = recordClass.kotlin,
+            timeRangeFilter = TimeRangeFilter.between(startTime, endTime)
+        )
+    }
+
     private fun isFeatureAvailable(recordType: KClass<out Record>): Boolean =
         featureBasedPermissions[recordType]?.let { feature -> isFeatureAvailable(feature).also {
             Log.d(

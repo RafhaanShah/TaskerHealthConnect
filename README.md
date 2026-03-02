@@ -6,6 +6,7 @@
 - Read [Health Data](https://developer.android.com/health-and-fitness/guides/health-connect/develop/read-data)  as JSON.
 - Read [Aggregated Health Data](https://developer.android.com/health-and-fitness/guides/health-connect/develop/aggregate-data) as JSON.
 - Write [Health Data](https://developer.android.com/health-and-fitness/guides/health-connect/develop/write-data) from JSON.
+- Delete [Health Data](https://developer.android.com/health-and-fitness/health-connect/delete-data) inserted by this plugin (the Health Connect API does NOT let you delete records inserted by other apps).
 - Note that the Health Connect API is only designed for on-demand fetching and pushing of data, it does NOT support getting notified of changes and so you cannot build application that react to changes in data.
 
 ## Installation

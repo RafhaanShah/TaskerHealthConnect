@@ -39,4 +39,6 @@
     <string name="health_connect_toolbox">Health Connect Toolbox</string>
     <string name="aggregate_metric">Aggregate Metric Class.Field</string>
     <string name="aggregate_metric_description">The Aggregate Metric to return from androidx.health.connect.client.records.* package, must be in the format ClassName.FieldName, e.g. StepsRecord.COUNT_TOTAL</string>
+    <string name="delete_data">Delete Data</string>
+    <string name="delete_data_description">Deletes records of the specified type within the given time range.</string>
 </resources>

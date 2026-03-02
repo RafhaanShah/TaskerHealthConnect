@@ -203,6 +203,15 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".delete.DeleteDataActivity"
+            android:exported="true"
+            android:label="@string/delete_data">
+            <intent-filter>
+                <action android:name="com.twofortyfouram.locale.intent.action.EDIT_SETTING" />
+            </intent-filter>
+        </activity>
+
         <!-- Try to fix ForegroundServiceDidNotStartInTimeException -->
         <!-- https://github.com/joaomgcd/TaskerPluginSample/issues/24 -->
         <!-- https://github.com/joaomgcd/TaskerPluginSample/issues/29 -->

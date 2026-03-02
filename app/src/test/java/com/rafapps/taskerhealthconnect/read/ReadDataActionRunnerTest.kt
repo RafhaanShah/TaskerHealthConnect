@@ -1,7 +1,6 @@
 package com.rafapps.taskerhealthconnect.read
 
 import android.util.Log
-import androidx.health.connect.client.records.PlannedExerciseSessionRecord
 import androidx.health.connect.client.records.Record
 import androidx.health.connect.client.testing.FakeHealthConnectClient
 import com.joaomgcd.taskerpluginlibrary.input.TaskerInput
@@ -13,8 +12,9 @@ import com.rafapps.taskerhealthconnect.Serializer
 import com.rafapps.taskerhealthconnect.TestMapper
 import com.rafapps.taskerhealthconnect.readTestFile
 import com.rafapps.taskerhealthconnect.recordTypes
-import com.rafapps.taskerhealthconnect.testData
+import com.rafapps.taskerhealthconnect.testRecords
 import com.rafapps.taskerhealthconnect.time
+import com.rafapps.taskerhealthconnect.unsupportedRecordTypes
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -51,18 +51,15 @@ class ReadDataActionRunnerTest(
                 0,
                 Long.MAX_VALUE,
                 className,
-                listOf(testData.getValue(className)),
+                listOf(testRecords.getValue(className)),
                 readTestFile("output", "${className.simpleName}")
             )
         }
-
-        // not supported to insert
-        val unsupported = setOf(PlannedExerciseSessionRecord::class)
     }
 
     @Test
     fun testRun() {
-        assumeTrue(!unsupported.contains(recordType))
+        assumeTrue(!unsupportedRecordTypes.contains(recordType))
         Log.i("Input", expectedList.toString())
         require(expectedList.isNotEmpty()) { "No expected records found" }
         runBlocking { client.insertRecords(expectedList) }

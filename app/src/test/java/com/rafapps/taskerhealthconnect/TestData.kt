@@ -101,7 +101,9 @@ private val duration = Duration.ofMinutes(30)
 private val speed = Velocity.kilometersPerHour(10.0)
 private val volume = Volume.liters(2.0)
 
-val testData: Map<KClass<out Record>, Record> = recordTypes.associateWith { kClass ->
+val unsupportedRecordTypes: Set<KClass<out Record>> = setOf(PlannedExerciseSessionRecord::class)
+
+val testRecords: Map<KClass<out Record>, Record> = recordTypes.associateWith { kClass ->
     when (kClass) {
         ActiveCaloriesBurnedRecord::class -> ActiveCaloriesBurnedRecord(
             startTime = time,

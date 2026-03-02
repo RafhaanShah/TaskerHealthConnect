@@ -1,7 +1,6 @@
 package com.rafapps.taskerhealthconnect.write
 
 import android.util.Log
-import androidx.health.connect.client.records.PlannedExerciseSessionRecord
 import androidx.health.connect.client.records.Record
 import androidx.health.connect.client.request.ReadRecordsRequest
 import androidx.health.connect.client.testing.FakeHealthConnectClient
@@ -15,6 +14,7 @@ import com.rafapps.taskerhealthconnect.TestMapper
 import com.rafapps.taskerhealthconnect.healthConnectRecordsPackage
 import com.rafapps.taskerhealthconnect.readTestFile
 import com.rafapps.taskerhealthconnect.recordTypes
+import com.rafapps.taskerhealthconnect.unsupportedRecordTypes
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertTrue
 import org.junit.Assume.assumeTrue
@@ -43,15 +43,12 @@ class WriteDataActionRunnerTest(
             val name = className.simpleName.toString()
             arrayOf(name, readTestFile("input", name))
         }
-
-        // not supported to insert
-        val unsupported = setOf(PlannedExerciseSessionRecord::class.simpleName.toString())
     }
 
     @Test
     @Suppress("UNCHECKED_CAST")
     fun testRun() {
-        assumeTrue(!unsupported.contains(recordType))
+        assumeTrue(unsupportedRecordTypes.none { it.simpleName == recordType })
         Log.i("Input", inputString)
 
         val output = runner.run(context, TaskerInput(WriteDataInput(recordType, inputString)))
