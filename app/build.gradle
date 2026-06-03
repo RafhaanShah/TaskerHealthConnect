@@ -11,8 +11,8 @@ android {
         applicationId "com.rafapps.taskerhealthconnect"
         minSdk 28 // Health Connect is only available in Android 9
         targetSdk 34
-        versionCode 9
-        versionName "1.0.3"
+        versionCode 10
+        versionName "1.0.4"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
